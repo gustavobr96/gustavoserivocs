@@ -1,0 +1,382 @@
+﻿@using SistemaBico.Web.Enum
+@using SistemaBico.Web.Util
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model SistemaBico.Web.Models.Reponse.ProfessionalClientPaginationResponse;
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+}
+@section Head{
+    <link href="assets/css/rating.css" rel="stylesheet" />
+    <link href="assets/css/timeline.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet"
+      href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+}
+    <form class="form" id="kt_form_update" action="Professional/ProfessionalPage" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card card-custom card-stretch gutter-b compact">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            Contratação de Serviço
+                        </h3>
+                    </div>
+                    <!--begin::Row-->
+                    <div class="card-body">
+                        <div asp-area="" class="row" id="listProfessional">
+                            @{
+                            if (Model.ProfessionalClient.Count == 0)
+                            {
+                                <div class="d-flex flex-column flex-root">
+                                    <!--begin::Error-->
+                                    <div class="error error-5 d-flex flex-row-fluid bgi-size-cover bgi-position-center" style="background-image: url(assets/media/error/bg5.jpg);">
+                                        <!--begin::Content-->
+                                        <div class="container d-flex flex-row-fluid flex-column justify-content-md-center p-12">
+                                            <h1 class="error-title font-weight-boldest text-info mt-10 mt-md-0 mb-12">Oops!</h1>
+                                            <p class="font-weight-boldest display-4">Você não escolheu nenhum profissional.</p>
+                                            <p class="font-size-h3">Você não escolheu nenhum profissional, por favor escolha agora um profissional.</p>
+                                        </div>
+                                        <!--end::Content-->
+                                    </div>
+                                    <!--end::Error-->
+                                </div>
+                            }
+                        }
+                        @foreach (var item in Model.ProfessionalClient)
+                        {
+                            var disabled = item.StatusWorker == StatusWorker.Finalizado ? "Opacity: 0.5; box-shadow: 0px 9px 16px 0px rgb(0 167 159 / 38%) !important" : "box-shadow: 0px 0px 30px 0px rgb(0 0 0 / 15%)";
+                            var reprovado = item.StatusWorker == StatusWorker.Reprovado ? "Opacity: 0.5; box-shadow: 0px 9px 16px 0px #eb6e7c !important" : "box-shadow: 0px 0px 30px 0px rgb(0 0 0 / 15%)";
+
+                            <div class="card card-custom gutter-b col-lg-12" style="@disabled; @reprovado">
+                                <div class="card-body">
+                                    <!--begin::Top-->
+                                    <div class="d-flex">
+                                        <!--begin::Pic-->
+                                        <div class="flex-shrink-0 mr-7">
+                                            <div class="symbol symbol-50 symbol-lg-120">
+                                                <img class="round" src="data:image/jpg;base64,@item.ProfessionalProfile.PerfilPicture" alt="image" />
+                                            </div>
+                                        </div>
+                                        <!--end::Pic-->
+                                        <!--begin: Info-->
+                                        <div class="flex-grow-1">
+                                            <!--begin::Title-->
+                                            <div class="d-flex align-items-center justify-content-between flex-wrap mt-2">
+                                                <!--begin::User-->
+                                                <div class="mr-3">
+                                                    <!--begin::Name-->
+                                                    <label class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3">
+                                                        <a href="profile/id/@item.ProfessionalProfile.Perfil">@item.ProfessionalProfile.Name @item.ProfessionalProfile.LastName</a>
+                                                        <i class="flaticon2-correct text-success icon-md ml-2"></i>
+                                                    </label>
+                                                    <!--end::Name-->
+                                                    <!--begin::Contacts-->
+                                                    <div class="d-flex flex-wrap my-2">
+                                                        <a class="text-dark-75 font-weight-bolder font-size-sm mr-lg-8 mr-5 mb-lg-0 mb-2">
+                                                            <span class="svg-icon svg-icon-md svg-icon-gray-500 mr-1 text-dark-75 font-weight-bolder font-size-sm">
+                                                                <!--begin::Svg Icon | path:assets/media/svg/icons/General/Lock.svg-->
+                                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                        <mask fill="white">
+                                                                            <use xlink:href="#path-1" />
+                                                                        </mask>
+                                                                        <g />
+                                                                        <path d="M7,10 L7,8 C7,5.23857625 9.23857625,3 12,3 C14.7614237,3 17,5.23857625 17,8 L17,10 L18,10 C19.1045695,10 20,10.8954305 20,12 L20,18 C20,19.1045695 19.1045695,20 18,20 L6,20 C4.8954305,20 4,19.1045695 4,18 L4,12 C4,10.8954305 4.8954305,10 6,10 L7,10 Z M12,5 C10.3431458,5 9,6.34314575 9,8 L9,10 L15,10 L15,8 C15,6.34314575 13.6568542,5 12,5 Z" fill="#000000" />
+                                                                    </g>
+                                                                </svg>
+                                                                <!--end::Svg Icon-->
+                                                            </span>@item.ProfessionalProfile.Profession
+                                                        </a>
+                                                        @{
+                                                            string phone = ConvertGeneric.ConvertTelefoneLimpo(@item.ProfessionalProfile.Phone);
+                                                            string linkWhats = "https://wa.me/55" + @phone + "?text=Olá, tudo bem ? Peguei seu contato através da plataforma de serviços *WORKFREE*.";
+                                                        }
+                                                        <a href="@linkWhats" target="_blank" class="text-dark-75 font-weight-bolder font-size-sm">
+                                                           <i class="flaticon-whatsapp mr-2" style="color:#15db36"></i>@item.ProfessionalProfile.Phone
+                                                        </a>
+                                                    </div>
+                                                    <!--end::Contacts-->
+                                                </div>
+                                                <!--begin::User-->
+                                                <!--begin::Actions-->
+                                                @{
+                                                    if (item.StatusWorker == StatusWorker.AguardandoConfirmacao)
+                                                    {
+                                                        <div class="d-flex flex-wrap my-2 my-lg-0 my-1">
+                                                            <button type="button" class="btn btn-success btn-shadow font-weight-bold mr-2" disabled><i class="flaticon-stopwatch icon-md"></i>Aguandando Confirmação</button>
+                                                        </div>
+                                                    }
+                                                    if (item.StatusWorker == StatusWorker.Reprovado)
+                                                    {
+                                                        <div class="d-flex flex-wrap my-2 my-lg-0 my-1">
+                                                            <button type="button" class="btn btn-danger btn-shadow font-weight-bold mr-2" disabled><i class="flaticon2-cancel icon-md"></i>Prestador Cancelou</button>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    if (item.StatusWorker == StatusWorker.IntencaoServico)
+                                                    {
+                                                        <div class="d-flex flex-wrap my-2 my-lg-0 my-1">
+                                                            <button type="button" class="btn btn-success btn-shadow font-weight-bold mr-2 mt-2" id="Contratar_@item.ProfessionalProfile.Perfil" onclick="Contratar('@item.ProfessionalProfile.Perfil')"><i class="flaticon-like icon-md"></i><i id="spinner_@item.ProfessionalProfile.Perfil"></i>  Contratar</button>
+                                                            <button type="button" class="btn btn-danger btn-shadow font-weight-bold mr-2 mt-2" id="Remover_@item.ProfessionalProfile.Perfil" onclick="Remover('@item.ProfessionalProfile.Perfil')"><i class="flaticon2-cancel icon-md"></i><i id="spinnerRemover_@item.ProfessionalProfile.Perfil"></i> Dispensar</button>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item.StatusWorker == StatusWorker.Contratado)
+                                                        {
+                                                            <div class="d-flex flex-wrap my-2 my-lg-0 my-1">
+                                                                <button type="button" class="btn btn-success btn-shadow font-weight-bold mr-2" id="Finalizado_@item.ProfessionalProfile.Perfil" onclick="Finalizar('@item.ProfessionalProfile.Perfil')"><i class="flaticon-like icon-md"></i>Finalizar Serviço</button>
+                                                            </div>
+                                                        }
+
+                                                    }
+                                                }
+
+                                                <!--end::Actions-->
+                                            </div>
+                                            <!--end::Title-->
+                                            <div>
+                                                <div class="form-group py-2 py-lg-2 mr-2">
+                                                    <div class="input-group">
+                                                        @{
+                                                            if (!string.IsNullOrEmpty(@item.ProfessionalProfile.Avaliation) && decimal.Parse(@item.ProfessionalProfile.Avaliation) > 0)
+                                                            {
+                                                                string img = "star";
+                                                                var avaliation = Math.Ceiling(decimal.Parse(@item.ProfessionalProfile.Avaliation));
+
+                                                                if (avaliation < 0)
+                                                                    avaliation = 1;
+                                                                else
+                                                                if (avaliation > 5)
+                                                                    avaliation = 5;
+
+                                                                img += avaliation.ToString() + ".png";
+
+                                                                <label class="text-dark-75 font-weight-bolder font-size-sm">Reputação</label>
+                                                                <div class="input-group">
+
+                                                                    <img src="assets/media/logos/@img" alt="image" style="width: 6.5rem" />
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <label class="text-dark-75 font-weight-bolder font-size-sm">Reputação</label>
+                                                                <div class="input-group">
+                                                                    <span class="flex-grow-1 font-weight text-dark-50 py-1 py-lg-1 mr-2" style="font-style: italic">Esse profissional ainda não foi contratado. Vamos dar sua primeira oportunidade ?</span>
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--begin::Content-->
+                                            <div class="d-flex align-items-center flex-wrap justify-content-between">
+                                                <!--begin::Description-->
+                                                <div class="flex-grow-1 font-weight-bold text-dark-50 py-1 py-lg-1 mr-2">@item.ProfessionalProfile.Sobre</div>
+                                                <!--end::Description-->
+                                            </div>
+                                            <!--end::Content-->
+                                        </div>
+                                        <!--end::Info-->
+                                    </div>
+                                    <!--end::Top-->
+                                    <!--begin::Separator-->
+                                    <div class="separator separator-solid my-7"></div>
+                                    <div>
+                                        <div class="form-group py-2 py-lg-2 mr-2">
+                                            <div class="input-group">
+                                                <label class="text-dark-75 font-weight-bolder font-size-sm">Cidade</label>
+                                                <div class="input-group">
+                                                    <a class="text-dark-75 font-weight-bolder font-size-sm">
+                                                        <span class="svg-icon svg-icon-md svg-icon-gray-500 mr-1">
+                                                            <!--begin::Svg Icon | path:assets/media/svg/icons/Map/Marker2.svg-->
+                                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                    <rect x="0" y="0" width="24" height="24" />
+                                                                    <path d="M9.82829464,16.6565893 C7.02541569,15.7427556 5,13.1079084 5,10 C5,6.13400675 8.13400675,3 12,3 C15.8659932,3 19,6.13400675 19,10 C19,13.1079084 16.9745843,15.7427556 14.1717054,16.6565893 L12,21 L9.82829464,16.6565893 Z M12,12 C13.1045695,12 14,11.1045695 14,10 C14,8.8954305 13.1045695,8 12,8 C10.8954305,8 10,8.8954305 10,10 C10,11.1045695 10.8954305,12 12,12 Z" fill="#000000" />
+                                                                </g>
+                                                            </svg>
+                                                            <!--end::Svg Icon-->
+                                                        </span>@item.ProfessionalProfile.City - @item.ProfessionalProfile.State
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--begin: Item-->
+                                    <!--begin: Item-->
+                                    <div class="form-group">
+                                        <div class="row px-3">
+                                            <div class="col">
+                                                <ul id="progressbar">
+                                                    @{
+                                                        if ((int)item.StatusWorker < 5)
+                                                        {
+                                                            string active1 = (int)item.StatusWorker >= 3 ? "Active" : "";
+                                                            string active3 = (int)item.StatusWorker == 4 ? "Active" : "";
+
+                                                            <li class="step0   @active1" id="step1">CONTRATADO</li>
+                                                            <li class="step0  text-center @active1" id="step2">SERVIÇO EM ANDAMENTO</li>
+                                                            <li class="step0  text-muted text-right @active3" id="step3">FINALIZADO</li>
+                                                        }
+                                                    }
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--begin: Item-->
+                                    <div class="form-group">
+                                        <label class="text-dark-75 font-weight-bolder font-size-sm">Especialidades</label>
+                                        <div class="input-group">
+                                            @foreach (var especiality in item.ProfessionalProfile.Especiality)
+                                            {
+                                                <div class="d-flex">
+                                                    <span class="label label-primary label-inline font-weight-boldest mr-2 mt-2">@especiality</span>
+                                                </div>
+                                            }
+                                        </div>
+                                        <!--end: Item-->
+                                    </div>
+                                    <!--end::Bottom-->
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</form>
+<div class=" modal fade modal_confirm" id="modalConfirmeWorker">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Por favor, avalie o prestador de serviço.</h4>
+            </div>
+            <div class="modal-body">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-lg-3 col-form-label text-right">Prazo</label>
+                        <div class="col-lg-4 col-md-9 col-sm-12" nmae="prazo" id="prazo">
+                            <input class="form-control" hidden type="text" name="PerfilProfissional" id="PerfilProfissional" />
+                            <input class="form-control" hidden type="text" name="StarPrazo" id="StarPrazo" />
+                            <ul class="avaliacao">
+                                <li class="star-icon starPrazo ativo" onclick="starPrazo(1)" data-avaliacaoPrazo="1"></li>
+                                <li class="star-icon starPrazo" onclick="starPrazo(2)" data-avaliacaoPrazo="2"></li>
+                                <li class="star-icon starPrazo" onclick="starPrazo(3)" data-avaliacaoPrazo="3"></li>
+                                <li class="star-icon starPrazo" onclick="starPrazo(4)" data-avaliacaoPrazo="4"></li>
+                                <li class="star-icon starPrazo" onclick="starPrazo(5)" data-avaliacaoPrazo="5"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group row mt-2">
+                        <label class="col-xl-3 col-lg-3 col-form-label text-right">Qualidade do Serviço</label>
+                        <div class="col-lg-4 col-md-9 col-sm-12">
+                            <input class="form-control" hidden type="text" name="StarQualidade" id="StarQualidade" />
+                            <ul class="avaliacao">
+                                <li class="star-icon starQualidade ativo" onclick="starQualidade(1)" data-avaliacaoQualidade="1"></li>
+                                <li class="star-icon starQualidade" onclick="starQualidade(2)" data-avaliacaoQualidade="2"></li>
+                                <li class="star-icon starQualidade" onclick="starQualidade(3)" data-avaliacaoQualidade="3"></li>
+                                <li class="star-icon starQualidade" onclick="starQualidade(4)" data-avaliacaoQualidade="4"></li>
+                                <li class="star-icon starQualidade " onclick="starQualidade(5)" data-avaliacaoQualidade="5"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group row mt-2">
+                        <label class="col-xl-3 col-lg-3 col-form-label text-right">Comunicação</label>
+                        <div class="col-lg-4 col-md-9 col-sm-12">
+                            <input class="form-control" hidden type="text" name="StarComunicacao" id="StarComunicacao" />
+                            <ul class="avaliacao">
+                                <li class="star-icon starComunicacao ativo" onclick="starComunicacao(1)" data-avaliacaoComunicacao="1"></li>
+                                <li class="star-icon starComunicacao" onclick="starComunicacao(2)" data-avaliacaoComunicacao="2"></li>
+                                <li class="star-icon starComunicacao" onclick="starComunicacao(3)" data-avaliacaoComunicacao="3"></li>
+                                <li class="star-icon starComunicacao" onclick="starComunicacao(4)" data-avaliacaoComunicacao="4"></li>
+                                <li class="star-icon starComunicacao" onclick="starComunicacao(5)" data-avaliacaoComunicacao="5"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-lg-3 col-form-label text-right">Serviço Executado Pelo Profissional</label>
+                        <div class="col-lg-4 col-md-9 col-sm-12">
+                            <select class="form-control" name="SelWorker" id="SelWorker"></select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-lg-3 col-form-label text-right">Descrição do serviço realizado</label>
+                        <div class="col-lg-9 col-md-9 col-sm-12">
+                            <input class="form-control" type="text" name="Description" id="Description" placeholder="Descreva com poucas palavras o que o profissional executou" maxlength="50" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <textarea class="form-control" name="Sobre" id="Sobre" maxlength="300" placeholder="Comente, o que você achou do profissional." rows="6"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="enviar_registro"><i id="spinnerEnviarAvaliacao"></i> Enviar Avaliação</button>
+                <button type="button" id="btnVoltar" data-dismiss="modal" class="btn btn-danger"> Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class=" modal fade modal_confirm" id="modalConfirmarExclusao">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content" id="divcontent">
+            <div class="modal-body">
+                <p>
+                    A confirmação, leverá a exclusão da lista de interesse de profissionais. Você poderá ter acesso a esse profissionais na página principal de profissionais
+                    <br /><br />
+                    Tem certeza que deseja concluir a ação ?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="delete_registro">SIM</button>
+                <button type="button" id="btnVoltar" data-dismiss="modal" class="btn btn-danger">NÃO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class=" modal fade modal_confirm" id="modalAviso">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-xl-12">
+                        <!--begin::Engage Widget 9-->
+                        <div class="card card-custom card-stretch gutter-b">
+                            <div class="card-body d-flex p-0">
+                                <div class="flex-grow-1 p-20 pb-40 card-rounded flex-grow-1 bgi-no-repeat" style="background-color: #000000; background-position: calc(100% + 0.5rem) bottom; background-size: 50% auto; background-image: url(assets/media/svg/humans/custom-10.svg)">
+                                    <h4 class="text-white pb-5 font-weight-bolder">Estamos processando sua contratação.</h4>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--end::Engage Widget 9-->
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnVoltar" data-dismiss="modal" class="btn btn-success"> Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <!--begin::Global Theme Bundle(used by all pages)-->
+    <script>var KTAppSettings = { "breakpoints": { "sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1200 }, "colors": { "theme": { "base": { "white": "#ffffff", "primary": "#663259", "secondary": "#E5EAEE", "success": "#1BC5BD", "info": "#8950FC", "warning": "#FFA800", "danger": "#F64E60", "light": "#F3F6F9", "dark": "#212121" }, "light": { "white": "#ffffff", "primary": "#F4E1F0", "secondary": "#ECF0F3", "success": "#C9F7F5", "info": "#EEE5FF", "warning": "#FFF4DE", "danger": "#FFE2E5", "light": "#F3F6F9", "dark": "#D6D6E0" }, "inverse": { "white": "#ffffff", "primary": "#ffffff", "secondary": "#212121", "success": "#ffffff", "info": "#ffffff", "warning": "#ffffff", "danger": "#ffffff", "light": "#464E5F", "dark": "#ffffff" } }, "gray": { "gray-100": "#F3F6F9", "gray-200": "#ECF0F3", "gray-300": "#E5EAEE", "gray-400": "#D6D6E0", "gray-500": "#B5B5C3", "gray-600": "#80808F", "gray-700": "#464E5F", "gray-800": "#1B283F", "gray-900": "#212121" } }, "font-family": "Poppins" };</script>
+    <script src="assets/js/pages/crud/forms/widgets/select2.js"></script>
+    <script src="/scripts/Client/myProfessional.js"></script>
+}

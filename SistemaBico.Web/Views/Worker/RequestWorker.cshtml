@@ -1,0 +1,235 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model SistemaBico.Web.Models.WorkerDto;
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+}
+@section Head{
+}
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Subheader-->
+        <div class="subheader py-2 py-lg-4 subheader-transparent" id="kt_subheader">
+            <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
+                <!--begin::Details-->
+                <div class="d-flex align-items-center flex-wrap mr-2">
+                    <!--begin::Title-->
+                    <h5 class="text-dark font-weight-bold mt-2 mb-2 mr-5">Encontre o melhor profissional para sua necessidade</h5>
+                    <!--end::Title-->
+                    <!--begin::Separator-->
+                    <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-5 bg-gray-200"></div>
+                    <!--end::Separator-->
+                    <!--begin::Search Form-->
+                    <div class="d-flex align-items-center" id="kt_subheader_search">
+                        <span class="text-dark-50 font-weight-bold" id="kt_subheader_total">Publique seu projeto em até 2 minutos.</span>
+                    </div>
+                    <!--end::Search Form-->
+                </div>
+                <!--end::Details-->
+            </div>
+        </div>
+        <!--end::Subheader-->
+        <!--begin::Entry-->
+        <div class="d-flex flex-column-fluid">
+            <!--begin::Container-->
+            <div class="container-fluid">
+                <!--begin::Card-->
+                <div class="card card-custom card-transparent">
+                    <div class="card-body p-0">
+                        <!--begin::Wizard-->
+                        <div class="wizard wizard-4" id="kt_wizard" data-wizard-state="step-first" data-wizard-clickable="true">
+                            <!--begin::Wizard Nav-->
+                            <div class="wizard-nav">
+                                <div class="wizard-steps">
+                                    <div class="wizard-step" data-wizard-type="step" data-wizard-state="current">
+                                        <div class="wizard-wrapper">
+                                            <div class="wizard-number">1</div>
+                                            <div class="wizard-label">
+                                                <div class="wizard-desc">Area de atuação</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="wizard-step" data-wizard-type="step">
+                                        <div class="wizard-wrapper">
+                                            <div class="wizard-number">2</div>
+                                            <div class="wizard-label">
+                                                <div class="wizard-desc">Detalhes do Serviço</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end::Wizard Nav-->
+                            <!--begin::Card-->
+                            <div class="card card-custom card-shadowless rounded-top-0">
+                                <!--begin::Body-->
+                                <div class="card-body p-0">
+                                    <div class="row justify-content-center py-8 px-8 py-lg-15 px-lg-10">
+                                        <div class="col-xl-12 col-xxl-10">
+                                            <!--begin::Wizard Form-->
+                                            <form class="form mt-0 mt-lg-10" id="kt_form" action="worker/register" method="post" novalidate="novalidate" enctype="multipart/form-data">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-xl-9">
+                                                        <!--begin::Wizard Step 1-->
+                                                        <div class="my-5 step" data-wizard-type="step-content" data-wizard-state="current">
+                                                            <div class="form-group row">
+                                                                <label class="col-xl-3 col-lg-3 col-form-label">Área de atuação</label>
+                                                                <div class="col-lg-9 col-xl-9">
+                                                                    <select class="form-control" id="kt_select2_1_modal" name="Area" name="Area" asp-for="Area">
+                                                                        <option value="0">Todas areas</option>
+                                                                        <option value="13">Administação e Finanças</option>
+                                                                        <option value="1">Assistência Técnica</option>
+                                                                        <option value="2">Aulas</option>
+                                                                        <option value="14">Comunicação</option>
+                                                                        <option value="4">Consultoria</option>
+                                                                        <option value="15">Criador de Conteúdos</option>
+                                                                        <option value="5">Design/Tecnologia</option>
+                                                                        <option value="12">Edição de Vídeos</option>
+                                                                        <option value="11">Engenharias</option>
+                                                                        <option value="6">Eventos</option>
+                                                                        <option value="19">Jurídico</option>
+                                                                        <option value="16">Marketing e Vendas</option>
+                                                                        <option value="7">Moda e Beleza</option>
+                                                                        <option value="21">Motoboy</option>
+                                                                        <option value="22">Motorista</option>
+                                                                        <option value="8">Reformas e Reparos</option>
+                                                                        <option value="9">Saúde</option>
+                                                                        <option value="10">Serviços Domésticos</option>
+                                                                        <option value="17">Tradução e Conteúdos</option>
+                                                                        <option value="20">Transportes</option>
+                                                                        <option value="3">Veículos</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <label class="col-xl-3 col-lg-3 col-form-label">Telefone de contato</label>
+                                                                <div class="col-lg-9 col-xl-9">
+                                                                    <div class="input-group input-group-solid input-group-lg">
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text">
+                                                                                <i class="la la-phone"></i>
+                                                                                <code>(XX)XXXXXXXXX</code>
+                                                                            </span>
+                                                                        </div>
+                                                                        <input type="text" id="kt_maxlength_1" onkeyup="handlePhone(event)" maxlength="14" class="form-control form-control-solid form-control-lg kt_inputmask_3" asp-for="Phone" name="Phone" id="Phone" value="" placeholder="Celular" />
+                                                                    </div>
+                                                                    <span class="form-text text-muted">Insira o número de telefone válido.</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <label class="col-xl-3 col-lg-3 col-form-label">Profissão</label>
+                                                                <div class="col-lg-9 col-xl-6">
+                                                                    <input class="form-control form-control-lg form-control-solid" type="text" name="Profession" asp-for="Profession" value="" maxlength="30" />
+                                                                    <span class="form-text text-muted">Você pode preencher aqui a profissão específica para seu projeto.</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xl-3">
+                                                                    <!--begin::Group-->
+                                                                    <div class="form-group">
+                                                                        <label>CEP</label>
+                                                                        <input type="text" onblur="pesquisacep(this.value);" maxlength="8" class="form-control form-control-solid form-control-lg" name="CEP" asp-for="CEP" id="CEP" placeholder="CEP" value="" />
+                                                                        <span class="form-text text-muted">Preencha o CEP de atuação do projeto/serviço, no caso de ser online, não preencha o campo.</span>
+                                                                    </div>
+                                                                </div>
+                                                                <!--end::Group-->
+                                                                <!--begin::Group-->
+                                                                <div class="col-xl-6">
+                                                                    <div class="form-group">
+                                                                        <label>Cidade</label>
+                                                                        <input type="text" class="form-control form-control-solid form-control-lg" name="City" asp-for="City" id="City" placeholder="Cidade" maxlength="40" value="" />
+                                                                        <span class="form-text text-muted">Preencha a cidade de atuação do projeto/serviço, no caso de ser online, não preencha o campo</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-3">
+                                                                    <!--begin::Group-->
+                                                                    <div class="form-group">
+                                                                        <label>UF</label>
+                                                                        <input type="text" class="form-control form-control-solid form-control-lg" name="State" asp-for="State" id="State" placeholder="UF" maxlength="2" value="" />
+                                                                        <span class="form-text text-muted">Preencha o estado de atuação do projeto/serviço, no caso de ser online, não preencha o campo</span>
+                                                                    </div>
+                                                                </div>
+                                                                <!--end::Group-->
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="my-5 step" data-wizard-type="step-content">
+                                                            <div class="row">
+                                                                <div class="col-xl-12">
+                                                                    <!--begin::Group-->
+                                                                    <div class="form-group">
+                                                                        <label>Titulo</label>
+                                                                        <input type="text" class="form-control form-control-solid form-control-lg" name="Titulo" asp-for="Titulo" id="Titulo" placeholder="Ex: Preciso de um mecânico" maxlength="100" value="" />
+                                                                        <span class="form-text text-muted">Preencha o titulo do projeto/serviço.</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-xl-12">
+                                                                    <!--begin::Group-->
+                                                                    <div class="form-group">
+                                                                        <label>Descreva o projeto/serviço com as suas palavras</label>
+                                                                        <textarea class="form-control" name="Sobre" id="Sobre" maxlength="2000" placeholder="Ex: Preciso de um mecânico, pois meu carro não está dando partida." asp-for="Sobre" rows="6"></textarea>
+                                                                        <span class="form-text text-muted">Detalhe aqui o que você precisa.</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xl-12">
+                                                                    <!--begin::Group-->
+                                                                    <div class="form-group">
+                                                                        <label>Preço</label>
+                                                                        <input type="text" class="form-control form-control-solid form-control-lg" name="PriceString" asp-for="PriceString" id="PriceString" value="" onKeyUp="mascaraMoeda(this, event)" size="9" maxlength="9" />
+                                                                        <span class="form-text text-muted">Você pode colocar o valor que está dispoto a pagar para o serviço(não é obrigatório).</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="d-flex justify-content-between border-top pt-10 mt-15">
+                                                            <div class="mr-2">
+                                                                <button type="button" class="btn btn-light-primary font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-prev">Anterior</button>
+                                                            </div>
+                                                            <div>
+                                                                <button class="btn btn-success font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-submit">Cadastrar</button>
+                                                                <button type="button" class="btn btn-primary font-weight-bold text-uppercase px-9 py-4" data-wizard-type="action-next">Proximo</button>
+                                                            </div>
+                                                        </div>
+                                                        <!--end::Wizard Actions-->
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <!--end::Wizard Form-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end::Body-->
+                            </div>
+                            <!--end::Card-->
+                        </div>
+                        <!--end::Wizard-->
+                    </div>
+                </div>
+                <!--end::Card-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Entry-->
+    </div>
+
+    @section Scripts{
+    <script>var HOST_URL = "https://keenthemes.com/metronic/tools/preview";</script>
+    <!--begin::Global Config(global config for global JS scripts)-->
+    <script>var KTAppSettings = { "breakpoints": { "sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1200 }, "colors": { "theme": { "base": { "white": "#ffffff", "primary": "#663259", "secondary": "#E5EAEE", "success": "#1BC5BD", "info": "#8950FC", "warning": "#FFA800", "danger": "#F64E60", "light": "#F3F6F9", "dark": "#212121" }, "light": { "white": "#ffffff", "primary": "#F4E1F0", "secondary": "#ECF0F3", "success": "#C9F7F5", "info": "#EEE5FF", "warning": "#FFF4DE", "danger": "#FFE2E5", "light": "#F3F6F9", "dark": "#D6D6E0" }, "inverse": { "white": "#ffffff", "primary": "#ffffff", "secondary": "#212121", "success": "#ffffff", "info": "#ffffff", "warning": "#ffffff", "danger": "#ffffff", "light": "#464E5F", "dark": "#ffffff" } }, "gray": { "gray-100": "#F3F6F9", "gray-200": "#ECF0F3", "gray-300": "#E5EAEE", "gray-400": "#D6D6E0", "gray-500": "#B5B5C3", "gray-600": "#80808F", "gray-700": "#464E5F", "gray-800": "#1B283F", "gray-900": "#212121" } }, "font-family": "Poppins" };</script>
+    <!--end::Global Config-->
+    <!--begin::Global Theme Bundle(used by all pages)-->
+    <script src="assets/plugins/global/plugins.bundle.js"></script>
+    <script src="assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
+    <script src="assets/js/scripts.bundle.js"></script>
+    <!--end::Global Theme Bundle-->
+    <!--begin::Page Scripts(used by this page)-->
+    <script src="assets/js/pages/custom/user/add-user.js"></script>
+    <script src="assets/js/pages/crud/forms/widgets/bootstrap-maxlength.js"></script>
+    <script src="~/scripts/Worker/RequestWorker.js"></script>
+
+}
+

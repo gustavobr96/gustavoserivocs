@@ -1,0 +1,593 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model SistemaBico.Web.Models.Reponse.ProfessionalProfilePaginationResponse;
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+}
+@section Head{
+ 
+}
+<form class="form" id="kt_form_update" action="Professional/ProfessionalPage" method="post" enctype="multipart/form-data">
+    <div class="row">
+          <div class="col-lg-3" style="height:50%">
+            <div class="card card-custom card-stretch gutter-b compact" style="box-shadow: 0px 0px 30px 0px rgb(0 0 0 / 15%);">
+                <!--end::Header-->
+                <!--begin::Body-->
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Encontre o profissional que você precisa.
+                    </h3>
+                </div>
+                <!--begin::Form-->
+                @*    <form class="form">*@
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Localidade do prestador</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-success" style="background-color: #000000; border-color: #000000" type="button" onclick="getLocation()" <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span></button>
+                            </div>
+                            <input type="text" class="form-control" onblur="pesquisacep(this.value);" id="CepCity" placeholder="Insira o CEP ou cidade" name="City" asp-for="City" value="@Model.City"/>
+                        </div>
+                        <span class="form-text text-muted " id="spanLoc"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Área de atuação</label>
+                        <div class="input-group">
+                            <select class="form-control" id="kt_select2_1_modal" name="Area" asp-for="Area" value="@Model.Area">
+                               <option value="0">Todas areas</option>
+                                <option value="13">Administação e Finanças</option>
+                                <option value="1">Assistência Técnica</option>
+                                <option value="2">Aulas</option>
+                                <option value="14">Comunicação</option>
+                                <option value="4">Consultoria</option>
+                                <option value="15">Criador de Conteúdos</option>
+                                <option value="5">Design/Tecnologia</option>
+                                <option value="12">Edição de Vídeos</option>
+                                <option value="11">Engenharias</option>
+                                <option value="6">Eventos</option>
+                                <option value="19">Jurídico</option>
+                                <option value="16">Marketing e Vendas</option>
+                                <option value="7">Moda e Beleza</option>
+                                <option value="21">Motoboy</option>
+                                <option value="22">Motorista</option>
+                                <option value="8">Reformas e Reparos</option>
+                                <option value="9">Saúde</option>
+                                <option value="10">Serviços Domésticos</option>
+                                <option value="17">Tradução e Conteúdos</option>
+                                <option value="20">Transportes</option>
+                                <option value="3">Veículos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Profissão</label>
+                        <div class="input-group">
+                            <input class="form-control" id="Profession" name="Profession" asp-for="Profession" value="@Model.Profession" placeholder="Ex: Pedreiro"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Especialidade</label>
+                        <div class="input-group">
+                            <select class="form-control select2" id="kt_select2_11" multiple="multiple" name="Especiality"  placeholder="Informe a especialidade que você precisa" name="Especiality" asp-for="Especiality">
+                                <optgroup label="Assistência Técnica">
+                                   @{
+                                        if(Model.Especiality != null)
+                                        foreach(var item in Model.Especiality)
+                                        {
+                                                     <option value="@item" selected>@item</option>
+                                        }
+                                    }
+                                    <option value="Assistência Adega Climatizada">Assistência Adega Climatizada</option>
+                                    <option value="Assistência Aparelho de Som">Assistência Aparelho de Som</option>
+                                    <option value="Assistência Aparelhos de Ginástica">Assistência Aparelhos de Ginástica</option>
+                                    <option value="Assistência Aquecedor a Gás">Assistência Aquecedor a Gás</option>
+                                    <option value="Assistência Ar condicionado">Assistência Ar condicionado</option>
+                                    <option value="Assistência Cabeamento e Redes">Assistência Cabeamento e Redes</option>
+                                    <option value="Assistência Celular">Assistência Celular</option>
+                                    <option value="Assistência Computador/Notebook">Assistência Computador/Notebook</option>
+                                    <option value="Assistência Cortador de Grama">Assistência Cortador de Grama</option>
+                                    <option value="Assistência Câmera">Assistência Câmera</option>
+                                    <option value="Assistência Eletrodomésticos">Assistência Eletrodomésticos</option>
+                                    <option value="Assistência Fogão e cooktop">Assistência Fogão e cooktop</option>
+                                    <option value="Assistência Fone de Ouvido">Assistência Fone de Ouvido</option>
+                                    <option value="Assistência Geladeira e freezer">Assistência Geladeira e freezer</option>
+                                    <option value="Assistência Gerador">Assistência Gerador</option>
+                                    <option value="Assistência Home theater">Assistência Home theater</option>
+                                    <option value="Assistência Impressora">Assistência Impressora</option>
+                                    <option value="Assistência Instrumentos Musicais">Assistência Instrumentos Musicais</option>
+                                    <option value="Assistência Lava Louça">Assistência Lava Louça</option>
+                                    <option value="Assistência Lava roupa">Assistência Lava roupa</option>
+                                    <option value="Assistência Micro-ondas">Assistência Micro-ondas</option>
+                                    <option value="Assistência Notebooks e Laptops">Assistência Notebooks e Laptops</option>
+                                    <option value="Assistência Relógios">Assistência Relógios</option>
+                                    <option value="Assistência Secadora de Roupas">Assistência Secadora de Roupas</option>
+                                    <option value="Assistência Smartwatch">Assistência Smartwatch</option>
+                                    <option value="Assistência Tablet">Assistência Tablet</option>
+                                    <option value="Assistência Televisão">Assistência Televisão</option>
+                                    <option value="Assistência Vídeo game">Assistência Vídeo game</option>
+                                </optgroup>
+                                <optgroup label="Aulas">
+                                    <option value="Aulas Artes">Aulas Artes</option>
+                                    <option value="Aulas Artesanato">Aulas Artesanato</option>
+                                    <option value="Aulas Desenvolvimento Web">Aulas Desenvolvimento Web</option>
+                                    <option value="Aulas Escolares e Reforço<">Aulas Escolares e Reforço</option>
+                                    <option value="Aulas Esportes Eletrônicos">Aulas Esportes Eletrônicos</option>
+                                    <option value="Aulas Fotografia">Aulas Fotografia</option>
+                                    <option value="Aulas Gastronomia">Aulas Gastronomia</option>
+                                    <option value="Aulas Idiomas">Aulas Idiomas</option>
+                                    <option value="Aulas Informática">Aulas Informática</option>
+                                    <option value="Aulas Luta">Aulas Luta</option>
+                                    <option value="Aulas Marketing Digital">Aulas Marketing Digital</option>
+                                    <option value="Aulas Moda">Aulas Moda</option>
+                                    <option value="Aulas Música">Aulas Música</option>
+                                    <option value="Aulas Paisagismo">Aulas Paisagismo</option>
+                                    <option value="Aulas Saúde">Aulas Saúde</option>
+                                    <option value="Aulas TV e Teatro">Aulas TV e Teatro</option>
+                                </optgroup>
+                                <optgroup label="Autos">
+                                    <option value="Alarme">Alarme</option>
+                                    <option value="Ar Condicionado Automotivo">Ar Condicionado Automotivo</option>
+                                    <option value="Auto elétrico<">Auto elétrico</option>
+                                    <option value="Borracharia">Borracharia</option>
+                                    <option value="Funilaria Automotiva">Funilaria Automotiva</option>
+                                    <option value="Guincho">Guincho</option>
+                                    <option value="Higienização e Polimento">Higienização e Polimento</option>
+                                    <option value="Insulfilm">Insulfilm</option>
+                                    <option value="Martelinho de Ouro">Martelinho de Ouro</option>
+                                    <option value="Mecânica Geral">Mecânica Geral</option>
+                                    <option value="Pintura">Pintura</option>
+                                    <option value="Som Automotivo">Som Automotivo</option>
+                                    <option value="Venda de Automóveis">Venda de Automóveis</option>
+                                    <option value="Vidraçaria Automotiva">Vidraçaria Automotiva</option>
+                                </optgroup>
+                                <optgroup label="Consultoria">
+                                    <option value="Administração de Condomínios">Administração de Condomínios</option>
+                                    <option value="Administração de Imóveis">Administração de Imóveis</option>
+                                    <option value="Advogado">Advogado</option>
+                                    <option value="Assessor de Investimentos">Assessor de Investimentos</option>
+                                    <option value="Assessoria de Imprensa">Assessoria de Imprensa</option>
+                                    <option value="Auditoria e Assuntos Regulatórios">Auditoria e Assuntos Regulatórios</option>
+                                    <option value="Auxilio administrativo">Auxilio administrativo</option>
+                                    <option value="Consultor pessoal">Consultor pessoal</option>
+                                    <option value="Contador">Contador</option>
+                                    <option value="Corretor">Corretor</option>
+                                    <option value="Despachante">Despachante</option>
+                                    <option value="Detetive Particular">Detetive Particular</option>
+                                    <option value="Digitação e Digitalização de Documentos">Digitação e Digitalização de Documentos</option>
+                                    <option value="Economia e Finanças">Economia e Finanças</option>
+                                    <option value="Escrita e Conteúdo">Escrita e Conteúdo</option>
+                                    <option value="Guia de Turismo">Guia de Turismo</option>
+                                    <option value="Mediação de Conflitos">Mediação de Conflitos</option>
+                                    <option value="Palestrantes">Palestrantes</option>
+                                    <option value="Pesquisas em geral">Pesquisas em geral</option>
+                                    <option value="Produção, padronização e revisão de conteúdo">Produção, padronização e revisão de conteúdo</option>
+                                    <option value="Recrutamento e Seleção">Recrutamento e Seleção</option>
+                                    <option value="Segurança do Trabalho">Segurança do Trabalho</option>
+                                    <option value="Testamento e Planejamento Patrimonial">Testamento e Planejamento Patrimonial</option>
+                                    <option value="Tradução">Tradução</option>
+                                    <option value="Tradução Juramentada">Tradução Juramentada</option>
+                                    <option value="Treinamentos">Treinamentos</option>
+                                </optgroup>
+                                <optgroup label="Design/Tecnologia">
+                                    <option value="Animação (Motion)">Animação (Motion)</option>
+                                    <option value="Aplicativos para celular e redes sociais">Aplicativos para celular e redes sociais</option>
+                                    <option value="Autocad e Modelagem 3D">Autocad e Modelagem 3D</option>
+                                    <option value="Convites">Convites</option>
+                                    <option value="Corte e Gravação a Laser">Corte e Gravação a Laser</option>
+                                    <option value="Criação de Logos">Criação de Logos</option>
+                                    <option value="Criação de Marca">Criação de Marca</option>
+                                    <option value="Desenvolvimento de Game">Desenvolvimento de Games</option>
+                                    <option value="Desenvolvimento de Sites e Sistemas">Desenvolvimento de Sites e Sistemas</option>
+                                    <option value="Diagramador">Diagramador</option>
+                                    <option value="Edição de Foto">Edição de Fotos</option>
+                                    <option value="Ilustração">Ilustração</option>
+                                    <option value="Marketing Online">Marketing Online</option>
+                                    <option value="Materiais promocionais">Materiais promocionais</option>
+                                    <option value="Panfletagem">Panfletagem</option>
+                                    <option value="Produção gráfica">Produção gráfica</option>
+                                    <option value="Restauração de Fotos">Restauração de Fotos</option>
+                                    <option value="Serviços de TI07">Serviços de TI</option>
+                                    <option value="Soluções em Streaming">Soluções em Streaming</option>
+                                    <option value="Ilustração">Ilustração</option>
+                                    <option value="Ux - Ui Design">Ux - Ui Design</option>
+                                    <option value="Web Design">Web Design</option>
+                                    <option value="Áudio e Vídeo">Áudio e Vídeo</option>
+                                    <option value="Outro">Outro</option>
+                                </optgroup>
+                                <optgroup label="Eventos">
+                                    <option value="Animação de Festas">Animação de Festas</option>
+                                    <option value="Assessor de Eventos">Assessor de Eventos</option>
+                                    <option value="Bandas e cantores">Bandas e cantores</option>
+                                    <option value="Bartenders">Bartenders</option>
+                                    <option value="Brindes e Lembrancinhas">Brindes e Lembrancinhas</option>
+                                    <option value="Buffet Completo">Buffet Completo</option>
+                                    <option value="Carros de Casamento">Carros de Casamento</option>
+                                    <option value="Casting para Eventos">Casting para Eventos</option>
+                                    <option value="Celebrantes">Celebrantes</option>
+                                    <option value="Chocolateiro">Chocolateiro</option>
+                                    <option value="Churrasqueiro24">Churrasqueiro</option>
+                                    <option value="Confeitaria">Confeitaria</option>
+                                    <option value="Decoração">Decoração</option>
+                                    <option value="Djs">Djs</option>
+                                    <option value="quipamentos para festas">Equipamentos para festas</option>
+                                    <option value="Florista">Florista</option>
+                                    <option value="Food Truck">Food Truck</option>
+                                    <option value="Fotografia">Fotografia</option>
+                                    <option value="Garçons e Copeiras">Garçons e Copeiras</option>
+                                    <option value="Gravação de Vídeos">Gravação de Vídeos</option>
+                                    <option value="Manobrista">Manobrista</option>
+                                    <option value="Organização de Eventos">Organização de Eventos</option>
+                                    <option value="Personal Chef">Personal Chef</option>
+                                    <option value="Recepcionistas e Cerimonialistas">Recepcionistas e Cerimonialistas</option>
+                                    <option value="Segurança">Segurança</option>
+                                    <option value="Sommelier">Sommelier</option>
+                                    <option value="Ônibus Balada">Ônibus Balada</option>
+                                </optgroup>
+                                <optgroup label="Moda e Beleza">
+                                    <option value="Alfaiate">Alfaiate</option>
+                                    <option value="Artesanato">Artesanato</option>
+                                    <option value="Barbeiro">Barbeiro</option>
+                                    <option value="Bronzeamento">Bronzeamento</option>
+                                    <option value="Cabeleireiros">Cabeleireiros</option>
+                                    <option value="Corte e costura">Corte e costura</option>
+                                    <option value="Depilação">Depilação</option>
+                                    <option value="Designer de Cílios">Designer de Cílios</option>
+                                    <option value="Designer de Sobrancelhas">Designer de Sobrancelhas</option>
+                                    <option value="Esotérico">Esotérico</option>
+                                    <option value="Esteticista">Esteticista</option>
+                                    <option value="Manicure e pedicure">Manicure e pedicure</option>
+                                    <option value="Maquiadores">Maquiadores</option>
+                                    <option value="Micropigmentador">Micropigmentador</option>
+                                    <option value="Ourives">Ourives</option>
+                                    <option value="Personal Stylist">Personal Stylist</option>
+                                    <option value="Podólogo">Podólogo</option>
+                                    <option value="Sapateiro">Sapateiro</option>
+                                    <option value="Visagista">Visagista</option>
+                                </optgroup>
+                                <optgroup label="Reformas e Reparos">
+                                    <option value="Afiação">Afiação</option>
+                                    <option value="Agrimensura">Agrimensura</option>
+                                    <option value="Aluguel de Grandes Equipamentos de Construção">Aluguel de Grandes Equipamentos de Construção</option>
+                                    <option value="Aluguel de Maquinário">Aluguel de Maquinário</option>
+                                    <option value="Antenista">Antenista</option>
+                                    <option value="Análises Ambientais">Análises Ambientais</option>
+                                    <option value="Arquiteto">Arquiteto</option>
+                                    <option value="Automação Residencial">Automação Residencial</option>
+                                    <option value="Banheira">Banheira</option>
+                                    <option value="Casas e Chalés de Madeira">Casas e Chalés de Madeira</option>
+                                    <option value="Chaveiro">Chaveiro</option>
+                                    <option value="Climatização">Climatização</option>
+                                    <option value="Coifas e Exaustores">Coifas e Exaustores</option>
+                                    <option value="Concretagem">Concretagem</option>
+                                    <option value="Decorador">Decorador</option>
+                                    <option value="Dedetizador">Dedetizador</option>
+                                    <option value="Demolição">Demolição</option>
+                                    <option value="Desentupidor">Desentupidor</option>
+                                    <option value="Banheira">Banheira</option>
+                                    <option value="Design de Interiores">Design de Interiores</option>
+                                    <option value="Desinfecção">Desinfecção</option>
+                                    <option value="Dutos">Dutos</option>
+                                    <option value="Eletricista">Eletricista</option>
+                                    <option value="Empreiteiro">Empreiteiro</option>
+                                    <option value="Encanador">Encanador</option>
+                                    <option value="Energia Solar">Energia Solar</option>
+                                    <option value="Engenheiro">Engenheiro</option>
+                                    <option value="Escada, Corrimão e Guarda-Corpo">Escada, Corrimão e Guarda-Corpo</option>
+                                    <option value="Fossa">Fossa</option>
+                                    <option value="Galvanização">Galvanização</option>
+                                    <option value="Gesso e DryWall">Gesso e DryWall</option>
+                                    <option value="Gás">Gás</option>
+                                    <option value="Escavação">Escavação</option>
+                                    <option value="Impermeabilizador">Impermeabilizador</option>
+                                    <option value="Instalador TV Digital">Instalador TV Digital</option>
+                                    <option value="Instalação de eletrônicos">Instalação de eletrônicos</option>
+                                    <option value="Instalação de Papel de Parede">Instalação de Papel de Parede</option>
+                                    <option value="Isolamentos Térmico e Acústico">Isolamentos Térmico e Acústico</option>
+                                    <option value="Jardinagem">Jardinagem</option>
+                                    <option value="Lareira">Lareira</option>
+                                    <option value="Lazer e Recreação">Lazer e Recreação</option>
+                                    <option value="Limpeza de Vidros">Limpeza de Vidros</option>
+                                    <option value="Limpeza Pós Obra">Limpeza Pós Obra</option>
+                                    <option value="Marceneiro">Marceneiro</option>
+                                    <option value="Marido de aluguel">Marido de aluguel</option>
+                                    <option value="Marmoraria e Granitos">Marmoraria e Granitos</option>
+                                    <option value="Montador de Móveis">Montador de Móveis</option>
+                                    <option value="Mudanças e Carretos">Mudanças e Carretos</option>
+                                    <option value="Paisagista">Paisagista</option>
+                                    <option value="Pavimentação">Pavimentação</option>
+                                    <option value="Pedreiro">Pedreiro</option>
+                                    <option value="Pintor">Pintor</option>
+                                    <option value="Piscina">Piscina</option>
+                                    <option value="Portão Automático">Portão Automático</option>
+                                    <option value="Poço Artesiano">Poço Artesiano</option>
+                                    <option value="Prevenção e Combate a Incêndio">Prevenção e Combate a Incêndio</option>
+                                    <option value="Reciclagem">Reciclagem</option>
+                                    <option value="Redes de Proteção">Redes de Proteção</option>
+                                    <option value="Remoção de Entulho">Remoção de Entulho</option>
+                                    <option value="Restauração e Polimento de Pisos">Restauração e Polimento de Pisos</option>
+                                    <option value="Segurança Eletrônica">Segurança Eletrônica</option>
+                                    <option value="Segurança Perimetral">Segurança Perimetral</option>
+                                    <option value="Serralheria e Solda">Serralheria e Solda</option>
+                                    <option value="Sonorização de Ambientes">Sonorização de Ambientes</option>
+                                    <option value="Tapeceiro">Tapeceiro</option>
+                                    <option value="Terraplanagem">Terraplanagem</option>
+                                    <option value="Toldos e Coberturas">Toldos e Coberturas</option>
+                                    <option value="Topografia">Topografia</option>
+                                    <option value="Vidraceiro">Vidraceiro</option>
+                                </optgroup>
+                                <optgroup label="Saúde">
+                                    <option value="Aconselhamento Conjugal e Familiar">Aconselhamento Conjugal e Familiar</option>
+                                    <option value="Biomedicina Estética">Biomedicina Estética</option>
+                                    <option value="Coach">Coach</option>
+                                    <option value="Cuidador de Pessoas">Cuidador de Pessoas</option>
+                                    <option value="Dentista">Dentista</option>
+                                    <option value="Enfermeira">Enfermeira</option>
+                                    <option value="Fisioterapeuta">Fisioterapeuta</option>
+                                    <option value="Fonoaudiólogo">Fonoaudiólogo</option>
+                                    <option value="Hipnoterapia">Hipnoterapia</option>
+                                    <option value="Médico">Médico</option>
+                                    <option value="Nutricionista">Nutricionista</option>
+                                    <option value="Psicanalista">Psicanalista</option>
+                                    <option value="Psicólogo">Psicólogo</option>
+                                    <option value="Quiropraxia">Quiropraxia</option>
+                                    <option value="Remoção de Tatuagem">Remoção de Tatuagem</option>
+                                    <option value="Terapia Ocupacional">Terapia Ocupacional</option>
+                                    <option value="Terapias Alternativas">Terapias Alternativas</option>
+                                </optgroup>
+                                <optgroup label="Serviços Domésticos">
+                                    <option value="Adestrador de Cães">Adestrador de Cães</option>
+                                    <option value="Babá">Babá</option>
+                                    <option value="Cozinheira">Cozinheira</option>
+                                    <option value="Diarista">Diarista</option>
+                                    <option value="Governanta">Governanta</option>
+                                    <option value="Lavadeira">Lavadeira</option>
+                                    <option value="Lavagem de Cortinas, Persianas e Tapetes">Lavagem de Cortinas, Persianas e Tapetes</option>
+                                    <option value="Limpeza de Carpetes">Limpeza de Carpetes</option>
+                                    <option value="Limpeza de Piscina">Limpeza de Piscina</option>
+                                    <option value="Motorista">Motorista</option>
+                                    <option value="Passadeira">Passadeira</option>
+                                    <option value="Passeador de Cães">Passeador de Cães</option>
+                                    <option value="Personal Organizer">Personal Organizer</option>
+                                    <option value="Personal Shopper">Personal Shopper</option>
+                                    <option value="Segurança Particular">Segurança Particular</option>
+                                    <option value="Segurança Patrimonial">Segurança Patrimonial</option>
+                                    <option value="Serviços para Pets">Serviços para Pets</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                </div class="col-mt-2">
+                <div class="card-footer">
+                    <button class="btn btn-primary mr-4">Pesquisar</button>
+                </div>
+                @*     </form>*@
+                <!--end::Form-->
+                <!--end::Body-->
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="card card-custom card-stretch gutter-b compact">
+                                 <div class="card-header">
+                                       <h3 class="card-title">
+                                         Selecione qual profissional deseje contratar.
+                                       </h3>
+                                 </div>
+								    <!--begin::Row-->
+                                 <div class="card-body">
+								    <div asp-area="" class="row" id="listProfessional">
+                                        @{
+                                             if(Model.ProfessionalProfile.Count == 0){
+                                                                 <div class="d-flex flex-column flex-root">
+                                                                <!--begin::Error-->
+                                                                <div class="error error-5 d-flex flex-row-fluid bgi-size-cover bgi-position-center" style="background-image: url(assets/media/error/bg5.jpg);">
+                                                                    <!--begin::Content-->
+                                                                    <div class="container d-flex flex-row-fluid flex-column justify-content-md-center p-12">
+                                                                        <h1 class="error-title font-weight-boldest text-info mt-10 mt-md-0 mb-12">Oops!</h1>
+                                                                        <p class="font-weight-boldest display-4">Não encontramos nenhum profissional.</p>
+                                                                        <p class="font-size-h3">Não encontramos nenhum profissional registrado em nossa base com esses requisitos, tente  com outras especificações.</p>
+                                                                    </div>
+                                                                    <!--end::Content-->
+                                                                </div>
+                                                                <!--end::Error-->
+                                                            </div>
+                                             }
+                                         }
+                                        @foreach(var item in Model.ProfessionalProfile)
+                                        {
+                                            <div class="card card-custom gutter-b col-lg-12" style="box-shadow: 0px 0px 30px 0px rgb(0 0 0 / 15%);">
+									            <div class="card-body">
+										            <!--begin::Top-->
+										            <div class="d-flex">
+											            <!--begin::Pic-->
+											            <div class="flex-shrink-0 mr-7">
+												            <div class="symbol symbol-50 symbol-lg-120">
+													            <img class="round" src="data:image/webp;base64,@item.PerfilPicture" alt="image" />
+												            </div>
+											            </div>
+											            <!--end::Pic-->
+											            <!--begin: Info-->
+											            <div class="flex-grow-1">
+												            <!--begin::Title-->
+												            <div class="d-flex align-items-center justify-content-between flex-wrap mt-2">
+													            <!--begin::User-->
+													            <div class="mr-3">
+														            <!--begin::Name-->
+														            <label class="d-flex align-items-center text-dark text-hover-primary font-size-h5 font-weight-bold mr-3"><a href="profile/id/@item.Perfil">@item.Name @item.LastName</a>
+														            <i class="flaticon2-correct text-success icon-md ml-2"></i></label>
+														            <!--end::Name-->
+														            <!--begin::Contacts-->
+														            <div class="d-flex flex-wrap my-2">
+															            <a  class="text-dark-75 font-weight-bolder font-size-sm mr-lg-8 mr-5 mb-lg-0 mb-2">
+															            <span class="svg-icon svg-icon-md svg-icon-gray-500 mr-1 text-dark-75 font-weight-bolder font-size-sm">
+																            <!--begin::Svg Icon | path:assets/media/svg/icons/General/Lock.svg-->
+																            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+																	            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+																		            <mask fill="white">
+																			            <use xlink:href="#path-1" />
+																		            </mask>
+																		            <g />
+																		            <path d="M7,10 L7,8 C7,5.23857625 9.23857625,3 12,3 C14.7614237,3 17,5.23857625 17,8 L17,10 L18,10 C19.1045695,10 20,10.8954305 20,12 L20,18 C20,19.1045695 19.1045695,20 18,20 L6,20 C4.8954305,20 4,19.1045695 4,18 L4,12 C4,10.8954305 4.8954305,10 6,10 L7,10 Z M12,5 C10.3431458,5 9,6.34314575 9,8 L9,10 L15,10 L15,8 C15,6.34314575 13.6568542,5 12,5 Z" fill="#000000" />
+																	            </g>
+																            </svg>
+																            <!--end::Svg Icon-->
+															            </span>@item.Profession</a>
+															           
+														            </div>
+														            <!--end::Contacts-->
+													            </div>
+													            <!--begin::User-->
+												            </div>
+												            <!--end::Title-->
+												            <!--begin::Content-->
+												            <div class="d-flex align-items-center flex-wrap justify-content-between">
+													            <!--begin::Description-->
+													            <div class="flex-grow-1 font-weight-bold text-dark-50 py-2 py-lg-2 mr-5">@item.Sobre</div>
+													            <!--end::Description-->
+												            </div>
+												            <!--end::Content-->
+											            </div>
+											            <!--end::Info-->
+										            </div>
+										            <!--end::Top-->
+										            <!--begin::Separator-->
+										            <div class="separator separator-solid my-7"></div>
+                                                     <div>
+                                                         <div class="form-group py-2 py-lg-2 mr-2">
+                                                           <div class="input-group">
+                                                               <label class="text-dark-75 font-weight-bolder font-size-sm">Cidade</label>
+                                                                 <div class="input-group">
+                                                                    <a  class="text-dark-75 font-weight-bolder font-size-sm">
+															                    <span class="svg-icon svg-icon-md svg-icon-gray-500 mr-1">
+																                    <!--begin::Svg Icon | path:assets/media/svg/icons/Map/Marker2.svg-->
+																                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+																	                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+																		                    <rect x="0" y="0" width="24" height="24" />
+																		                    <path d="M9.82829464,16.6565893 C7.02541569,15.7427556 5,13.1079084 5,10 C5,6.13400675 8.13400675,3 12,3 C15.8659932,3 19,6.13400675 19,10 C19,13.1079084 16.9745843,15.7427556 14.1717054,16.6565893 L12,21 L9.82829464,16.6565893 Z M12,12 C13.1045695,12 14,11.1045695 14,10 C14,8.8954305 13.1045695,8 12,8 C10.8954305,8 10,8.8954305 10,10 C10,11.1045695 10.8954305,12 12,12 Z" fill="#000000" />
+																	                    </g>
+																                    </svg>
+																                    <!--end::Svg Icon-->
+															           </span>@item.City - @item.State</a>
+                                                                 </div>
+                                                           </div>
+                                                        </div>
+                                                      </div>
+
+                                                     <!--begin: Item-->
+                                                      <div>
+                                                         <div class="form-group py-2 py-lg-2 mr-2">
+                                                            <div class="input-group">
+                                                             @{
+                                                                 if(!string.IsNullOrEmpty(@item.Avaliation) && decimal.Parse(@item.Avaliation)> 0){
+                                                                     string img = "star";
+                                                                     var avaliation = Math.Ceiling(decimal.Parse(@item.Avaliation));
+                                                                    
+                                                                     if(avaliation < 0)
+                                                                        avaliation = 1;
+                                                                     else
+                                                                       if(avaliation > 5)
+                                                                       avaliation = 5;
+                                                                     
+                                                                     img+= avaliation.ToString()+".png";
+
+                                                                         <label class="text-dark-75 font-weight-bolder font-size-sm">Reputação</label>
+                                                                         <div class="input-group">
+                                                                            <img src="assets/media/logos/@img" alt="image" style="width: 6.5rem" />
+                                                                        </div>
+                                                                 }else{
+                                                                       <label class="text-dark-75 font-weight-bolder font-size-sm">Reputação</label>
+                                                                        <div class="input-group">
+                                                                           <span class="flex-grow-1 font-weight text-dark-50 py-1 py-lg-1 mr-2" style="font-style: italic">Esse profissional ainda não foi contratado. Vamos dar sua primeira oportunidade ?</span>
+                                                                        </div>
+                                                                 }
+                                                              }
+                                                            </div>
+                                                        </div>
+                                                      </div>
+
+											            <!--begin: Item-->
+                                                     <div class="form-group">
+                                                          <label class="text-dark-75 font-weight-bolder font-size-sm">Especialidades</label>
+                                                           <div class="input-group">
+                                                                @foreach(var especiality in item.Especiality){
+                                                                   <div class="d-flex">
+												                    <span class="label label-primary label-inline font-weight-boldest mr-2 mt-2">@especiality</span>
+											                       </div>
+                                                                }
+                                                           </div>
+											            <!--end: Item-->
+										            </div>
+										            <!--end::Bottom-->
+									            </div>
+                                                 <div class="card-footer">
+                                                      <div class="col-lg-12">
+                                                        <button type="button" class="btn btn-success btn-shadow font-weight-bold mr-2 col-lg-12" id="@item.Perfil" onclick="Interesse('@item.Perfil')"><i class="flaticon2-phone icon-md"></i><i id="spinner_@item.Perfil"></i> Contato</button>
+                                                      </div>
+                                                 </div>
+								            </div>                        
+                                        }
+                                               
+                                    </div>
+                                    </div>
+                                      <div class="d-flex justify-content-between align-items-center flex-wrap">
+									    <div class="d-flex flex-wrap mr-3">
+                                              @{ 
+                                                      var anterior = Model.Page -1 > 0 ? Model.Page -1 : @Model.Page;
+
+                                                               <button class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" name="Page" value="@anterior">
+                                                                  <i class="ki ki-bold-arrow-back icon-xs"></i>
+                                                               </button>
+                                          
+                                                        var pageIndexMenos = Model.Page;
+                                                        var pageIndexMais = Model.Page;
+                                                        var contadorMenos = 2;
+                                                        var contadorMais = 2;
+                                                        List<int> list = new List<int>();
+
+                                                        for(;pageIndexMenos - 1 > 0 && contadorMenos >0; --contadorMenos){
+                                                            --pageIndexMenos;
+                                                            list.Add(@pageIndexMenos);
+                                                            
+                                                        }
+                                                        var listaOrdernada = list.OrderBy(s => s);
+
+                                                        foreach(var pag in listaOrdernada){
+                                                                         <button class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1" name="Page" value="@pag">@pag</button> 
+                                                        }
+
+                                                        contadorMais += contadorMenos;
+                                                                    <button class="btn btn-icon btn-sm border-0 btn-hover-primary active mr-2 my-1" name="Page" value="@Model.Page">@Model.Page</button>
+                                                        int indexMais = @Model.Page +1;
+                                                        
+                                                        for(;indexMais <= @Model.PagesSize &&  contadorMais > 0; indexMais++){
+                                                            --contadorMais;
+                                                                        <button class="btn btn-icon btn-sm border-0 btn-hover-primary mr-2 my-1" name="Page" value="@indexMais">@indexMais</button>  
+                                                        }
+
+                                                         var proximo = Model.Page +1 <= @Model.PagesSize ? Model.Page +1 : @Model.Page;
+                                                                 <button  class="btn btn-icon btn-sm btn-light-primary mr-2 my-1" name="Page" value="@proximo">
+                                                                 <i class="ki ki-bold-arrow-next icon-xs"></i> </button>
+                                                }
+										  
+									    </div>
+								       </div>
+                    
+								    <!--end::Row-->
+								    <!--begin::Pagination-->
+								    
+                           
+							    <!--end::Container-->
+						    </div>
+            </div>
+   
+    </div>
+ </form>
+
+
+
+@section Scripts{
+    <!--begin::Global Theme Bundle(used by all pages)-->
+    <script>var KTAppSettings = { "breakpoints": { "sm": 576, "md": 768, "lg": 992, "xl": 1200, "xxl": 1200 }, "colors": { "theme": { "base": { "white": "#ffffff", "primary": "#663259", "secondary": "#E5EAEE", "success": "#1BC5BD", "info": "#8950FC", "warning": "#FFA800", "danger": "#F64E60", "light": "#F3F6F9", "dark": "#212121" }, "light": { "white": "#ffffff", "primary": "#F4E1F0", "secondary": "#ECF0F3", "success": "#C9F7F5", "info": "#EEE5FF", "warning": "#FFF4DE", "danger": "#FFE2E5", "light": "#F3F6F9", "dark": "#D6D6E0" }, "inverse": { "white": "#ffffff", "primary": "#ffffff", "secondary": "#212121", "success": "#ffffff", "info": "#ffffff", "warning": "#ffffff", "danger": "#ffffff", "light": "#464E5F", "dark": "#ffffff" } }, "gray": { "gray-100": "#F3F6F9", "gray-200": "#ECF0F3", "gray-300": "#E5EAEE", "gray-400": "#D6D6E0", "gray-500": "#B5B5C3", "gray-600": "#80808F", "gray-700": "#464E5F", "gray-800": "#1B283F", "gray-900": "#212121" } }, "font-family": "Poppins" };</script>
+    <script src="~/scripts/Profissional/list.js"></script>
+    <script src="assets/js/pages/crud/forms/widgets/select2.js"></script>
+
+}

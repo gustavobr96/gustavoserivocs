@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Presentation", "1 - Presentation", "{3E3622CB-991B-4F47-814F-EACC16E92839}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Domain", "2 - Domain", "{D32EB41E-02D9-49FD-9C04-A0A0013FFEB0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Infra", "3 - Infra", "{8EC1DF69-ABDA-4B23-A711-021861AF4F4A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sistema.Bico.Domain", "Sistema.Bico.Domain\Sistema.Bico.Domain.csproj", "{66EC53AE-5B01-4381-875E-3B27C80DE148}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sistema.Bico.Infra", "Sistema.Bico.Infra\Sistema.Bico.Infra.csproj", "{A2961D59-963A-44E9-B121-3B194B7667D9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaBico.API", "SistemaBico.API\SistemaBico.API.csproj", "{165A9CE4-0762-42EE-985B-52E481536FCA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Web", "0 - Web", "{4D42F3D2-7093-47EB-9A5B-68DE33581327}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaBico.Web", "SistemaBico.Web\SistemaBico.Web.csproj", "{7BBDC8B7-E356-4E88-A32C-B35084F7AD1E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{66EC53AE-5B01-4381-875E-3B27C80DE148}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66EC53AE-5B01-4381-875E-3B27C80DE148}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66EC53AE-5B01-4381-875E-3B27C80DE148}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66EC53AE-5B01-4381-875E-3B27C80DE148}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2961D59-963A-44E9-B121-3B194B7667D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2961D59-963A-44E9-B121-3B194B7667D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2961D59-963A-44E9-B121-3B194B7667D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2961D59-963A-44E9-B121-3B194B7667D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{165A9CE4-0762-42EE-985B-52E481536FCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{165A9CE4-0762-42EE-985B-52E481536FCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{165A9CE4-0762-42EE-985B-52E481536FCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{165A9CE4-0762-42EE-985B-52E481536FCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BBDC8B7-E356-4E88-A32C-B35084F7AD1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BBDC8B7-E356-4E88-A32C-B35084F7AD1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BBDC8B7-E356-4E88-A32C-B35084F7AD1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BBDC8B7-E356-4E88-A32C-B35084F7AD1E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{66EC53AE-5B01-4381-875E-3B27C80DE148} = {D32EB41E-02D9-49FD-9C04-A0A0013FFEB0}
+		{A2961D59-963A-44E9-B121-3B194B7667D9} = {8EC1DF69-ABDA-4B23-A711-021861AF4F4A}
+		{165A9CE4-0762-42EE-985B-52E481536FCA} = {3E3622CB-991B-4F47-814F-EACC16E92839}
+		{7BBDC8B7-E356-4E88-A32C-B35084F7AD1E} = {4D42F3D2-7093-47EB-9A5B-68DE33581327}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0FBBA16E-4127-42F3-B6C7-8522BBE1B8AF}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,36 @@
+.desktop .section-spacing h1 {
+    font-size: 50px !important; /* Tamanho do texto para desktop */
+    text-align: center;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.desktop .section-spacing h3 {
+    font-size: 30px !important; /* Tamanho do texto para desktop */
+}
+
+
+.desktop .section-spacing h2 {
+    font-size: 24px; /* Tamanho do texto para desktop */
+}
+
+.desktop .section-spacing p {
+    font-size: 16px; /* Tamanho do texto para desktop */
+}
+
+.mobile .section-spacing h1 {
+    font-size: 20px !important; /* Tamanho do texto para dispositivos móveis */
+}
+
+.mobile .section-spacing h2 {
+    font-size: 18px; /* Tamanho do texto para dispositivos móveis */
+}
+
+.mobile .section-spacing h3 {
+    font-size: 10px !important; /* Tamanho do texto para dispositivos móveis */
+}
+
+
+.mobile .section-spacing p {
+    font-size: 14px; /* Tamanho do texto para dispositivos móveis */
+}
