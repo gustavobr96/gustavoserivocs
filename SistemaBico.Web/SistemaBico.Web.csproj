@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Content Remove="Properties\launchSettings.json" />
+    <Content Remove="Views\Login\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +38,7 @@
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	    <CopyToPublishDirectory>Never</CopyToPublishDirectory>
 	  </None>
+	  <None Include="Views\Login\Index.cshtml" />
 	  <None Include="wwwroot\assetsCaptura\css\.DS_Store" />
 	  <None Include="wwwroot\assetsCaptura\css\bootstrap\.DS_Store" />
 	  <None Include="wwwroot\assetsCaptura\css\css\.DS_Store" />
@@ -162,6 +164,19 @@
 	  <None Include="wwwroot\assetsCaptura\scss\bootstrap\_utilities.scss" />
 	  <None Include="wwwroot\assetsCaptura\scss\bootstrap\_variables.scss" />
 	  <None Include="wwwroot\assetsCaptura\scss\style.scss" />
+	  <None Include="wwwroot\assetsSite\img\.gitkeep" />
+	  <None Include="wwwroot\assetsSite\img\favicons\site.webmanifest" />
+	  <None Include="wwwroot\assetsSite\img\gallery\app-store.svg" />
+	  <None Include="wwwroot\assetsSite\img\gallery\Curve.svg" />
+	  <None Include="wwwroot\assetsSite\img\gallery\google-play.svg" />
+	  <None Include="wwwroot\assetsSite\img\gallery\logo.svg" />
+	  <None Include="wwwroot\assetsSite\img\illustrations\Curve.svg" />
+	  <None Include="wwwroot\assetsSite\vendors\popperjs\popper.min.js" />
+	  <None Include="wwwroot\assetsSite\vendors\bootstrap\bootstrap.min.js" />
+	  <None Include="wwwroot\assetsSite\vendors\bootstrap\bootstrap.min.js.map" />
+	  <None Include="wwwroot\assetsSite\vendors\feather-icons\feather.min.js" />
+	  <None Include="wwwroot\assetsSite\vendors\fontawesome\all.min.js" />
+	  <None Include="wwwroot\assetsSite\vendors\is\is.min.js" />
 	</ItemGroup>
 
 
