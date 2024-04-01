@@ -167,7 +167,6 @@
 	  <None Include="wwwroot\assetsSite\img\gallery\app-store.svg" />
 	  <None Include="wwwroot\assetsSite\img\gallery\Curve.svg" />
 	  <None Include="wwwroot\assetsSite\img\gallery\google-play.svg" />
-	  <None Include="wwwroot\assetsSite\img\gallery\logo.svg" />
 	  <None Include="wwwroot\assetsSite\img\illustrations\Curve.svg" />
 	  <None Include="wwwroot\assetsSite\vendors\popperjs\popper.min.js" />
 	  <None Include="wwwroot\assetsSite\vendors\bootstrap\bootstrap.min.js" />
