@@ -117,7 +117,7 @@ var KTCardTools = function () {
             toastr.info('Leload event fired!');
 
             KTApp.block(card.getSelf(), {
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 type: 'spinner',
                 state: 'primary',
                 opacity: 0.05,

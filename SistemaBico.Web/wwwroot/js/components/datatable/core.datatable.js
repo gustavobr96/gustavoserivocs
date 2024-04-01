@@ -3384,7 +3384,7 @@
 
 			// datatable spinner
 			spinner: {
-				overlayColor: '#000000',
+				overlayColor: '#042155',
 				opacity: 0,
 				type: 'loader',
 				state: 'primary',

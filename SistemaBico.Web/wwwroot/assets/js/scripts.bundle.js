@@ -224,7 +224,7 @@ var KTApp = function() {
 
             options = $.extend(true, {
                 opacity: 0.05,
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 type: '',
                 size: '',
                 state: 'primary',
@@ -8687,7 +8687,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
 
 			// datatable spinner
 			spinner: {
-				overlayColor: '#000000',
+				overlayColor: '#042155',
 				opacity: 0,
 				type: 'loader',
 				state: 'primary',

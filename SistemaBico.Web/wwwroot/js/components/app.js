@@ -224,7 +224,7 @@ var KTApp = function() {
 
             options = $.extend(true, {
                 opacity: 0.05,
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 type: '',
                 size: '',
                 state: 'primary',

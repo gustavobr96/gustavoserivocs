@@ -70,7 +70,7 @@ namespace SistemaBico.Web.Controllers
             if (model.ValidateLogin())
             {
                 ModelState.AddModelError(string.Empty, "Preencha o e-mail e a senha!");
-                return View("index", model);
+                return View("Professional", model);
             }
 
             var user = new User
@@ -84,7 +84,7 @@ namespace SistemaBico.Web.Controllers
             if (loginResponse.Token == null)
             {
                 ModelState.AddModelError(string.Empty, "Usuario ou senha invalido(s)");
-                return View("index", model);
+                return View("Professional", model);
             }
 
 
@@ -105,7 +105,7 @@ namespace SistemaBico.Web.Controllers
             if (model.ValidateLogin())
             {
                 ModelState.AddModelError(string.Empty, "Preencha o e-mail e a senha!");
-                return View("index", model);
+                return View("Contratante", model);
             }
 
             var user = new User
@@ -119,7 +119,7 @@ namespace SistemaBico.Web.Controllers
             if (loginResponse.Token == null)
             {
                 ModelState.AddModelError(string.Empty, "Usuario ou senha invalido(s)");
-                return View("index", model);
+                return View("Contratante", model);
             }
 
 

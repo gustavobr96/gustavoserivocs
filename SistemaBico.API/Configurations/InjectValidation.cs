@@ -14,6 +14,7 @@ using Sistema.Bico.Domain.UseCases.PaymentProfessional;
 using Sistema.Bico.Domain.UseCases.Plan;
 using Sistema.Bico.Domain.UseCases.Professional;
 using Sistema.Bico.Domain.UseCases.Worker;
+using Sistema.Bico.Domain.Worker;
 using Sistema.Bico.Infra.Dapper.Repository;
 using Sistema.Bico.Infra.Generics.Repository;
 using Sistema.Bico.Infra.Repository;
@@ -58,7 +59,9 @@ namespace SistemaBico.API.Configurations
             services.AddScoped<IRequestHandler<ApprovalOrRecusedCommand, Unit>, ApproveOrRecuseCommandHandler>();
             services.AddScoped<IRequestHandler<WorkerCancellPlansCommand, Unit>, WorkerCancelPlanCommandHandler>();
             services.AddScoped<IRequestHandler<SendEmailCommand, Unit>, SendEmailCommandHandler>();
-         
+
+            services.AddHostedService<WorkerCancelPlansExpiration>();
+
         }
 
         public static void AddInjectRepositorys(this IServiceCollection services)

@@ -7,7 +7,7 @@
 // Color system
 //
 // Black color
-$black:    											#000000 !default;
+$black:    											#042155 !default;
 
 // White color
 $white:    											#ffffff !default;
@@ -999,13 +999,13 @@ $datatable-config: (
 	row-bg-active: 				$gray-100,
 
 	// Lock table shadow
-	lock-shadow: 				0px 10px 17px 5px rgba(#000000, 0.075),
+	lock-shadow: 				0px 10px 17px 5px rgba(#042155, 0.075),
 
 	// Subtable
 	subtable-toggle-icon: 		$primary,
 	subtable-expanded-bg: 		$gray-100,
 	subtable-pager-pagel: 		$gray-100,
-	subtable-shadow: 			0px 10px 15px 1px rgba(#000000, 0.05),
+	subtable-shadow: 			0px 10px 15px 1px rgba(#042155, 0.05),
 
 	detail-icon-color: 			$primary,
 	detail-icon-color-hover: 	$primary,

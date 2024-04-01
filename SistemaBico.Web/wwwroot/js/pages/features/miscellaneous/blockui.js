@@ -28,7 +28,7 @@ var KTBlockUIDemo = function () {
 
         $('#kt_blockui_custom_spinner').click(function() {
             KTApp.block('#kt_blockui_content', {
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 state: 'warning', // a bootstrap color
                 size: 'lg' //available custom sizes: sm|lg
             });
@@ -40,7 +40,7 @@ var KTBlockUIDemo = function () {
 
         $('#kt_blockui_custom_text_1').click(function() {
             KTApp.block('#kt_blockui_content', {
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 state: 'danger',
                 message: 'Please wait...'
             });
@@ -52,7 +52,7 @@ var KTBlockUIDemo = function () {
 
         $('#kt_blockui_custom_text_2').click(function() {
             KTApp.block('#kt_blockui_content', {
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 state: 'primary',
                 message: 'Processing...'
             });
@@ -88,7 +88,7 @@ var KTBlockUIDemo = function () {
 
         $('#kt_blockui_modal_custom_spinner_btn').click(function() {
             KTApp.block('#kt_blockui_modal_custom_spinner .modal-content', {
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 state: 'warning', // a bootstrap color
                 size: 'lg' //available custom sizes: sm|lg
             });
@@ -100,7 +100,7 @@ var KTBlockUIDemo = function () {
 
         $('#kt_blockui_modal_custom_text_1_btn').click(function() {
             KTApp.block('#kt_blockui_modal_custom_text_1 .modal-content', {
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 state: 'danger',
                 message: 'Please wait...'
             });
@@ -112,7 +112,7 @@ var KTBlockUIDemo = function () {
 
         $('#kt_blockui_modal_custom_text_2_btn').click(function() {
             KTApp.block('#kt_blockui_modal_custom_text_2 .modal-content', {
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 state: 'primary',
                 message: 'Processing...'
             });
@@ -148,7 +148,7 @@ var KTBlockUIDemo = function () {
 
         $('#kt_blockui_card_custom_spinner').click(function() {
             KTApp.block('#kt_blockui_card', {
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 state: 'warning', // a bootstrap color
                 size: 'lg' //available custom sizes: sm|lg
             });
@@ -160,7 +160,7 @@ var KTBlockUIDemo = function () {
 
         $('#kt_blockui_card_custom_text_1').click(function() {
             KTApp.block('#kt_blockui_card', {
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 state: 'danger',
                 message: 'Please wait...'
             });
@@ -172,7 +172,7 @@ var KTBlockUIDemo = function () {
 
         $('#kt_blockui_card_custom_text_2').click(function() {
             KTApp.block('#kt_blockui_card', {
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 state: 'primary',
                 message: 'Processing...'
             });
@@ -207,7 +207,7 @@ var KTBlockUIDemo = function () {
 
         $('#kt_blockui_page_custom_spinner').click(function() {
             KTApp.blockPage({
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 state: 'warning', // a bootstrap color
                 size: 'lg' //available custom sizes: sm|lg
             });
@@ -219,7 +219,7 @@ var KTBlockUIDemo = function () {
 
         $('#kt_blockui_page_custom_text_1').click(function() {
             KTApp.blockPage({
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 state: 'danger',
                 message: 'Please wait...'
             });
@@ -231,7 +231,7 @@ var KTBlockUIDemo = function () {
 
         $('#kt_blockui_page_custom_text_2').click(function() {
             KTApp.blockPage({
-                overlayColor: '#000000',
+                overlayColor: '#042155',
                 state: 'primary',
                 message: 'Processing...'
             });

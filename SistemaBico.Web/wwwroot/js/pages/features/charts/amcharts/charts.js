@@ -1307,7 +1307,7 @@ var KTamChartsChartsDemo = function() {
             "chartCursor": {
                 "categoryBalloonDateFormat": "DD",
                 "cursorAlpha": 0.1,
-                "cursorColor": "#000000",
+                "cursorColor": "#042155",
                 "fullWidth": true,
                 "valueBalloonsEnabled": false,
                 "zoomable": false

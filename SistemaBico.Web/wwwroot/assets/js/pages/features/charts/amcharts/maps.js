@@ -38,7 +38,7 @@ var KTamChartsMapsDemo = function() {
                 }, {
                     "id": "line2",
                     "alpha": 0,
-                    "color": "#000000",
+                    "color": "#042155",
                     "latitudes": [48.8567, 43.8163, 34.3, 23],
                     "longitudes": [2.3510, -79.4287, -118.15, -82]
                 }],
@@ -65,7 +65,7 @@ var KTamChartsMapsDemo = function() {
                 }, {
                     "svgPath": planeSVG,
                     "positionOnLine": 0,
-                    "color": "#000000",
+                    "color": "#042155",
                     "alpha": 0.1,
                     "animateAlongLine": true,
                     "lineId": "line2",
@@ -283,7 +283,7 @@ var KTamChartsMapsDemo = function() {
             "imagesSettings": {
                 "color": "#CC0000",
                 "rollOverColor": "#CC0000",
-                "selectedColor": "#000000"
+                "selectedColor": "#042155"
             },
 
             "linesSettings": {
@@ -354,7 +354,7 @@ var KTamChartsMapsDemo = function() {
                 "linkToObject": "london",
                 "images": [{
                         "id": "london",
-                        "color": "#000000",
+                        "color": "#042155",
                         "svgPath": targetSVG,
                         "title": "London",
                         "latitude": 51.5002,
@@ -416,7 +416,7 @@ var KTamChartsMapsDemo = function() {
                             "label": "show flights from Vilnius",
                             "left": 106,
                             "top": 70,
-                            "labelColor": "#000000",
+                            "labelColor": "#042155",
                             "labelRollOverColor": "#CC0000",
                             "labelFontSize": 11,
                             "linkToObject": "vilnius"
@@ -425,7 +425,7 @@ var KTamChartsMapsDemo = function() {
 
                     {
                         "id": "vilnius",
-                        "color": "#000000",
+                        "color": "#042155",
                         "svgPath": targetSVG,
                         "title": "Vilnius",
                         "latitude": 54.6896,
@@ -484,7 +484,7 @@ var KTamChartsMapsDemo = function() {
                             "label": "show flights from London",
                             "left": 106,
                             "top": 70,
-                            "labelColor": "#000000",
+                            "labelColor": "#042155",
                             "labelRollOverColor": "#CC0000",
                             "labelFontSize": 11,
                             "linkToObject": "london"
@@ -585,7 +585,7 @@ var KTamChartsMapsDemo = function() {
             "imagesSettings": {
                 "color": "#CC0000",
                 "rollOverColor": "#CC0000",
-                "selectedColor": "#000000"
+                "selectedColor": "#042155"
             },
 
             "linesSettings": {
