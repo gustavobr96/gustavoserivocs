@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using Sistema.Bico.API;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Command.Validations;
 using Sistema.Bico.Domain.Entities;
@@ -14,7 +15,7 @@ using Sistema.Bico.Domain.UseCases.PaymentProfessional;
 using Sistema.Bico.Domain.UseCases.Plan;
 using Sistema.Bico.Domain.UseCases.Professional;
 using Sistema.Bico.Domain.UseCases.Worker;
-using Sistema.Bico.Domain.Worker;
+using Sistema.Bico.Domain.Workers;
 using Sistema.Bico.Infra.Dapper.Repository;
 using Sistema.Bico.Infra.Generics.Repository;
 using Sistema.Bico.Infra.Repository;
@@ -39,7 +40,7 @@ namespace SistemaBico.API.Configurations
             services.AddScoped<IRequestHandler<QueueCancelApplyProfessionalCommand, Result>, QueuePublishCancelProfessionalCommandHandler>();
             services.AddScoped<IRequestHandler<QueuePublishRegisterProfessionalCommand, Result>, QueuePublishRegisterProfessionalCommandHandler>();
             services.AddScoped<IRequestHandler<QueueDoneWorkerCommand, Result>, QueuePublishDoneWorkerCommandHandler>();
-            services.AddScoped<IRequestHandler<QueuePublishWorkerCancelPlanCommand, Result>, QueuePublishWorkerCancelPlanCommandHandler>();
+          
             services.AddScoped<IRequestHandler<AddClientCommand, Unit>, RegisterClientCommandHandler>();
             services.AddScoped<IRequestHandler<ForgotCommand, Unit>, ForgotClientCommandHandler>();
             services.AddScoped<IRequestHandler<AddWorkerCommand, Unit>, RegisterWorkertCommandHandler>();
@@ -60,8 +61,7 @@ namespace SistemaBico.API.Configurations
             services.AddScoped<IRequestHandler<WorkerCancellPlansCommand, Unit>, WorkerCancelPlanCommandHandler>();
             services.AddScoped<IRequestHandler<SendEmailCommand, Unit>, SendEmailCommandHandler>();
 
-            services.AddHostedService<WorkerCancelPlansExpiration>();
-
+         
         }
 
         public static void AddInjectRepositorys(this IServiceCollection services)

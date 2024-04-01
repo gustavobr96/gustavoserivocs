@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Sistema.Bico.Domain.AutoMapper;
+using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Generics.Entities;
 using Sistema.Bico.Domain.Generics.Result;
 using Sistema.Bico.Domain.Integration;
@@ -22,6 +23,7 @@ using Sistema.Bico.Domain.UseCases.PaymentProfessional;
 using Sistema.Bico.Domain.UseCases.Plan;
 using Sistema.Bico.Domain.UseCases.Professional;
 using Sistema.Bico.Domain.UseCases.Worker;
+using Sistema.Bico.Domain.Workers;
 using Sistema.Bico.Infra.Context;
 using SistemaBico.API.Configurations;
 using System;
@@ -84,6 +86,10 @@ namespace Sistema.Bico.API
 
             // Commands
             services.AddInjectHandlers();
+
+            services.AddTransient<IRequestHandler<QueuePublishWorkerCancelPlanCommand, Unit>, QueuePublishWorkerCancelPlanCommandHandler>();
+            services.AddHttpClient();
+            services.AddHostedService<WorkerCancelPlansExpiration>();
 
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 

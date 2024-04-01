@@ -4,7 +4,6 @@ using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Enums;
 using Sistema.Bico.Domain.Generics.Extensions;
 using Sistema.Bico.Domain.Generics.Interfaces;
-using Sistema.Bico.Domain.Generics.Result;
 using System;
 using System.Text;
 using System.Text.Json;
@@ -14,19 +13,16 @@ using System.Threading.Tasks;
 namespace Sistema.Bico.Domain.UseCases.Plan
 {
 
-    public class QueuePublishWorkerCancelPlanCommandHandler : IRequestHandler<QueuePublishWorkerCancelPlanCommand, Result>
+    public class QueuePublishWorkerCancelPlanCommandHandler : IRequestHandler<QueuePublishWorkerCancelPlanCommand, Unit>
     {
-        private readonly Generics.Interfaces.INotification _Notification;
         private ConnectionFactory _ConnectionFactory { get; set; }
 
-        public QueuePublishWorkerCancelPlanCommandHandler(Generics.Interfaces.INotification Notification,
-            IConnectFactory connectionFactory)
+        public QueuePublishWorkerCancelPlanCommandHandler(IConnectFactory connectionFactory)
         {
-            _Notification = Notification;
             _ConnectionFactory = connectionFactory.Get();
         }
 
-        public async Task<Result> Handle(QueuePublishWorkerCancelPlanCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(QueuePublishWorkerCancelPlanCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -57,14 +53,13 @@ namespace Sistema.Bico.Domain.UseCases.Plan
                             body: byteArray
                             );
 
-                        return new Result(true);
+                        return Unit.Value;
                     }
                 }
             }
             catch (Exception e)
             {
-                _Notification.Handle("Erro ao enfileirar o cancelamento de plano");
-                return _Notification.Return();
+                return Unit.Value;
             }
         }
     }

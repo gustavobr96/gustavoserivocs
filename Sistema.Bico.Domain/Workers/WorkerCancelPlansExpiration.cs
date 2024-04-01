@@ -6,7 +6,7 @@ using System.Threading;
 using Sistema.Bico.Domain.Command;
 using MediatR;
 
-namespace Sistema.Bico.Domain.Worker
+namespace Sistema.Bico.Domain.Workers
 {
     public class WorkerCancelPlansExpiration : BackgroundService
     {
@@ -26,10 +26,10 @@ namespace Sistema.Bico.Domain.Worker
             {
                 try
                 {
-                    await _mediator.Send(new QueuePublishWorkerCancelPlanCommand());
+                    //await _mediator.Send(new QueuePublishWorkerCancelPlanCommand());
 
                     // Aguardar 24 horas antes de chamar o endpoint novamente
-                    await Task.Delay(TimeSpan.FromHours(24), stoppingToken);
+                    await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
                 }
                 catch (Exception ex)
                 {
