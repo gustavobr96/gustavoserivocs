@@ -34,6 +34,13 @@ namespace SistemaBico.Web.Controllers
             return View("Index");
         }
 
+
+        [Route("conta-criada")]
+        public IActionResult ContrCriada()
+        {
+            return View("ContaCriada");
+        }
+
         [Route("profissional")]
         public IActionResult Profissional()
         {
@@ -197,16 +204,9 @@ namespace SistemaBico.Web.Controllers
                 }
                 else
                 {
-                    var responseLogin = await AutenticarLogin(new User { Email = model.Email, Password = model.Password });
-                    if (responseLogin != null && responseLogin.Token != null)
-                    {
-                        await _authenticateService.Login(HttpContext, responseLogin);
-                        return RedirectToAction("Index", "Professional", new { area = "" });
-                    }
-                    else
-                    {
-                        return View("index", model);
-                    }
+
+                    return RedirectToAction("conta-criada", "Login", new { area = "" });
+                   
                 }   
             }
         }
