@@ -107,6 +107,8 @@ namespace SistemaBico.Web.Controllers
             }
         }
 
+
+
         [HttpGet("GetProfissionalEspeciality")]
         public async Task<ProfessionalProfileDto> GetProfissionalEspeciality()
         {

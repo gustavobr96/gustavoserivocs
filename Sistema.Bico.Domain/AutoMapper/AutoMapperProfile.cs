@@ -94,6 +94,13 @@ namespace Sistema.Bico.Domain.AutoMapper
                 .ForMember(dst => dst.PhoneNumber, map => map.MapFrom(src => src.PhoneNumber))
                 .ForMember(dst => dst.PerfilPicture, map => map.MapFrom(src => src.Client.PerfilPicture != null && src.Client.PerfilPicture.Length > 0 ? Convert.ToBase64String(src.Client.PerfilPicture) : _imageDefault));
 
+
+            _ = CreateMap<ProfessionalProfile, ProfileProfessionalTopResponse>()
+               .ForMember(dst => dst.Name, map => map.MapFrom(src => src.Name))
+               .ForMember(dst => dst.LastName, map => map.MapFrom(src => src.LastName))
+               .ForMember(dst => dst.PerfilPicture, map => map.MapFrom(src => src.PerfilPicture.Length > 0 ? Convert.ToBase64String(src.PerfilPicture) : _imageDefault))
+               .ForMember(dst => dst.City, map => map.MapFrom(src => src.Address.City))
+               .ForMember(dst => dst.Profession, map => map.MapFrom(src => src.Profession));
         }
     }
 }

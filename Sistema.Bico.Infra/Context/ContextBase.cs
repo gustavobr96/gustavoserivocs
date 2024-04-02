@@ -61,7 +61,7 @@ namespace Sistema.Bico.Infra.Context
         private string GetStringConectionConfig()
         {
             //string strCon = "Server=localhost;Port=5432;User Id=postgres;Password=@leteelias23;Database=db_workfree;";
-            string strCon = "Host=localhost;Port=5432;Database=db_work;Username=adm;Password=1234;Pooling=true";
+            string strCon = "Host=localhost;Port=5433;Database=db_workfree;Username=postgres;Password=@Abc123;Pooling=true";
             // string strCon = "Data Source = SQL5107.site4now.net; Initial Catalog = db_a93e2a_bico; User Id = db_a93e2a_bico_admin; Password = wshKNfSxEVup7L5j";
 
             return strCon;

@@ -12,7 +12,30 @@
     cursor: pointer;
 }
 
-    .btn-custom:hover {
+
+.btn-custom-10padding {
+    background-color: rgba(255, 95, 6, 0.8); /* Laranja */
+    color: #FFFFFF; /* Branco */
+    border: none;
+    padding: 10px 30px; /* Ajuste conforme necessário */
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-custom:hover {
         background-color: rgb(255, 95, 6); /* Laranja (sem opacidade) */
         color: #FFFFFF; /* Branco */
     }
+
+
+.w-50 {
+    width: 50%;
+}
+
+/* Para smartphones */
+@media (max-width: 768px) {
+    .w-50 {
+        width: 100% !important;
+    }
+}

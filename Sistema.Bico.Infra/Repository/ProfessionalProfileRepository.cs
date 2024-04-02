@@ -53,6 +53,15 @@ namespace Sistema.Bico.Infra.Repository
                  .FirstOrDefaultAsync(f => f.Perfil == id);
         }
 
+        public async Task<List<ProfessionalProfile>> GetTopProfessional(string? city = null)
+        {
+            return await _context.ProfessionalProfile
+                  .Include(end => end.Address)
+                  .Where(w => string.IsNullOrEmpty(city) || w.Address.City.Contains(city) && w.Ativo)
+                  .Take(12)
+                  .ToListAsync();
+        }
+
 
         public async Task<ProfessionalProfile> GetProfessionalProfileIdBasic(Guid id)
         {

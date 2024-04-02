@@ -19,15 +19,3 @@ services:
       PGADMIN_DEFAULT_PASSWORD: 1234
     ports:
       - "8080:80"
-  rabbitmq:
-    image: rabbitmq:3.8-management
-    hostname: localhost
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: "brttblack23"
-      RABBITMQ_DEFAULT_PASS: "1234"
-      RABBITMQ_DEFAULT_VHOST: "cherry_broker"
-    volumes:
-      - ./custom-rabbitmq-init.sh:/docker-entrypoint-init.d/custom-rabbitmq-init.sh

@@ -89,7 +89,7 @@ namespace Sistema.Bico.API
 
             services.AddTransient<IRequestHandler<QueuePublishWorkerCancelPlanCommand, Unit>, QueuePublishWorkerCancelPlanCommandHandler>();
             services.AddHttpClient();
-            services.AddHostedService<WorkerCancelPlansExpiration>();
+            //services.AddHostedService<WorkerCancelPlansExpiration>();
 
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 

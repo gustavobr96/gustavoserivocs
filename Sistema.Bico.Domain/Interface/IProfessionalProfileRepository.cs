@@ -17,5 +17,6 @@ namespace Sistema.Bico.Domain.Interface
         Task<ProfessionalProfile> GetProfessionalPerfil(string id);
         Task<ProfessionalProfile> GetProfessionalProfileById(Guid id);
         Task UpdateStatsProfessionalPlan(List<ProfessionalProfile> list);
+        Task<List<ProfessionalProfile>> GetTopProfessional(string? city = null);
     }
 }

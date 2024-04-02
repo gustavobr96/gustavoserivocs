@@ -100,6 +100,17 @@ namespace SistemaBico.API.Controllers
             return new ProfessionalProfilePaginationResponse { ProfessionalProfile = response };
         }
 
+        [HttpPost("GetTopProfessionalAnonymos")]
+        [SwaggerOperation(Tags = new[] { "Professional" })]
+        [AllowAnonymous]
+        public async Task<List<ProfileProfessionalTopResponse>> GetTopProfessionalAnonymos(StringResponse request)
+        {
+           var professionalProfileEntity =  await _professionalProfileRepository.GetTopProfessional(request.Descricao);
+           var professionalResponse = _mapper.Map<List<ProfileProfessionalTopResponse>>(professionalProfileEntity);
+
+           return professionalResponse;
+        }
+
         [HttpPost("GetProfessionalPerfil")]
         [SwaggerOperation(Tags = new[] { "Professional" })]
         public async Task<ProfileWorkerProfessionalPaginationResponse> GetProfessionalPerfil(FilterProfileCommand filter)
