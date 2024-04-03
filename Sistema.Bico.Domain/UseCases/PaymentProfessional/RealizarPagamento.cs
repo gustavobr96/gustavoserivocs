@@ -20,7 +20,7 @@ namespace Sistema.Bico.Domain.UseCases.PaymentProfessional
     public class RealizarPagamentoCommandHandler : IRequestHandler<AddPaymentProfessionalCommand, long>
     {
         private const string ACCESS_TOKEN = "APP_USR-5887426233082411-102818-d001fb8b0011e5824574f24cc26fe42a-269808625";
-        private const string DESCRIPTION = "Plano Premium - WORKFREE";
+        private const string DESCRIPTION = "Plano Premium - BICO";
         private const decimal PACKAGE_AMOUNT = 9.99M;
 
         private readonly IProfessionalPaymentRepository _professionalPaymentRepository;

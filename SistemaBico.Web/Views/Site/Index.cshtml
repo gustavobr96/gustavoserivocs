@@ -127,20 +127,20 @@
                                     <div class="row gx-3">
                                         @for (int i = 0; i < @ViewBag.Profissionais.Count && i < 6; i++)
                                         {
-                                            <div class="col-sm-6 col-md-4 col-xl-2 mb-3">
-                                                <div class="card h-100 rounded-3 shadow">
-                                                    <img class="img-fluid rounded-3" src="@($"data:image/png;base64,{@ViewBag.Profissionais[i].PerfilPicture}")" alt="Professional Picture" style="height: 180px;" />
-                                                    <div class="card-body ps-3">
+                                            <div class="col-sm-6 col-md-4 col-xl-2 mb-2">
+                                                <div class="card rounded-3 shadow">
+                                                    <img class="img-fluid rounded-3" src="@($"data:image/png;base64,{@ViewBag.Profissionais[i].PerfilPicture}")" alt="Professional Picture" />
+                                                    <div class="card-body">
                                                         <h6 class="fw-bold text-truncate mb-1">@($"{@ViewBag.Profissionais[i].Name} {@ViewBag.Profissionais[i].LastName}")</h6>
                                                         <p class="mb-1">
-                                                            <i class="fas fa-map-marker-alt text-warning me-2"></i>@ViewBag.Profissionais[i].City <br />
+                                                            <i class="fas fa-map-marker-alt text-warning me-1"></i>@ViewBag.Profissionais[i].City <br />
                                                             <i class="fas fa-user-md text-primary me-1"></i> @ViewBag.Profissionais[i].Profession
                                                         </p>
                                                         <!-- Adicione a lógica para exibir outros detalhes, como preço, se necessário -->
                                                     </div>
                                                     <div class="card-footer bg-transparent border-top-0">
                                                         <div class="d-grid">
-                                                            <a class="btn btn-sm btn-danger" href="#!" role="button">Realizar Orçamento</a>
+                                                            <a class="btn btn-sm btn-danger" href="@Url.Action("Index", "Login")" role="button">Realizar Orçamento</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -155,20 +155,20 @@
                                             <div class="row gx-3">
                                                 @for (int i = 5; i < @ViewBag.Profissionais.Count && i < 12; i++)
                                                 {
-                                                    <div class="col-sm-6 col-md-4 col-xl-2 mb-3">
-                                                        <div class="card h-100 rounded-3 shadow">
-                                                            <img class="img-fluid rounded-3" src="@($"data:image/png;base64,{@ViewBag.Profissionais[i].PerfilPicture}")" alt="Professional Picture" style="height: 180px;" />
-                                                            <div class="card-body ps-3">
+                                                    <div class="col-sm-6 col-md-4 col-xl-2 mb-2">
+                                                        <div class="card rounded-3 shadow">
+                                                            <img class="img-fluid rounded-3" src="@($"data:image/png;base64,{@ViewBag.Profissionais[i].PerfilPicture}")" alt="Professional Picture" />
+                                                            <div class="card-body">
                                                                 <h6 class="fw-bold text-truncate mb-1">@($"{@ViewBag.Profissionais[i].Name} {@ViewBag.Profissionais[i].LastName}")</h6>
                                                                 <p class="mb-1">
-                                                                    <i class="fas fa-map-marker-alt text-warning me-2"></i>@ViewBag.Profissionais[i].City <br />
-                                                                    <i class="fas fa-user-md text-primary me-1"></i>@ViewBag.Profissionais[i].Profession
+                                                                    <i class="fas fa-map-marker-alt text-warning me-1"></i>@ViewBag.Profissionais[i].City <br />
+                                                                    <i class="fas fa-user-md text-primary me-1"></i> @ViewBag.Profissionais[i].Profession
                                                                 </p>
                                                                 <!-- Adicione a lógica para exibir outros detalhes, como preço, se necessário -->
                                                             </div>
                                                             <div class="card-footer bg-transparent border-top-0">
                                                                 <div class="d-grid">
-                                                                    <a class="btn btn-sm btn-danger" href="#!" role="button">Realizar Orçamento</a>
+                                                                    <a class="btn btn-sm btn-danger" href="@Url.Action("Index", "Login")" role="button">Realizar Orçamento</a>
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -28,7 +28,7 @@ namespace SistemaBico.Web.Util
                 {
                     image.Format = image.Format; // Get or Set the format of the image.
                     image.Resize(HEIGHT, WIDTH); // fit the image into the requested width and height. 
-                    image.Quality = 60; // This is the Compression level.
+                    image.Quality = 120; // This is the Compression level.
 
                     return image.ToByteArray();
                 }
