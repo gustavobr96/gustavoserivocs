@@ -3,9 +3,9 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 
 # Copia os arquivos do projeto e restaura os pacotes NuGet
-COPY ["Sistema.Bico.Infra/Sistema.Bico.Infra.csproj", "Sistema.Bico.Infra/"]
-COPY ["SistemaBico.API/SistemaBico.API.csproj", "SistemaBico.API/"]
-COPY ["Sistema.Bico.Domain/Sistema.Bico.Domain.csproj", "Sistema.Bico.Domain/"]
+COPY ["../gustavoserivocs/Sistema.Bico.Infra/Sistema.Bico.Infra.csproj", "Sistema.Bico.Infra/"]
+COPY ["../gustavoserivocs/SistemaBico.API/SistemaBico.API.csproj", "SistemaBico.API/"]
+COPY ["../gustavoserivocs/Sistema.Bico.Domain/Sistema.Bico.Domain.csproj", "Sistema.Bico.Domain/"]
 RUN dotnet restore "SistemaBico.API/SistemaBico.API.csproj"
 
 # Copia o restante dos arquivos do projeto e compila
