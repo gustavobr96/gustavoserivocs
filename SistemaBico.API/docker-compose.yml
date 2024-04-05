@@ -1,21 +1,42 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres
-    restart: always
+  web:
+    build:
+      context: ../appweb
+      dockerfile: Dockerfile
+    ports:
+      - "5000:80"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+      - postgresql
     environment:
-      POSTGRES_USER: adm
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: db_work
+      - ASPNETCORE_ENVIRONMENT=Production
+      - RabbitConnection__HostName=rabbitmq
+      - RabbitConnection__Port=5672
+      - RabbitConnection__UserName=brttblack23
+      - RabbitConnection__Password=@Leteelias5307
+      - RabbitConnection__VirtualHost=cherry_broker
+      - ConnectionStrings__DefaultConnection=Host=postgresql;Database=bico;Username=brttlback;Password=@Leteelias5307
+    ports:
+      - "5001:5001"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  postgresql:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: brttlback
+      POSTGRES_PASSWORD: "@Leteelias5307"
+      POSTGRES_DB: bico
     ports:
       - "5432:5432"
-
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: teste@teste.com
-      PGADMIN_DEFAULT_PASSWORD: 1234
-    ports:
-      - "8080:80"

@@ -26,7 +26,6 @@ namespace SistemaBico.Web.Controllers
         }
 
 
-
         private async Task<List<ProfileProfessionalTopDto>> GetTopProfessionalProfile(string city = null)
         {
             using (HttpClient htppClient = new HttpClient())
