@@ -8,9 +8,11 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
+COPY ["Sistema.Bico.Infra/Sistema.Bico.Infra.csproj", "Sistema.Bico.Infra/"]
 COPY ["SistemaBico.API/SistemaBico.API.csproj", "SistemaBico.API/"]
 COPY ["Sistema.Bico.Domain/Sistema.Bico.Domain.csproj", "Sistema.Bico.Domain/"]
-COPY ["Sistema.Bico.Infra/Sistema.Bico.Infra.csproj", "Sistema.Bico.Infra/"]
+
 RUN dotnet restore "./SistemaBico.API/SistemaBico.API.csproj"
 COPY . .
 WORKDIR "/src/SistemaBico.API"
