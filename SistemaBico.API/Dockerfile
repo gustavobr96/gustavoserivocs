@@ -11,7 +11,7 @@ WORKDIR /src
 
 COPY ["Sistema.Bico.Infra/Sistema.Bico.Infra.csproj", "Sistema.Bico.Infra/"]
 COPY ["../SistemaBico.API/SistemaBico.API.csproj", "SistemaBico.API/"]
-COPY ["../Sistema.Bico.Domain/Sistema.Bico.Domain.csproj", "Sistema.Bico.Domain/"]
+COPY ["../../Sistema.Bico.Domain/Sistema.Bico.Domain.csproj", "Sistema.Bico.Domain/"]
 
 RUN dotnet restore "./SistemaBico.API/SistemaBico.API.csproj"
 COPY . .
