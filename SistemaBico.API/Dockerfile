@@ -1,28 +1,28 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
+# Estágio de construção
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
+# Copia os arquivos do projeto e restaura os pacotes NuGet
 COPY ["Sistema.Bico.Infra/Sistema.Bico.Infra.csproj", "Sistema.Bico.Infra/"]
-COPY ["../SistemaBico.API/SistemaBico.API.csproj", "SistemaBico.API/"]
-COPY ["../../Sistema.Bico.Domain/Sistema.Bico.Domain.csproj", "Sistema.Bico.Domain/"]
+COPY ["SistemaBico.API/SistemaBico.API.csproj", "SistemaBico.API/"]
+COPY ["Sistema.Bico.Domain/Sistema.Bico.Domain.csproj", "Sistema.Bico.Domain/"]
+RUN dotnet restore "SistemaBico.API/SistemaBico.API.csproj"
 
-RUN dotnet restore "./SistemaBico.API/SistemaBico.API.csproj"
+# Copia o restante dos arquivos do projeto e compila
 COPY . .
 WORKDIR "/src/SistemaBico.API"
-RUN dotnet build "./SistemaBico.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "SistemaBico.API.csproj" -c Release -o /app/build
 
+# Estágio de publicação
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./SistemaBico.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "SistemaBico.API.csproj" -c Release -o /app/publish
 
-FROM base AS final
+# Estágio final
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
 WORKDIR /app
+
+# Copia a aplicação publicada do estágio de publicação
 COPY --from=publish /app/publish .
+
+# Define o comando de entrada para iniciar a aplicação
 ENTRYPOINT ["dotnet", "SistemaBico.API.dll"]
