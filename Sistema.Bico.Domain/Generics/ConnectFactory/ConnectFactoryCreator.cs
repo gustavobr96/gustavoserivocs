@@ -17,13 +17,13 @@ namespace Sistema.Bico.Domain.Generics.ConnectFactory
         {
             return new ConnectionFactory
             {
-                HostName = _configuration.GetConnectionString("RabbitConnection:HostName"),
-                Port = int.Parse(_configuration.GetConnectionString("RabbitConnection:Port")),
-                UserName = _configuration.GetConnectionString("RabbitConnection:UserName"),
-                Password = _configuration.GetConnectionString("RabbitConnection:Password"),
-                VirtualHost = _configuration.GetConnectionString("RabbitConnection:VirtualHost")
+                //HostName = _configuration.GetConnectionString("RabbitConnection:HostName"),
+                //Port = int.Parse(_configuration.GetConnectionString("RabbitConnection:Port")),
+                //UserName = _configuration.GetConnectionString("RabbitConnection:UserName"),
+                //Password = _configuration.GetConnectionString("RabbitConnection:Password"),
+                //VirtualHost = _configuration.GetConnectionString("RabbitConnection:VirtualHost")
 
-                //HostName = _configuration.GetConnectionString("RabbitConnection")
+                HostName = _configuration.GetConnectionString("RabbitConnection")
             };
         }
     }

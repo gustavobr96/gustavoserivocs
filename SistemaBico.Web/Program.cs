@@ -42,7 +42,7 @@ builder.Services.AddScoped<IAuthenticateService, AuthenticateService>();
 builder.Services.AddScoped<IProfessionalClientService, ProfessionalClientService>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-builder.Services.AddLettuceEncrypt();
+//builder.Services.AddLettuceEncrypt();
 
 var app = builder.Build();
 
