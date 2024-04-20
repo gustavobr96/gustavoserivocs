@@ -38,7 +38,7 @@ namespace SistemaBico.API.Controllers
 
         [HttpPost("Register")]
         [SwaggerOperation(Tags = new[] { "Worker" })]
-        public async Task<IActionResult> Post(QueueAddWorkerCommand queueAddWorkerCommand)
+        public async Task<IActionResult> Post(AddWorkerCommand queueAddWorkerCommand)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace SistemaBico.API.Controllers
 
         [HttpPost("ApplyWorker")]
         [SwaggerOperation(Tags = new[] { "Worker" })]
-        public async Task<IActionResult> ApplyWorker(QueueApplyWorkerCommand queueApplyWorkerCommand)
+        public async Task<IActionResult> ApplyWorker(ApplyWorkerCommand queueApplyWorkerCommand)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace SistemaBico.API.Controllers
         // Done Worker
         [HttpPost("WorkerDone")]
         [SwaggerOperation(Tags = new[] { "Worker" })]
-        public async Task<IActionResult> WorkerDone(QueueDoneWorkerCommand queueDoneWorkerCommand)
+        public async Task<IActionResult> WorkerDone(DoneWorkerCommand queueDoneWorkerCommand)
         {
             try
             {

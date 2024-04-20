@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Serilog;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Generics.Extensions;
@@ -29,6 +30,8 @@ namespace Sistema.Bico.Domain.UseCases.Professional
         {
             try
             {
+                Log.Information("Novo profissional {@Request}", request);
+
                 var professionalExist = await _professionalProfileRepository.GetProfessionalProfileIdBasic(request.ClientId);
                 if(professionalExist == null)
                 {
@@ -39,12 +42,27 @@ namespace Sistema.Bico.Domain.UseCases.Professional
                         professional.ProfessionalAreaId = area.Id;
                         professional.Perfil = EnumExtensions.GenerateKey();
 
+                        Log.Information("Entrou Prof: {@Professional}", professional);
                         await _professionalProfileRepository.Add(professional);
                     }
+                    else
+                    {
+                        Log.Information($"Não encontrou area");
+                    }
+
                 }
                 
             }
-            catch (Exception e) { return Unit.Value; }
+            catch (Exception e) 
+            {
+                Log.Information($"{e.Message}");
+                Log.Information($"Erro {e.InnerException}");
+                Log.Information($"Erro2 {e.ToString()}");
+
+                return Unit.Value;
+       
+            }
+
 
             return await Task.FromResult(Unit.Value);
         }

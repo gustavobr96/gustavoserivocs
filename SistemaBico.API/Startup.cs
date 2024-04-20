@@ -46,7 +46,7 @@ namespace Sistema.Bico.API
         public void ConfigureServices(IServiceCollection services)
         {
             // *** ESTE BLOCO PRECISA INSERIR
-           // services.AddLettuceEncrypt();
+            //services.AddLettuceEncrypt();
             // FIM DO BLOCO
 
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);

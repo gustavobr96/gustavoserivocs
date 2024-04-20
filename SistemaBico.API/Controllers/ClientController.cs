@@ -37,7 +37,7 @@ namespace SistemaBico.API.Controllers
         [AllowAnonymous]
         [HttpPost("Register")]
         [SwaggerOperation(Tags = new[] { "Client" })]
-        public async Task<IActionResult> Post(QueueAddClientCommand queueAddClientCommand)
+        public async Task<IActionResult> Post(AddClientCommand queueAddClientCommand)
         {
             try
             {

@@ -4,11 +4,13 @@
     "Projects": [
       {
         "Name": "SistemaBico.API\\SistemaBico.API.csproj",
-        "Action": "Start"
+        "Action": "Start",
+        "DebugTarget": ""
       },
       {
         "Name": "SistemaBico.Web\\SistemaBico.Web.csproj",
-        "Action": "Start"
+        "Action": "Start",
+        "DebugTarget": ""
       }
     ]
   }

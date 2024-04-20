@@ -2,6 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Serilog;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Command.Filters;
 using Sistema.Bico.Domain.Interface;
@@ -60,10 +62,11 @@ namespace SistemaBico.API.Controllers
 
         [HttpPost("Register")]
         [SwaggerOperation(Tags = new[] { "Professional" })]
-        public async Task<IActionResult> Post(QueuePublishRegisterProfessionalCommand addProfessionalCommand)
+        public async Task<IActionResult> Post(AddProfessionalCommand addProfessionalCommand)
         {
             try
             {
+                Log.Information($"Controller Command addProfessionalCommand {addProfessionalCommand.ToString()}");
                 var model = await _mediator.Send(addProfessionalCommand);
                 return Ok(200);
             }

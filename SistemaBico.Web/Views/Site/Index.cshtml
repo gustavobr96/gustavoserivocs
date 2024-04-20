@@ -29,6 +29,27 @@
                 background-color: rgb(255, 95, 6); /* Laranja (sem opacidade) */
                 color: #FFFFFF; /* Branco */
             }
+
+
+
+        .testimonial-card .card-up {
+            height: 120px;
+            overflow: hidden;
+            border-top-left-radius: .25rem;
+            border-top-right-radius: .25rem;
+        }
+
+        .aqua-gradient {
+            background: linear-gradient(40deg, #ff5e00, #f58006bf) !important;
+        }
+
+        .testimonial-card .avatar {
+            width: 120px;
+            margin-top: -60px;
+            overflow: hidden;
+            border: 5px solid #fff;
+            border-radius: 50%;
+        }
     </style>
 
     <!-- ===============================================-->
@@ -114,7 +135,6 @@
         </section>
 
         <section class="py-4 overflow-hidden">
-
             <div class="container">
                 <div class="row h-100">
                     <div class="col-lg-7 mx-auto text-center mt-7 mb-5">
@@ -124,62 +144,64 @@
                         <div class="carousel slide" id="carouselPopularItems" data-bs-touch="false" data-bs-interval="false">
                             <div class="carousel-inner">
                                 <div class="carousel-item active" data-bs-interval="10000">
-                                    <div class="row gx-3">
-                                        @for (int i = 0; i < @ViewBag.Profissionais.Count && i < 6; i++)
+                                    <div class="row  gx-3">
+                                        @for (int i = 0; @ViewBag.Profissionais != null && i < @ViewBag.Profissionais.Count && i < 6; i++)
                                         {
+
                                             <div class="col-sm-6 col-md-4 col-xl-2 mb-2">
-                                                <div class="card rounded-3 shadow">
-                                                    <img class="img-fluid rounded-3" src="@($"data:image/png;base64,{@ViewBag.Profissionais[i].PerfilPicture}")" alt="Professional Picture" />
-                                                    <div class="card-body">
-                                                        <h6 class="fw-bold text-truncate mb-1">@($"{@ViewBag.Profissionais[i].Name} {@ViewBag.Profissionais[i].LastName}")</h6>
-                                                        <p class="mb-1">
-                                                            <i class="fas fa-map-marker-alt text-warning me-1"></i>@ViewBag.Profissionais[i].City <br />
+                                                <div class="card testimonial-card mt-2 mb-2">
+                                                    <div class="card-up aqua-gradient"></div>
+                                                    <div class="avatar mx-auto white">
+                                                        <img src="@($"data:image/png;base64,{@ViewBag.Profissionais[i].PerfilPicture}")" class="rounded-circle img-fluid" alt="woman avatar">
+                                                    </div>
+                                                    <div class="card-body text-center">
+                                                        <h4 class="card-title font-weight-bold">@($"{@ViewBag.Profissionais[i].Name} {@ViewBag.Profissionais[i].LastName}")</h4>
+                                                        <hr>
+                                                        <p>
+                                                            <i class="fas fa-map-marker-alt text-warning me-1"></i> @ViewBag.Profissionais[i].City<br />
                                                             <i class="fas fa-user-md text-primary me-1"></i> @ViewBag.Profissionais[i].Profession
                                                         </p>
-                                                        <!-- Adicione a lógica para exibir outros detalhes, como preço, se necessário -->
-                                                    </div>
-                                                    <div class="card-footer bg-transparent border-top-0">
-                                                        <div class="d-grid">
-                                                            <a class="btn btn-sm btn-danger" href="@Url.Action("Index", "Login")" role="button">Realizar Orçamento</a>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
+
+
+                                     
                                         }
                                     </div>
                                 </div>
-                                @if (@ViewBag.Profissionais.Count > 6)
+                                @if (@ViewBag.Profissionais != null && @ViewBag.Profissionais.Count > 6)
                                 {
+
                                     <div class="carousel-item" data-bs-interval="5000">
                                         @{
                                             <div class="row gx-3">
                                                 @for (int i = 5; i < @ViewBag.Profissionais.Count && i < 12; i++)
                                                 {
                                                     <div class="col-sm-6 col-md-4 col-xl-2 mb-2">
-                                                        <div class="card rounded-3 shadow">
-                                                            <img class="img-fluid rounded-3" src="@($"data:image/png;base64,{@ViewBag.Profissionais[i].PerfilPicture}")" alt="Professional Picture" />
-                                                            <div class="card-body">
-                                                                <h6 class="fw-bold text-truncate mb-1">@($"{@ViewBag.Profissionais[i].Name} {@ViewBag.Profissionais[i].LastName}")</h6>
-                                                                <p class="mb-1">
-                                                                    <i class="fas fa-map-marker-alt text-warning me-1"></i>@ViewBag.Profissionais[i].City <br />
+                                                        <div class="card testimonial-card mt-2 mb-2">
+                                                            <div class="card-up aqua-gradient"></div>
+                                                            <div class="avatar mx-auto white">
+                                                                <img src="@($"data:image/png;base64,{@ViewBag.Profissionais[i].PerfilPicture}")" class="rounded-circle img-fluid" alt="woman avatar">
+                                                            </div>
+                                                            <div class="card-body text-center">
+                                                                <h4 class="card-title font-weight-bold">@($"{@ViewBag.Profissionais[i].Name} {@ViewBag.Profissionais[i].LastName}")</h4>
+                                                                <hr>
+                                                                <p>
+                                                                    <i class="fas fa-map-marker-alt text-warning me-1"></i> @ViewBag.Profissionais[i].City<br />
                                                                     <i class="fas fa-user-md text-primary me-1"></i> @ViewBag.Profissionais[i].Profession
                                                                 </p>
-                                                                <!-- Adicione a lógica para exibir outros detalhes, como preço, se necessário -->
-                                                            </div>
-                                                            <div class="card-footer bg-transparent border-top-0">
-                                                                <div class="d-grid">
-                                                                    <a class="btn btn-sm btn-danger" href="@Url.Action("Index", "Login")" role="button">Realizar Orçamento</a>
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 }
                                             </div>
+
                                         }
 
                                     </div>
                                 }
-                                
+
                             </div>
                             <button class="carousel-control-prev carousel-icon" type="button" data-bs-target="#carouselPopularItems" data-bs-slide="prev"><span class="carousel-control-prev-icon hover-top-shadow" aria-hidden="true"></span><span class="visually-hidden">Previous</span></button>
                             <button class="carousel-control-next carousel-icon" type="button" data-bs-target="#carouselPopularItems" data-bs-slide="next"><span class="carousel-control-next-icon hover-top-shadow" aria-hidden="true"></span><span class="visually-hidden">Next </span></button>
@@ -281,8 +303,7 @@
                     </div>
                 </div>
                 <div class="row flex-center mt-md-8">
-                    <div class="col-lg-5 d-none d-lg-block" style="margin-bottom: -122px;"> <img class="w-100" src="assetsSite/img/gallery/phone-cta-one.png" alt="..." /></div>
-                    <div class="col-lg-5 mt-7 mt-md-0">
+                     <div class="col-lg-5 mt-7 mt-md-0">
                         <h1 class="text-primary">É um prestador de serviço ?</h1>
                         <p>Cadastre-se agora gratuitamente e receba várias orfertas de serviço. <br class="d-none d-xl-block" />Estamos oferecendo gratuitamente o primeiro serviço.</p>
                         <button class="btn-custom" type="button" onclick="window.location.href = '@Url.Action("profissional", "Login")'">Seja Um Profissional</button>

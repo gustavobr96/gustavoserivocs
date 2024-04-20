@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.CookiePolicy;
+using Serilog;
 using SistemaBico.Web.AutoMapper;
 using SistemaBico.Web.Services;
 using SistemaBico.Web.Services.Interfaces;
@@ -9,6 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+Log.Logger = new LoggerConfiguration()
+               .MinimumLevel.Information()
+               .WriteTo.File("logWeb.txt", rollingInterval: RollingInterval.Day)
+               .CreateLogger();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -18,14 +23,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
     });
 
-if (!builder.Environment.IsDevelopment())
-{
-    builder.Services.AddHttpsRedirection(options =>
-    {
-        options.RedirectStatusCode = (int)HttpStatusCode.PermanentRedirect;
-        options.HttpsPort = 443;
-    });
-}
+//if (!builder.Environment.IsDevelopment())
+//{
+//    builder.Services.AddHttpsRedirection(options =>
+//    {
+//        options.RedirectStatusCode = (int)HttpStatusCode.PermanentRedirect;
+//        options.HttpsPort = 443;
+//    });
+//}
 
 
 builder.Services.AddDistributedMemoryCache();
@@ -46,14 +51,6 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
 var app = builder.Build();
 
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
 
 app.UseStatusCodePages(async context =>
 {

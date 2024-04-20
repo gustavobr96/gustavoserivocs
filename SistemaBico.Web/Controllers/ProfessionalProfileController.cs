@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Serilog;
 using SistemaBico.Web.Enum;
 using SistemaBico.Web.Models;
 using SistemaBico.Web.Models.Configuration;
@@ -143,17 +144,22 @@ namespace SistemaBico.Web.Controllers
             string url = _configuration.GetSection("ApiBackEndSettings").Get<ApiBackEndSettings>().Url + "professional/Register";
             using (HttpClient htppClient = new HttpClient())
             {
+              
                 var idClient = await _authenticateService.ObterClientIdLogado(HttpContext);
 
                 var professionalProfile = _mapper.Map<ProfessionalProfile>(model);
                 professionalProfile.ClientId = Guid.Parse(idClient);
                 professionalProfile.AddressId = professionalProfile.Address.Id;
 
+                Log.Information($"Controller WEB ProfessionalProfileDto {model}");
+
                 var clientToken = await _authenticateService.TokenAuth(HttpContext, htppClient);
                 HttpResponseMessage response = clientToken.PostAsync(url,
                 new StringContent(JsonConvert.SerializeObject(professionalProfile), Encoding.UTF8, "application/json")).Result;
 
                 string json = response.Content.ReadAsStringAsync().Result;
+
+                Log.Information($"json {json}");
                 var result = JsonConvert.DeserializeObject<TypeStatusCode>(json);
 
                 if (result == TypeStatusCode.Ok)
