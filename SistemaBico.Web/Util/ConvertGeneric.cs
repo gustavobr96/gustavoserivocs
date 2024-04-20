@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using ImageMagick;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
@@ -23,15 +24,15 @@ namespace SistemaBico.Web.Util
                 //        imgByte = ReduceImage(img, file);
                 //}
 
-                return imgByte;
-                //using (MagickImage image = new MagickImage(imgByte))
-                //{
-                //    image.Format = image.Format; // Get or Set the format of the image.
-                //    image.Resize(HEIGHT, WIDTH); // fit the image into the requested width and height. 
-                //    image.Quality = 120; // This is the Compression level.
+                //return imgByte;
+                using (MagickImage image = new MagickImage(imgByte))
+                {
+                    image.Format = image.Format; // Get or Set the format of the image.
+                    image.Resize(HEIGHT, WIDTH); // fit the image into the requested width and height. 
+                    image.Quality = 120; // This is the Compression level.
 
-                //    return image.ToByteArray();
-                //}
+                    return image.ToByteArray();
+                }
             }
         }
 
