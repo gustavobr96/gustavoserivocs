@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Serilog;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Enums;
@@ -30,9 +31,6 @@ namespace SistemaBico.API.Controllers
         [SwaggerOperation(Tags = new[] { "WebHook" })]
         public async Task<IActionResult> WebHook(WebHookDto webHook)
         {
-            var termo = new TermUse { Description = JsonConvert.SerializeObject(webHook), TypeTerm = TypeTerm.TermUseProfessional, Version = 1 };
-            await _termUseRepository.Add(termo);
-            
             await _mediator.Send(new QueueAddPaymentCommand { Id = long.Parse(webHook.data.id), Action = DePara.DeParaActionWebHook[webHook.action] });
             return Ok();
         }

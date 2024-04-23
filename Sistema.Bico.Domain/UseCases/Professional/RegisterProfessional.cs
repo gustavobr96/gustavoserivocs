@@ -30,7 +30,7 @@ namespace Sistema.Bico.Domain.UseCases.Professional
         {
             try
             {
-                Log.Information("Novo profissional {@Request}", request);
+ 
 
                 var professionalExist = await _professionalProfileRepository.GetProfessionalProfileIdBasic(request.ClientId);
                 if(professionalExist == null)
@@ -42,12 +42,8 @@ namespace Sistema.Bico.Domain.UseCases.Professional
                         professional.ProfessionalAreaId = area.Id;
                         professional.Perfil = EnumExtensions.GenerateKey();
 
-                        Log.Information("Entrou Prof: {@Professional}", professional);
+
                         await _professionalProfileRepository.Add(professional);
-                    }
-                    else
-                    {
-                        Log.Information($"Não encontrou area");
                     }
 
                 }

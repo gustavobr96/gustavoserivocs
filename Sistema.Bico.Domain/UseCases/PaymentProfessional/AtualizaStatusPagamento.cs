@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Serilog;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Enums;
 using Sistema.Bico.Domain.Generics.DePara;
@@ -49,13 +50,14 @@ namespace Sistema.Bico.Domain.UseCases.PaymentProfessional
 
                 var payment = await _mercadoPago.GetPayment(request.Id);
                 var professionalPayment = await _professionalPaymentRepository.GetPaymentProfessionalByPayment(request.Id);
-                StatusPayment statusPayment;
+                StatusPayment statusPayment = new StatusPayment();
                 try
                 {
                     statusPayment = DePara.DeParaStatusPayment[payment.Status];
                 }
                 catch (Exception e)
                 {
+                    Log.Error($"UpdatePaymentCommand Error: {e.Message}");
                     return Unit.Value;
                 }
 
@@ -67,13 +69,13 @@ namespace Sistema.Bico.Domain.UseCases.PaymentProfessional
                     if (statusPayment == StatusPayment.APRO)
                     {
                         professional.SetPremium();
-                        var template = await _templateRepository.GetTemplate(TypeTemplate.ConfirmaPagamento);
-                        var dataVencimento = DateTime.UtcNow.AddDays(31);
-                        var messageBody = template.Description.Replace("{DATA_VENCIMENTO}", dataVencimento.ToString("dd/MM/yyyy"));
-                        messageBody = messageBody.Replace("{ID}", payment.Id.ToString());
-                        messageBody = messageBody.Replace("{VALOR}", EnumExtensions.FormataMoeda(professionalPayment.Value));
+                        //var template = await _templateRepository.GetTemplate(TypeTemplate.ConfirmaPagamento);
+                        //var dataVencimento = DateTime.UtcNow.AddDays(31);
+                        //var messageBody = template.Description.Replace("{DATA_VENCIMENTO}", dataVencimento.ToString("dd/MM/yyyy"));
+                        //messageBody = messageBody.Replace("{ID}", payment.Id.ToString());
+                        //messageBody = messageBody.Replace("{VALOR}", EnumExtensions.FormataMoeda(professionalPayment.Value));
 
-                        await _mediator.Send(new QueuePublishEmailCommand { Email = new EmailDto { To = new List<string> { professional.Client.Email }, Subject = TypeSubject.PagamentoConfirmado.GetDescription(), MessageBody = messageBody }, TypeTemplate = TypeTemplate.ConfirmaPagamento });
+                        //await _mediator.Send(new QueuePublishEmailCommand { Email = new EmailDto { To = new List<string> { professional.Client.Email }, Subject = TypeSubject.PagamentoConfirmado.GetDescription(), MessageBody = messageBody }, TypeTemplate = TypeTemplate.ConfirmaPagamento });
 
                     }
                     else
@@ -85,7 +87,11 @@ namespace Sistema.Bico.Domain.UseCases.PaymentProfessional
                 await _professionalPaymentRepository.Update(professionalPayment);
                 return Unit.Value;
 
-            }catch(Exception e){ return Unit.Value; }
+            }catch(Exception e)
+            {
+                Log.Error($"UpdatePaymentCommand Error: {e.Message}"); 
+                return Unit.Value;
+            }
            
         }
     }

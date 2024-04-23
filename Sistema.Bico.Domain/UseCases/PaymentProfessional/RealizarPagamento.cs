@@ -3,6 +3,7 @@ using MercadoPago.Client.Common;
 using MercadoPago.Client.Payment;
 using MercadoPago.Config;
 using MercadoPago.Resource.Payment;
+using Serilog;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Enums;
@@ -65,16 +66,17 @@ namespace Sistema.Bico.Domain.UseCases.PaymentProfessional
                         StatusPayment = DePara.DeParaStatusPayment[payment.Status]
                     };
 
+
                     if (payment.Status.Equals(StatusPayment.APRO.GetDescription()))
                     {
-                        var template = await _templateRepository.GetTemplate(TypeTemplate.ConfirmaPagamento);
+                        //var template = await _templateRepository.GetTemplate(TypeTemplate.ConfirmaPagamento);
 
-                        var dataVencimento = DateTime.UtcNow.AddDays(31);
-                        var messageBody = template.Description.Replace("{DATA_VENCIMENTO}", dataVencimento.ToString("dd/MM/yyyy"));
-                        //messageBody = messageBody.Replace("{ID}", payment.Id.ToString());
-                        messageBody = messageBody.Replace("{VALOR}", EnumExtensions.FormataMoeda(PACKAGE_AMOUNT));
+                        //var dataVencimento = DateTime.UtcNow.AddDays(31);
+                        //var messageBody = template.Description.Replace("{DATA_VENCIMENTO}", dataVencimento.ToString("dd/MM/yyyy"));
+                        ////messageBody = messageBody.Replace("{ID}", payment.Id.ToString());
+                        //messageBody = messageBody.Replace("{VALOR}", EnumExtensions.FormataMoeda(PACKAGE_AMOUNT));
 
-                        await _mediator.Send(new QueuePublishEmailCommand { Email = new EmailDto { To = new List<string> { professional.Client.Email }, Subject = TypeSubject.PagamentoConfirmado.GetDescription(), MessageBody = messageBody }, TypeTemplate = TypeTemplate.ConfirmaPagamento });
+                        //await _mediator.Send(new QueuePublishEmailCommand { Email = new EmailDto { To = new List<string> { professional.Client.Email }, Subject = TypeSubject.PagamentoConfirmado.GetDescription(), MessageBody = messageBody }, TypeTemplate = TypeTemplate.ConfirmaPagamento });
 
                         professional.SetPremium();
                         await _professionalProfileRepository.Update(professional);
@@ -86,7 +88,11 @@ namespace Sistema.Bico.Domain.UseCases.PaymentProfessional
 
                 return 0;
             }
-            catch(Exception e) { return 0; }
+            catch(Exception e) 
+            {
+                Log.Error($"Exception Payment: {e.Message}");
+                return 0;
+            }
 
         }
 

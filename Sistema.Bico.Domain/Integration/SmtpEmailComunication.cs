@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Serilog;
 using Sistema.Bico.Domain.Generics.Extensions;
 using Sistema.Bico.Domain.Integration.Interfaces;
 using Sistema.Bico.Domain.Response;
@@ -21,6 +22,8 @@ namespace Sistema.Bico.Domain.Integration
 
         public async Task<Unit> SendEmail(EmailDto request, CancellationToken cancellationToken = default)
         {
+            Log.Information("SendEmail {@request}", request);
+
             MailAddress sender = new(EMAIL_CREDENTIAL);
             MailAddress destinatario = new(request.To.ToSeparatedString(','));
 

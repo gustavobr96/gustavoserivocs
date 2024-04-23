@@ -151,7 +151,7 @@ namespace SistemaBico.Web.Controllers
                 professionalProfile.ClientId = Guid.Parse(idClient);
                 professionalProfile.AddressId = professionalProfile.Address.Id;
 
-                Log.Information($"Controller WEB ProfessionalProfileDto {model}");
+
 
                 var clientToken = await _authenticateService.TokenAuth(HttpContext, htppClient);
                 HttpResponseMessage response = clientToken.PostAsync(url,
@@ -159,7 +159,6 @@ namespace SistemaBico.Web.Controllers
 
                 string json = response.Content.ReadAsStringAsync().Result;
 
-                Log.Information($"json {json}");
                 var result = JsonConvert.DeserializeObject<TypeStatusCode>(json);
 
                 if (result == TypeStatusCode.Ok)

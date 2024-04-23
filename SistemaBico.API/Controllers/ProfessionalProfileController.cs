@@ -66,7 +66,7 @@ namespace SistemaBico.API.Controllers
         {
             try
             {
-                Log.Information($"Controller Command addProfessionalCommand {addProfessionalCommand.ToString()}");
+              
                 var model = await _mediator.Send(addProfessionalCommand);
                 return Ok(200);
             }

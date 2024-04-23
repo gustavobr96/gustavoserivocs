@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using SistemaBico.Web.Models.Configuration;
 using SistemaBico.Web.Models;
 using System.Text;
+using Serilog;
 
 namespace SistemaBico.Web.Controllers
 {
@@ -28,18 +29,26 @@ namespace SistemaBico.Web.Controllers
 
         private async Task<List<ProfileProfessionalTopDto>> GetTopProfessionalProfile(string city = null)
         {
-            using (HttpClient htppClient = new HttpClient())
+            try{
+                using (HttpClient htppClient = new HttpClient())
+                {
+                    string url = _configuration.GetSection("ApiBackEndSettings").Get<ApiBackEndSettings>().Url + "professional/GetTopProfessionalAnonymos";
+
+                    HttpResponseMessage response = htppClient.PostAsync(url,
+                    new StringContent(JsonConvert.SerializeObject(new { Descricao = city }), Encoding.UTF8, "application/json")).Result;
+
+                    string json = response.Content.ReadAsStringAsync().Result;
+                    var result = JsonConvert.DeserializeObject<List<ProfileProfessionalTopDto>>(json);
+
+                    return result;
+                }
+            } 
+            catch(Exception e)
             {
-                string url = _configuration.GetSection("ApiBackEndSettings").Get<ApiBackEndSettings>().Url + "professional/GetTopProfessionalAnonymos";
-
-                HttpResponseMessage response = htppClient.PostAsync(url,
-                new StringContent(JsonConvert.SerializeObject(new { Descricao = city }), Encoding.UTF8, "application/json")).Result;
-
-                string json = response.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<List<ProfileProfessionalTopDto>>(json);
-
-                return result;
+                Log.Information($"{e.Message}");
+                return null;
             }
+           
         }
     }
 }
