@@ -22,7 +22,7 @@ async function VerifyPayment() {
     fecharLoader();
 }
 
-const mp = new MercadoPago('APP_USR-9bc2ec74-8e4e-4782-af42-272943b9a85b', {
+const mp = new MercadoPago('APP_USR-7ce1020c-e802-4323-b5fd-ee81d556673e', {
     locale: 'pt-BR'
 });
 const bricksBuilder = mp.bricks();
