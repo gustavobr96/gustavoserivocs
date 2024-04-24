@@ -293,7 +293,7 @@ namespace SistemaBico.Web.Controllers
                 var result = JsonConvert.DeserializeObject<object>(json);
 
                 if (result == null)
-                    return RedirectToAction("RequestWorker", "Validator", new { area = "" });
+                    return RedirectToAction("MyPublishedWorkers", "Worker", new { area = "" });
 
                 return RedirectToAction("ErrorPage", "Error", new { area = "" });
             }
