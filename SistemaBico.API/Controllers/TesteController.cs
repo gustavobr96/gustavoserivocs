@@ -37,5 +37,19 @@ namespace SistemaBico.API.Controllers
             await _mediator.Send(new QueuePublishEmailCommand { Email = new EmailDto { To = new List<string> { "gustavo_barreto7@outlook.com" }, Subject = TypeSubject.PagamentoConfirmado.GetDescription(), MessageBody = messageBody }, TypeTemplate = TypeTemplate.ConfirmaPagamento });
             return Ok();
         }
+
+        [HttpPost("TesteEmailRecovery")]
+        [SwaggerOperation(Tags = new[] { "Teste" })]
+        public async Task<IActionResult> TesteEmailRecovery(QueuePublishEmailCommand request)
+        {
+            var template = await _templateRepository.GetTemplate(TypeTemplate.RecuperacaoSenha);
+
+            var dataVencimento = DateTime.UtcNow.AddDays(31);
+            var messageBody = template.Description.Replace("{PASSWORD}", "1234");
+          
+
+            await _mediator.Send(new QueuePublishEmailCommand { Email = new EmailDto { To = new List<string> { "gustavo_barreto7@outlook.com" }, Subject = TypeSubject.RecuperacaoSenha.GetDescription(), MessageBody = messageBody }, TypeTemplate = TypeTemplate.RecuperacaoSenha });
+            return Ok();
+        }
     }
 }
