@@ -14,60 +14,14 @@
     <!--    Document Title-->
     <!-- ===============================================-->
     <title>Bico | Conectamos os clientes aos melhores profissionais.</title>
-    <style>
-        .btn-custom {
-            background-color: rgba(255, 95, 6, 0.8); /* Laranja */
-            color: #FFFFFF; /* Branco */
-            border: none;
-            padding: 17px 30px; /* Ajuste conforme necessário */
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-            .btn-custom:hover {
-                background-color: rgb(255, 95, 6); /* Laranja (sem opacidade) */
-                color: #FFFFFF; /* Branco */
-            }
-
-
-
-        .testimonial-card .card-up {
-            height: 120px;
-            overflow: hidden;
-            border-top-left-radius: .25rem;
-            border-top-right-radius: .25rem;
-        }
-
-        .aqua-gradient {
-            background: linear-gradient(40deg, #ff5e00, #f58006bf) !important;
-        }
-
-        .testimonial-card .avatar {
-            width: 120px;
-            margin-top: -60px;
-            overflow: hidden;
-            border: 5px solid #fff;
-            border-radius: 50%;
-        }
-
-        .avatar img {
-            width: 150px; /* Defina o tamanho da imagem para preencher o contêiner */
-            height: 115px; /* Altura automática para manter a proporção */
-        }
-    </style>
-
     <!-- ===============================================-->
     <!--    Favicons-->
     <!-- ===============================================-->
     <link rel="shortcut icon" href="assets/media/logos/Favicon2.ico" />
     <meta name="theme-color" content="#ffffff">
-
-
-    <!-- ===============================================-->
-    <!--    Stylesheets-->
     <!-- ===============================================-->
     <link href="assetsSite/css/theme.css" rel="stylesheet" />
+    <link href="assetsSite/css/site.css" rel="stylesheet" />
 
 </head>
 <body>
@@ -75,29 +29,19 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" data-navbar-on-scroll="data-navbar-on-scroll">
             <div class="container">
                 <a class="navbar-brand d-inline-flex" href="@Url.Action("index", "Site")">
-                    <img class="d-inline-block" src="assetsSite/img/gallery/logo.png" alt="logo" />
+                    <img alt="Logo" src="assetsSite/img/gallery/logo.png" class="logo-img" />
                     <span class="text-1000 fs-3 fw-bold ms-2 text-gradient"></span>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onclick="window.location.href='@Url.Action("Index", "Login")'">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse border-top border-lg-0 my-2 mt-lg-0" id="navbarSupportedContent">
-                    <div class="mx-auto pt-5 pt-lg-0 d-block d-lg-none d-xl-block">
-                    </div>
-                    <form class="d-flex mt-4 mt-lg-0 ms-lg-auto ms-xl-0">
-                        <div class="input-group-icon pe-2">
-                        </div>
-                        <a href="@Url.Action("Index", "Login")" class="btn btn-white shadow-warning text-warning d-flex align-items-center text-decoration-none">
-                            <i class="fas fa-user me-2"></i>Login
-                        </a>
-                    </form>
+                <div class="text-end">
+                    <!-- Mover o conteúdo para o canto direito -->
+                    <button class="btn-custom-login" type="button" onclick="window.location.href = '@Url.Action("Login", "Login")'">Cadastre-se</button>
                 </div>
             </div>
         </nav>
         <section class="py-5 overflow-hidden bg-primary" id="home">
             <div class="container">
                 <div class="row flex-center">
-                    <div class="col-md-5 col-lg-6 order-0 order-md-1 mt-8 mt-md-0"><a class="img-landing-banner"><img class="img-fluid" src="assetsSite/img/icons/fundo.png" alt="hero-header" /></a></div>
+                    <div class="col-md-5 col-lg-6 order-0 order-md-1 mt-8 mt-md-0 d-none d-md-block"><a class="img-landing-banner"><img class="img-fluid" src="assetsSite/img/icons/fundo.png" alt="hero-header" /></a></div>
                     <div class="col-md-7 col-lg-6 py-8 text-md-start text-center">
                         <h1 class="display-1 fs-md-5 fs-lg-6 fs-xl-8 text-light">Encontre agora mesmo o melhor profissional!</h1>
                         <h1 class="text-800 mb-5 fs-4"> Encontre pessoas especializadas e contrate serviços para todas as suas necessidades!<br class="d-none d-xxl-block" /></h1>

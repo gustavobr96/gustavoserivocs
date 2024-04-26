@@ -65,6 +65,13 @@ var KTAddUser = function () {
                             }
                         }
                     },
+                    Profession: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Preencha a sua profissao'
+                            }
+                        }
+                    },
                     //Phone: {
                     //    validators: {
                     //        notEmpty: {
@@ -91,6 +98,7 @@ var KTAddUser = function () {
                             }
                         }
                     }
+
 
 
                 },

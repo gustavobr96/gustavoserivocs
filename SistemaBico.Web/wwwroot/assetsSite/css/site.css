@@ -1,0 +1,71 @@
+﻿.btn-custom {
+    background-color: rgba(255, 95, 6, 0.8); /* Laranja */
+    color: #FFFFFF; /* Branco */
+    border: none;
+    padding: 17px 30px; /* Ajuste conforme necessário */
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+    .btn-custom:hover {
+        background-color: rgb(255, 95, 6); /* Laranja (sem opacidade) */
+        color: #FFFFFF; /* Branco */
+    }
+
+.btn-custom-login {
+    background-color: rgba(255, 95, 6, 0.8);
+    color: #FFFFFF;
+    border: none;
+    padding: 14px 55px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.testimonial-card .card-up {
+    height: 120px;
+    overflow: hidden;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
+.aqua-gradient {
+    background: linear-gradient(40deg, #ff5e00, #f58006bf) !important;
+}
+
+.testimonial-card .avatar {
+    width: 120px;
+    margin-top: -60px;
+    overflow: hidden;
+    border: 5px solid #fff;
+    border-radius: 50%;
+}
+
+.avatar img {
+    width: 150px; /* Defina o tamanho da imagem para preencher o contêiner */
+    height: 115px; /* Altura automática para manter a proporção */
+}
+
+
+.logo-img {
+    max-height: 60px; /* Altura padrão da logo */
+}
+
+@media screen and (max-width: 768px) {
+    /* Estilos para dispositivos móveis com largura máxima de 768 pixels */
+    .logo-img {
+        max-height: 55px !important; /* Altura reduzida para dispositivos móveis */
+    }
+
+    .btn-custom-login {
+        background-color: rgba(255, 95, 6, 0.8);
+        color: #FFFFFF;
+        border: none;
+        padding: 12px 50px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    
+    }
+}
