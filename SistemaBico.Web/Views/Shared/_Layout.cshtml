@@ -4,6 +4,9 @@
 
 @if (User.Identity.IsAuthenticated)
 {
+    var professionalSession = HttpContextAccessor.HttpContext.Session.GetString("PerfilProfessional");
+    bool professional = bool.Parse(professionalSession);
+
     <html lang="pt-BR">
     <!--begin::Head-->
     <head>
@@ -39,9 +42,19 @@
         <!--begin::Header Mobile-->
         <div id="kt_header_mobile" class="header-mobile header-mobile-fixed">
             <!--begin::Logo-->
-            <a href="@Url.Action("Index", "Professional")">
-                <img alt="Logo" src="assetsSite/img/gallery/logo.png" class="logo-default max-h-30px" />
-            </a>
+            @if (professional)
+            {
+                <a href="@Url.Action("Index", "Worker")">
+                    <img alt="Logo" src="assetsSite/img/gallery/logo.png" class="logo-default max-h-40px" />
+                </a>
+            }
+            else
+            {
+                <a href="@Url.Action("Index", "Professional")">
+                    <img alt="Logo" src="assetsSite/img/gallery/logo.png" class="logo-default max-h-40px" />
+                </a>
+            }
+
             <!--end::Logo-->
             <!--begin::Toolbar-->
             <div class="d-flex align-items-center">
@@ -79,8 +92,7 @@
                 <!--end::Aside-->
                 <!--begin::Wrapper-->
                 @{
-                    var professionalSession = HttpContextAccessor.HttpContext.Session.GetString("PerfilProfessional");
-                    bool professional = bool.Parse(professionalSession);
+               
 
                     <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
                         <!--begin::Header-->

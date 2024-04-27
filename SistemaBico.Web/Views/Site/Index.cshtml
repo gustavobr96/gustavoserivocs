@@ -99,10 +99,10 @@
                             <div class="carousel-inner">
                                 <div class="carousel-item active" data-bs-interval="10000">
                                     <div class="row  gx-3">
-                                        @for (int i = 0; @ViewBag.Profissionais != null && i < @ViewBag.Profissionais.Count && i < 6; i++)
+                                        @for (int i = 0; @ViewBag.Profissionais != null && i < @ViewBag.Profissionais.Count && i < 4; i++)
                                         {
 
-                                            <div class="col-sm-6 col-md-4 col-xl-2 mb-2">
+                                            <div class="col-sm-6 col-md-4 col-xl-3 mb-2">
                                                 <div class="card testimonial-card mt-2 mb-2">
                                                     <div class="card-up aqua-gradient"></div>
                                                     <div class="avatar mx-auto white">
@@ -129,15 +129,15 @@
                                         }
                                     </div>
                                 </div>
-                                @if (@ViewBag.Profissionais != null && @ViewBag.Profissionais.Count > 6)
+                                @if (@ViewBag.Profissionais != null && @ViewBag.Profissionais.Count >= 4)
                                 {
 
                                     <div class="carousel-item" data-bs-interval="5000">
                                         @{
                                             <div class="row gx-3">
-                                                @for (int i = 5; i < @ViewBag.Profissionais.Count && i < 12; i++)
+                                                @for (int i = 4; i < @ViewBag.Profissionais.Count && i < 8; i++)
                                                 {
-                                                    <div class="col-sm-6 col-md-4 col-xl-2 mb-2">
+                                                    <div class="col-sm-6 col-md-4 col-xl-3 mb-2">
                                                         <div class="card testimonial-card mt-2 mb-2">
                                                             <div class="card-up aqua-gradient"></div>
                                                             <div class="avatar mx-auto white">

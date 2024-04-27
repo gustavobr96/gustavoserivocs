@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SistemaBico.Web.Models;
 using SistemaBico.Web.Models.Configuration;
@@ -17,7 +18,7 @@ namespace SistemaBico.Web.Controllers
         private readonly ILocalStorageService _localStorageService;
         private readonly IConfiguration _configuration;
 
-        public LoginController(IAuthenticateService authenticateService, 
+        public LoginController(IAuthenticateService authenticateService,
             ILocalStorageService localStorageService,
             IConfiguration configuration)
         {
@@ -171,25 +172,58 @@ namespace SistemaBico.Web.Controllers
         }
 
         [HttpPost, AllowAnonymous]
-        [Route("register")]
-        public async Task<IActionResult> Post(Client model)
+        [Route("registerProfessional")]
+        public async Task<IActionResult> RegisterProfessional(Client model)
         {
             if (model.ValidateRegister())
             {
                 ModelState.AddModelError(string.Empty, "Preencha os dados obrigatórios!");
-                return View("index", model);
+                return View("Professional", model);
             }
             if (!Validate.IsCpf(model.CpfCnpj))
             {
                 ModelState.AddModelError(string.Empty, "O CPF não está válido!");
-                return View("index", model);
+                return View("Professional", model);
             }
 
             if (!Validate.ValidarSenha(model.Password))
             {
                 ModelState.AddModelError(string.Empty, "Deve conter ao menos 6 caracteres.");
-                return View("index", model);
+                return View("Professional", model);
             }
+
+            return await Register(model, true);
+        }
+
+        [HttpPost, AllowAnonymous]
+        [Route("registerClient")]
+        public async Task<IActionResult> RegisterClient(Client model)
+        {
+            if (model.ValidateRegister())
+            {
+                ModelState.AddModelError(string.Empty, "Preencha os dados obrigatórios!");
+                return View("Contratante", model);
+            }
+            if (!Validate.IsCpf(model.CpfCnpj))
+            {
+                ModelState.AddModelError(string.Empty, "O CPF não está válido!");
+                return View("Contratante", model);
+            }
+
+            if (!Validate.ValidarSenha(model.Password))
+            {
+                ModelState.AddModelError(string.Empty, "Deve conter ao menos 6 caracteres.");
+                return View("Contratante", model);
+
+            }
+
+            return await Register(model, false);
+        }
+
+
+        private async Task<IActionResult> Register(Client model, bool isProfessional)
+        {
+
             string url = _configuration.GetSection("ApiBackEndSettings").Get<ApiBackEndSettings>().Url + "client/Register";
             using (HttpClient htppClient = new HttpClient())
             {
@@ -197,19 +231,36 @@ namespace SistemaBico.Web.Controllers
                 new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json")).Result;
 
                 string json = response.Content.ReadAsStringAsync().Result;
-                if(json == "2")
+                if (json == "2")
                 {
+              
                     ModelState.AddModelError(string.Empty, "E-mail ou CPF já cadastrado!");
-                    return View("index", model);
+                    return isProfessional ? View("Professional", model) : View("Contratante", model);
                 }
                 else
                 {
+                    var user = new User
+                    {
+                        Email = model.Email,
+                        Password = model.Password
+                    };
 
-                    return RedirectToAction("conta-criada", "Login", new { area = "" });
-                   
-                }   
+                    var loginResponse = await AutenticarLogin(user);
+
+                    if (loginResponse.Token == null)
+                    {
+                        return RedirectToAction("conta-criada", "Login", new { area = "" });
+                    }
+
+                    await _authenticateService.Login(HttpContext, loginResponse, isProfessional);
+
+                    return isProfessional ?  RedirectToAction("Index", "Worker", new { area = "" }) 
+                                          :  RedirectToAction("Index", "Professional", new { area = "" });
+                }
             }
         }
+
+
 
         [HttpPost, AllowAnonymous]
         [Route("Forgot")]
