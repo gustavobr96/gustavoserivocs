@@ -40,7 +40,7 @@ namespace Sistema.Bico.Domain.AutoMapper
                .AfterMap((src, dest) => dest.EmailConfirmed = true);
 
             _ = CreateMap<ProfessionalProfile, ProfessionalProfileResponse>()
-                .ForMember(dst => dst.Name, map => map.MapFrom(src => src.Name))
+                .ForMember(dst => dst.Name, map => map.MapFrom(src => src.Name + " " + src.LastName))
                 .ForMember(dst => dst.LastName, map => map.MapFrom(src => src.LastName))
                 .ForMember(dst => dst.Phone, map => map.MapFrom(src => src.Phone))
                 .ForMember(dst => dst.Perfil, map => map.MapFrom(src => src.Perfil))
@@ -56,7 +56,7 @@ namespace Sistema.Bico.Domain.AutoMapper
                 .ForMember(dst => dst.State, map => map.MapFrom(src => src.Address.State))
                 .ForMember(dst => dst.Complemento, map => map.MapFrom(src => src.Address.Complemento))
                 .ForMember(dst => dst.CEP, map => map.MapFrom(src => src.Address.ZipCode))
-                .ForMember(dst => dst.City, map => map.MapFrom(src => src.Address.City))
+                .ForMember(dst => dst.City, map => map.MapFrom(src => src.Address.City + "-" +src.Address.State))
                 .ForMember(dst => dst.Email, map => map.MapFrom(src => src.Client.Email))
                 .ForMember(dst => dst.Ativo, map => map.MapFrom(src => src.Ativo))
                 .ForMember(dst => dst.Premium, map => map.MapFrom(src => src.Premium));
@@ -75,7 +75,8 @@ namespace Sistema.Bico.Domain.AutoMapper
 
             _ = CreateMap<Worker, WorkerResponse>()
                 .ForMember(dst => dst.Id, map => map.MapFrom(src => src.Id))
-                .ForMember(dst => dst.Created, map => map.MapFrom(src => src.Created))
+                .ForMember(dst => dst.Created, map => map.MapFrom(src =>  src.Created.ToString("dd/MM/yyyy HH:mm")))
+                .ForMember(dst => dst.Name, map => map.MapFrom(src => src.Client.Name))
                 .ForMember(dst => dst.Price, map => map.MapFrom(src => src.Price))
                 .ForMember(dst => dst.Titulo, map => map.MapFrom(src => src.Title))
                 .ForMember(dst => dst.Phone, map => map.MapFrom(src => src.Phone))
@@ -84,11 +85,11 @@ namespace Sistema.Bico.Domain.AutoMapper
                 .ForMember(dst => dst.Sobre, map => map.MapFrom(src => src.About))
                 .ForMember(dst => dst.State, map => map.MapFrom(src => src.Address.State))
                 .ForMember(dst => dst.CEP, map => map.MapFrom(src => src.Address.ZipCode))
-                .ForMember(dst => dst.City, map => map.MapFrom(src => src.Address.City))
+                .ForMember(dst => dst.City, map => map.MapFrom(src => src.Address.City + "-" + src.Address.State))
                 .ForMember(dst => dst.Interessados, map => map.MapFrom(src => src.WorkerProfessional == null ? 0 : src.WorkerProfessional.Count));
 
             _ = CreateMap<ApplicationUser, ClientResponse>()
-                .ForMember(dst => dst.Name, map => map.MapFrom(src => src.Client.Name))
+                .ForMember(dst => dst.Name, map => map.MapFrom(src => src.Client.Name + " " + src.Client.LastName))
                 .ForMember(dst => dst.LastName, map => map.MapFrom(src => src.Client.LastName))
                 .ForMember(dst => dst.CpfCnpj, map => map.MapFrom(src => src.Client.CpfCnpj))
                 .ForMember(dst => dst.PhoneNumber, map => map.MapFrom(src => src.PhoneNumber))
@@ -96,11 +97,16 @@ namespace Sistema.Bico.Domain.AutoMapper
 
 
             _ = CreateMap<ProfessionalProfile, ProfileProfessionalTopResponse>()
-               .ForMember(dst => dst.Name, map => map.MapFrom(src => src.Name))
+               .ForMember(dst => dst.Name, map => map.MapFrom(src => src.Name + " " + src.LastName))
                .ForMember(dst => dst.LastName, map => map.MapFrom(src => src.LastName))
                .ForMember(dst => dst.PerfilPicture, map => map.MapFrom(src => src.PerfilPicture.Length > 0 ? Convert.ToBase64String(src.PerfilPicture) : _imageDefault))
                .ForMember(dst => dst.City, map => map.MapFrom(src => src.Address.City))
                .ForMember(dst => dst.Profession, map => map.MapFrom(src => src.Profession));
+        }
+
+        private string FormatToReais(double price)
+        {
+            return $"R$ {price:0.00}";
         }
     }
 }

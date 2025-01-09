@@ -2,6 +2,7 @@
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Infra.Context;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Sistema.Bico.Infra.Repository
@@ -19,6 +20,11 @@ namespace Sistema.Bico.Infra.Repository
         {
             return await _context.ProfessionalArea
                  .FirstOrDefaultAsync(f => f.Codigo == id);
+        }
+
+        public async Task<List<ProfessionalArea>> GetAllProfessionalArea()
+        {
+            return await _context.ProfessionalArea.ToListAsync();
         }
     }
 }

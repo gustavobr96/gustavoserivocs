@@ -53,6 +53,12 @@ namespace Sistema.Bico.Infra.Repository
                  .FirstOrDefaultAsync(f => f.Perfil == id);
         }
 
+        public async Task<ProfessionalProfile> GetProfessionalPerfil(string perfil)
+        {
+            return await _context.ProfessionalProfile
+                 .FirstOrDefaultAsync(f => f.Perfil == perfil);
+        }
+
         public async Task<List<ProfessionalProfile>> GetTopProfessional(string? city = null)
         {
             return await _context.ProfessionalProfile
@@ -107,7 +113,7 @@ namespace Sistema.Bico.Infra.Repository
 
             return listProfessional;
         }
-        public async Task<ProfessionalProfile> GetProfessionalPerfil(string id)
+        public async Task<ProfessionalProfile> GetProfessionalProfileBasic(string id)
         {
             return await _context.ProfessionalProfile
                  .FirstOrDefaultAsync(f => f.Perfil == id);

@@ -30,17 +30,19 @@ namespace Sistema.Bico.Infra.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-               .SetBasePath(Directory.GetCurrentDirectory())
-               .AddJsonFile("appsettings.json")
-               .Build();
-
             if (!optionsBuilder.IsConfigured)
             {
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .Build();
 
-                optionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
-                base.OnConfiguring(optionsBuilder);
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+                optionsBuilder.UseNpgsql(connectionString);
             }
+
+            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

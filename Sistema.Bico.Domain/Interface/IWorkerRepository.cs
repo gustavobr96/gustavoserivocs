@@ -13,5 +13,6 @@ namespace Sistema.Bico.Domain.Interface
         Task<(int, List<Worker>)> GetMyWorkersPagination(FilterWorkerCommand filter);
         Task<(int, List<Worker>)> GetMyPublishWorkerClient(FilterWorkerCommand filter);
         Task<List<Worker>> GetMyWorkersClientIdBasic(Guid clientId);
+        Task<bool> DeleteWorkerId(Guid? id);
     }
 }

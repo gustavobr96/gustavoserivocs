@@ -13,7 +13,7 @@ namespace Sistema.Bico.Domain.Entities
         public string Phone { get; set; }
         public string Profession { get; set; }
         public string About { get; set; }
-        public double? Price { get; set; }
+        public string? Price { get; set; }
         public Guid ClientId { get; set; }
         public Guid? AddressId { get; set; }
         public Guid? ProfessionalAreaId { get; set; }

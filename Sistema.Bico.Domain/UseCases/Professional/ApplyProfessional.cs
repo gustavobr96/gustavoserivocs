@@ -13,11 +13,18 @@ namespace Sistema.Bico.Domain.UseCases.Professional
     {
         private readonly IProfessionalProfileRepository _professionalProfileRepository;
         private readonly IProfessionalClientRepository _professionalClientRepository;
+        private readonly IMediator _mediator;
+        private readonly IWorkerRepository _workerRepository;
 
-        public ApplyProfessionalCommandHandler(IProfessionalProfileRepository professionalProfileRepository, IProfessionalClientRepository professionalClientRepository)
+        public ApplyProfessionalCommandHandler(IProfessionalProfileRepository professionalProfileRepository,
+            IProfessionalClientRepository professionalClientRepository,
+            IMediator mediator,
+            IWorkerRepository workerRepository)
         {
             _professionalProfileRepository = professionalProfileRepository;
             _professionalClientRepository = professionalClientRepository;
+            _mediator = mediator;
+            _workerRepository = workerRepository;
         }
 
         public async Task<Unit> Handle(ApplyProfessionalCommand request, CancellationToken cancellationToken)
@@ -30,6 +37,14 @@ namespace Sistema.Bico.Domain.UseCases.Professional
                     var professionalClient = await _professionalClientRepository.GetProfessionalClientEmAndamento(request.ClientId, professional.Id);
                     if (professionalClient == null)
                         await _professionalClientRepository.Add(new ProfessionalClient { ProfessionalProfileId = professional.Id, ClientId = request.ClientId, StatusWorker = StatusWorker.IntencaoServico });
+               
+                }
+
+                if(request.WorkerId != null)
+                {
+                    var command = new UpdateProfessionalClientCommand { ClientId = request.ClientId, Perfil = request.Perfil, StatusWorker = StatusWorker.AguardandoConfirmacao };
+                    await _mediator.Send(command);
+                    await _workerRepository.DeleteWorkerId(request.WorkerId);
                 }
             }
             catch(Exception e) { return Unit.Value; }

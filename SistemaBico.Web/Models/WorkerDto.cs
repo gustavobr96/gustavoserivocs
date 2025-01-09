@@ -3,8 +3,8 @@
     public class WorkerDto
     {
         public Guid Id { get; set; }
-        public DateTime Created { get; set; }
-        public double Price { get; set; }
+        public string Created { get; set; }
+        public string Price { get; set; }
         public string PriceString { get; set; }
         public string? Titulo { get; set; }
         public string? Phone { get; set; }

@@ -3,6 +3,7 @@ using Sistema.Bico.Domain.Command.Filters;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Infra.Context;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,6 +32,14 @@ namespace Sistema.Bico.Infra.Repository
                 .ToListAsync();
 
             return (count, listWorkerDone);
+        }
+        public async Task<List<WorkerDone>> GetListWorkerDoneProfile(string id)
+        {
+            var list = await _context.WorkerDone
+             .Where(w => w.WorkerDoneProfessional.ProfessionalProfile.Perfil == id)
+             .ToListAsync();
+
+            return list;
         }
     }
 }

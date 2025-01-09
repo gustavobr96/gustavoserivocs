@@ -23,6 +23,20 @@ namespace Sistema.Bico.Infra.Repository
             _workerProfessionalRepository = workerProfessionalRepository;
         }
 
+        public async Task<bool> DeleteWorkerId(Guid? id)
+        {
+            _context.WorkerProfessional.RemoveRange(_context.WorkerProfessional.Where(w => w.WorkerId == id));
+            var worker = await _context.Worker.Where(w => w.Id == id).FirstOrDefaultAsync();
+
+            if (worker != null) // Remove worker publicado.
+            {
+                _context.Worker.Remove(worker);
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<(int, List<Worker>)> GetProfessionalPagination(FilterWorkerCommand filter)
         {
 
@@ -109,7 +123,7 @@ namespace Sistema.Bico.Infra.Repository
         {
             return await _context.Worker
                  .AsNoTracking()
-                 .Where(w =>  w.ClientId == clientId)
+                 .Where(w => w.ClientId == clientId)
                  .ToListAsync();
         }
 

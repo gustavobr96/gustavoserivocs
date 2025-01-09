@@ -7,5 +7,6 @@ namespace Sistema.Bico.Domain.Command
     {
         public Guid ClientId { get; set; }
         public string Perfil { get; set; }
+        public Guid? WorkerId { get; set; }
     }
 }

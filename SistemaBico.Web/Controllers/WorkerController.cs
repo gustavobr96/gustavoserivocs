@@ -269,7 +269,7 @@ namespace SistemaBico.Web.Controllers
 
             if (!string.IsNullOrEmpty(model.PriceString))
             {
-                model.Price = ConvertGeneric.ConvertPrice(model.PriceString);
+                model.Price = model.PriceString;
                 Console.WriteLine("Valor Convertido: " + model.Price);
             }
                 

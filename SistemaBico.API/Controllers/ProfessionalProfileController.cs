@@ -40,7 +40,7 @@ namespace SistemaBico.API.Controllers
         }
 
         [HttpGet("GetProfessionalProfileId/{id}")]
-        [SwaggerOperation(Tags = new[] { "Professional" })]
+        [SwaggerOperation(Tags = new[] { "Professional" })] 
         public async Task<IActionResult> GetProfessionalProfileId(Guid id)
         {
 
@@ -128,6 +128,21 @@ namespace SistemaBico.API.Controllers
             var treeAvaliationResponse = _mapper.Map<ThreeAvaliationResponse>(treeAvaliation);
 
             return new ProfileWorkerProfessionalPaginationResponse { CountRegister = count, ProfessionalProfile = professionalProfile, WorkerDone = workerDone , ThreeAvaliation = treeAvaliationResponse };
+        }
+
+        [HttpGet("GetProfessionalPerfil/{id}")]
+        [SwaggerOperation(Tags = new[] { "Professional" })]
+        public async Task<ProfileWorkerProfessionalPaginationResponse> GetProfessionalPerfil(string id)
+        {
+
+            var entity = await _professionalProfileRepository.GetProfessionalProfileBasic(id);
+            var treeAvaliation = await _threeAvaliationRepository.GetThreeAvaliationByProfessionalId(entity.Id);
+            var list= await _workerDoneRepository.GetListWorkerDoneProfile(id);
+
+            var workerDone = _mapper.Map<List<WorkerDoneResponse>>(list);
+            var treeAvaliationResponse = _mapper.Map<ThreeAvaliationResponse>(treeAvaliation);
+
+            return new ProfileWorkerProfessionalPaginationResponse { WorkerDone = workerDone, ThreeAvaliation = treeAvaliationResponse };
         }
 
     }
