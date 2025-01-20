@@ -34,13 +34,13 @@ namespace Sistema.Bico.Domain.Entities
         public virtual ICollection<ProfessionalClient>? ProfessionalClient { get; set; }
         public virtual ICollection<WorkerDoneProfessional>? WorkerDoneProfessional { get; set; }
 
-        public void UpdateProfile(string name, string lastName, string phone, byte[] perfilPicture, string about, string profession, ProfessionalArea professionalArea)
+        public void UpdateProfile(string name, string lastName, string phone, string perfilPicture, string about, string profession, ProfessionalArea professionalArea)
         {
             Name = name;
             LastName = lastName;
             Phone = phone;
-            if(perfilPicture.Length > 0)
-              PerfilPicture = perfilPicture;
+            if(!string.IsNullOrEmpty(perfilPicture))
+              PerfilPicture = Convert.FromBase64String(perfilPicture);
             About = about;
             Profession = profession;
             ProfessionalArea = professionalArea;

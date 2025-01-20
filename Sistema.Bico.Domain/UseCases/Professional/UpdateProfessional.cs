@@ -30,20 +30,20 @@ namespace Sistema.Bico.Domain.UseCases.Professional
             try
             {
                 var professionalProfile = await _professionalProfileRepository.GetProfessionalProfileId(request.ClientId);
-
-                if (request.Address == null)
+                if (professionalProfile == null)
                 {
-                    var professionalArea = await _professionalAreaRepository.GetProfessionalAreaId(request.ProfissionalArea.Codigo);
-                    professionalProfile.UpdateProfile(request.Name, request.LastName,request.Phone, request.PerfilPicture, request.About, request.Profession, professionalArea);
-                    await _professionalEspecialityRepository.UpdateEspecialityProfile(professionalProfile.Id, request.Especiality);
+                    throw new ArgumentException("Perfil profissional não encontrado para o ID fornecido.");
                 }
-                else
-                    professionalProfile.UpdateAddress(request.Address);
-                    
+
+                var professionalArea = await _professionalAreaRepository.GetProfessionalAreaId(request.ProfissionalArea.Codigo);
+                professionalProfile.UpdateProfile(request.Name, request.LastName, request.Phone, request.PerfilPicture, request.About, request.Profession, professionalArea);
+                await _professionalEspecialityRepository.UpdateEspecialityProfile(professionalProfile.Id, request.Especiality);
+                professionalProfile.UpdateAddress(request.Address);
+
                 await _professionalProfileRepository.Update(professionalProfile);
                 return professionalProfile;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return null;
             }

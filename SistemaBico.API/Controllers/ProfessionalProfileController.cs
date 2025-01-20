@@ -50,6 +50,20 @@ namespace SistemaBico.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet("GetVerifyProfissional/{id}")]
+        [SwaggerOperation(Tags = new[] { "Professional" })]
+        public async Task<IActionResult> GetVerifyProfissional(Guid id)
+        {
+
+            var entity = await _professionalProfileRepository.GetVerifyProfissional(id);
+
+            if(entity != null)
+                return Ok(true);
+
+
+            return Ok(false);
+        }
+
         [HttpPost("GetProfessionalPaginated")]
         [SwaggerOperation(Tags = new[] { "Professional" })]
         public async Task<ProfessionalProfilePaginationResponse> GetProfessionalPaginated(FilterProfessionalCommand filter)

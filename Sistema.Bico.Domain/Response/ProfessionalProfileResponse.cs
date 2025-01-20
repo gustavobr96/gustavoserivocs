@@ -7,6 +7,7 @@ namespace Sistema.Bico.Domain.Response
     public class ProfessionalProfileResponse
     {
         public string Name { get; set; }
+        public string NameComplete { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
         public string Perfil { get; set; }
@@ -17,6 +18,7 @@ namespace Sistema.Bico.Domain.Response
         public Guid ClientId { get; set; }
         public List<string> Especiality { get; set; }
         public int Area { get; set; }
+        public string AreaName { get; set; }
         public string Sobre { get; set; }
         public string Profession { get; set; }
         public string Logradouro { get; set; }

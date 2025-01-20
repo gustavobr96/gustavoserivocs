@@ -41,6 +41,10 @@ namespace Sistema.Bico.Domain.UseCases.Cliente
 
                 // Set infos
                 client.Email = identity.Email;
+
+                if (!string.IsNullOrEmpty(request.FotoBase64))
+                    client.PerfilPicture = Convert.FromBase64String(request.FotoBase64);
+               
                 identity.Client = client;
 
                 var template = await _templateRepository.GetTemplate(TypeTemplate.Cadastro);

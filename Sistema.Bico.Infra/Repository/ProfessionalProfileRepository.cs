@@ -43,6 +43,13 @@ namespace Sistema.Bico.Infra.Repository
                  .Include(end => end.Address)
                  .FirstOrDefaultAsync(f => f.ClientId == id);
         }
+
+        public async Task<ProfessionalProfile> GetVerifyProfissional(Guid id)
+        {
+            return await _context.ProfessionalProfile
+                 .Include(es => es.Client)
+                 .FirstOrDefaultAsync(f => f.ClientId == id);
+        }
         public async Task<ProfessionalProfile> GetProfessionalPerfilId(string id)
         {
             return await _context.ProfessionalProfile
@@ -79,7 +86,7 @@ namespace Sistema.Bico.Infra.Repository
         public async Task<(int, List<ProfessionalProfile>)> GetProfessionalPagination(FilterProfessionalCommand filter)
         {
             var count = await _context.ProfessionalProfile
-                 .Where(w => (string.IsNullOrEmpty(filter.City) || w.Address.City.Contains(filter.City)) &&
+                 .Where(w => (string.IsNullOrEmpty(filter.City) || w.Address.City.Trim().ToLower().Contains(filter.City.Trim().ToLower())) &&
                         ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
                         ((filter.Especiality == null || filter.Especiality.Count == 0) || w.Especiality.Any(l => filter.Especiality.Contains(l.Description))) && w.ClientId != filter.ClientId && w.Ativo &&
                         (string.IsNullOrEmpty(filter.Profession) || w.Profession.ToLower().Contains(filter.Profession.ToLower())))
@@ -90,7 +97,7 @@ namespace Sistema.Bico.Infra.Repository
                  .Include(es => es.Client)
                  .Include(area => area.ProfessionalArea)
                  .Include(end => end.Address)
-                 .Where(w => (string.IsNullOrEmpty(filter.City) ||  w.Address.City.Contains(filter.City)) && 
+                  .Where(w => (string.IsNullOrEmpty(filter.City) || w.Address.City.Trim().ToLower().Contains(filter.City.Trim().ToLower())) &&
                         ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
                         ((filter.Especiality == null || filter.Especiality.Count == 0) || w.Especiality.Any(l => filter.Especiality.Contains(l.Description))) && w.ClientId != filter.ClientId && w.Ativo &&
                         (string.IsNullOrEmpty(filter.Profession) || w.Profession.ToLower().Contains(filter.Profession.ToLower())))

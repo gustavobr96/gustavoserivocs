@@ -10,7 +10,7 @@ namespace Sistema.Bico.Domain.Command
         public string Name { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
-        public byte[] PerfilPicture { get; set; }
+        public string PerfilPicture { get; set; }
         public Guid ClientId { get; set; }
         public Guid AddressId { get; set; }
         public Guid ProfessionalAreaId { get; set; }

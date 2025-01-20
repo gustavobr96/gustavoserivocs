@@ -8,6 +8,7 @@ namespace Sistema.Bico.Domain.Command
     public class UpdateClientCommand : IRequest<ApplicationUser>
     {
         public string PhoneNumber { get; set; }
+        public string FotoBase64 { get; set; }
         public Guid ClientId { get; set; }
         public Client Client { get; set; }
     }

@@ -18,5 +18,6 @@ namespace Sistema.Bico.Domain.Response
         public string? City { get; set; }
         public string? State { get; set; }
         public int? Interessados { get; set; }
+        public string AreaName { get; set; }
     }
 }

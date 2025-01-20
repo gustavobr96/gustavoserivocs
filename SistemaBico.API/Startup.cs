@@ -55,17 +55,17 @@ namespace Sistema.Bico.API
                   Configuration.GetConnectionString("DefaultConnection")));;
 
             // Inject Hosted
-            services.AddHostedService<QueueConsumerRegisterClient>();
-            services.AddHostedService<QueueConsumerRegisterWorker>();
-            services.AddHostedService<QueueConsumerApplyWorker>();
-            services.AddHostedService<QueueConsumerApplyProfessional>();
-            services.AddHostedService<QueueConsumerRegisterProfessional>();
-            services.AddHostedService<QueueConsumerCancelApplyProfessional>();
-            services.AddHostedService<QueueConsumerDoneWorker>();
-            services.AddHostedService<QueueConsumerPayment>();
-            services.AddHostedService<QueueConsumerWorkerCancelPlan>();
-            services.AddHostedService<QueueConsumerSendEmail>();
-            services.AddHostedService<QueueConsumerForgotClient>();
+            //services.AddHostedService<QueueConsumerRegisterClient>();
+            //services.AddHostedService<QueueConsumerRegisterWorker>();
+            //services.AddHostedService<QueueConsumerApplyWorker>();
+            //services.AddHostedService<QueueConsumerApplyProfessional>();
+            //services.AddHostedService<QueueConsumerRegisterProfessional>();
+            //services.AddHostedService<QueueConsumerCancelApplyProfessional>();
+            //services.AddHostedService<QueueConsumerDoneWorker>();
+            //services.AddHostedService<QueueConsumerPayment>();
+            //services.AddHostedService<QueueConsumerWorkerCancelPlan>();
+            //services.AddHostedService<QueueConsumerSendEmail>();
+            //services.AddHostedService<QueueConsumerForgotClient>();
 
             services.AddDefaultIdentity<ApplicationUser>(options => 
             { 
@@ -87,7 +87,7 @@ namespace Sistema.Bico.API
             // Commands
             services.AddInjectHandlers();
 
-            services.AddTransient<IRequestHandler<QueuePublishWorkerCancelPlanCommand, Unit>, QueuePublishWorkerCancelPlanCommandHandler>();
+          //  services.AddTransient<IRequestHandler<QueuePublishWorkerCancelPlanCommand, Unit>, QueuePublishWorkerCancelPlanCommandHandler>();
             services.AddHttpClient();
             //services.AddHostedService<WorkerCancelPlansExpiration>();
 

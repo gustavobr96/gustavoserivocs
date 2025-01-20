@@ -26,7 +26,7 @@ namespace Sistema.Bico.Domain.UseCases.Cliente
                 var user = await  _clientRepository.GetUserByClientId(request.ClientId);
                 user.PhoneNumber = request.PhoneNumber;
 
-                user.Client.UpdateProfile(request.Client.Name, request.Client.LastName, request.Client.PerfilPicture);
+                user.Client.UpdateProfile(request.Client.Name, request.Client.LastName, request.FotoBase64);
                 await _identityRepository.UpdateAsync(user);
 
                 return user;

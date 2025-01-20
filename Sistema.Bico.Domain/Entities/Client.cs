@@ -24,12 +24,12 @@ namespace Sistema.Bico.Domain.Entities
         public virtual ICollection<ApplicationUser> ApplicationUser { get; set; }
         public virtual ICollection<ProfessionalClient>? ProfessionalClient { get; set; }
 
-        public void UpdateProfile(string name, string lastName, byte[] perfilPicture)
+        public void UpdateProfile(string name, string lastName,  string perfilPicture)
         {
             Name = name;
             LastName = lastName;
-            if (perfilPicture != null && perfilPicture.Length > 0)
-                PerfilPicture = perfilPicture;
+            if (!string.IsNullOrEmpty(perfilPicture))
+                PerfilPicture = Convert.FromBase64String(perfilPicture);
         }
     }
 }

@@ -40,6 +40,11 @@ namespace Sistema.Bico.Domain.UseCases.Professional
                     {
                         var professional = _mapper.Map<ProfessionalProfile>(request);
                         professional.ProfessionalAreaId = area.Id;
+
+                        if (!string.IsNullOrEmpty(request.PerfilPicture))
+                            professional.PerfilPicture = Convert.FromBase64String(request.PerfilPicture);
+
+                   
                         professional.Perfil = EnumExtensions.GenerateKey();
 
 
