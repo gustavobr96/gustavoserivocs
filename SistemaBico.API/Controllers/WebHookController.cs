@@ -4,15 +4,8 @@ using MercadoPago.Config;
 using MercadoPago.Resource.Payment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
-using Serilog;
 using Sistema.Bico.Domain.Command;
-using Sistema.Bico.Domain.Entities;
-using Sistema.Bico.Domain.Enums;
-using Sistema.Bico.Domain.Generics.DePara;
-using Sistema.Bico.Domain.Hubs;
-using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Domain.Response;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -67,8 +60,6 @@ namespace SistemaBico.API.Controllers
                         ClientId = clientId.ToString()
                     });
 
-                    var connections = PaymentHub.GetConnection();
-                    var connectionId = PaymentHub.GetConnectionId(clientId.ToString());
                    
 
                     return Ok();

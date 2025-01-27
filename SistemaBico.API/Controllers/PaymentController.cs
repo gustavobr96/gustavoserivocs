@@ -1,9 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Sistema.Bico.Domain.Command;
-using Sistema.Bico.Domain.Hubs;
 using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Domain.Response;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,15 +15,13 @@ namespace SistemaBico.API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IProfessionalPaymentRepository _professionalPaymentRepository;
-        private readonly IHubContext<PaymentHub> _hubContext;
+ 
 
         public PaymentController(IMediator mediator,
-            IProfessionalPaymentRepository professionalPaymentRepository,
-            IHubContext<PaymentHub> hubContext)
+            IProfessionalPaymentRepository professionalPaymentRepository)
         {
             _mediator = mediator;
             _professionalPaymentRepository = professionalPaymentRepository;
-            _hubContext = hubContext;
         }
 
         [HttpPost("Payment")]
