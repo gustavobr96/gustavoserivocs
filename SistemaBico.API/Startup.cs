@@ -162,7 +162,7 @@ namespace Sistema.Bico.API
             });
 
 
-            services.AddSignalR();
+           // services.AddSignalR();
 
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
@@ -199,14 +199,14 @@ namespace Sistema.Bico.API
                          };
                      });
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll",
-                    builder => builder
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
-            });
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowAll",
+            //        builder => builder
+            //            .AllowAnyOrigin()
+            //            .AllowAnyMethod()
+            //            .AllowAnyHeader());
+            //});
 
 
             services.AddSwaggerGenNewtonsoftSupport();
@@ -228,7 +228,7 @@ namespace Sistema.Bico.API
                 app.UseHsts();
             }
 
-            app.UseCors("AllowAll");
+           // app.UseCors("AllowAll");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -243,7 +243,7 @@ namespace Sistema.Bico.API
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapHub<PaymentHub>("/signalr-hub");
+               // endpoints.MapHub<PaymentHub>("/signalr-hub");
             });
 
             app.UseSwaggerESwaggerUI();
