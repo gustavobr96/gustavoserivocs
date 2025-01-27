@@ -10,9 +10,7 @@ namespace Sistema.Bico.Domain.Interface
     {
         Task<ProfessionalPayment> GetPaymentProfessional(Guid id);
         Task<ProfessionalPayment> GetPaymentProfessionalByClient(Guid id);
-        Task<ProfessionalPayment> GetPaymentProfessionalByPayment(long id);
-        Task DeleteDuplicatedOrder(long id);
-        Task<int> GetNumberItens(long id);
+        Task<ProfessionalPayment> GetPaymentProfessionalByPayment(string id);
         Task<List<ProfessionalPayment>> GetPaymentProfessionalPeriod();
     } 
 }

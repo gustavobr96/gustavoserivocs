@@ -15,6 +15,7 @@ namespace SistemaBico.API
             try
             {
                 CreateHostBuilder(args).Build().Run();
+
             }
             finally
             {

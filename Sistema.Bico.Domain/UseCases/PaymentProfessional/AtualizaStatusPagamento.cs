@@ -1,6 +1,9 @@
 ﻿using MediatR;
+using MercadoPago.Resource.Preference;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Sistema.Bico.Domain.Command;
+using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Enums;
 using Sistema.Bico.Domain.Generics.DePara;
 using Sistema.Bico.Domain.Generics.Extensions;
@@ -39,55 +42,48 @@ namespace Sistema.Bico.Domain.UseCases.PaymentProfessional
         {
             try
             {
-                if (request.Action == ActionPaymentWebHook.CREATE)
-                {
-                    var count = await _professionalPaymentRepository.GetNumberItens(request.Id);
-                    if (count == 1)
-                        return Unit.Value;
+                var pagamento = await _professionalPaymentRepository.GetPaymentProfessionalByPayment(request.IdPagamento);
+                var professional = await _professionalProfileRepository.GetProfessionalProfileId(Guid.Parse(request.ClientId));
 
-                    await _professionalPaymentRepository.DeleteDuplicatedOrder(request.Id);
+                if (pagamento != null)
+                {
+                    pagamento.Status = request.Status;
+                    pagamento.Detalhes = request.Notificacao;
+                    pagamento.Update = DateTime.Now;
+                    pagamento.ProfessionalId = professional.Id;
+
+                    await _professionalPaymentRepository.Update(pagamento);
                 }
-
-                var payment = await _mercadoPago.GetPayment(request.Id);
-                var professionalPayment = await _professionalPaymentRepository.GetPaymentProfessionalByPayment(request.Id);
-                StatusPayment statusPayment = new StatusPayment();
-                try
+                else
                 {
-                    statusPayment = DePara.DeParaStatusPayment[payment.Status];
-                }
-                catch (Exception e)
-                {
-                    Log.Error($"UpdatePaymentCommand Error: {e.Message}");
-                    return Unit.Value;
-                }
-
-                professionalPayment.StatusPayment = statusPayment;
-                if (statusPayment == StatusPayment.APRO || statusPayment == StatusPayment.ESTORNO)
-                {
-                    var professional = await _professionalProfileRepository.GetProfessionalProfileById(professionalPayment.ProfessionalId);
-
-                    if (statusPayment == StatusPayment.APRO)
+                    var novoPagamento = new ProfessionalPayment
                     {
-                        professional.SetPremium();
-                        //var template = await _templateRepository.GetTemplate(TypeTemplate.ConfirmaPagamento);
-                        //var dataVencimento = DateTime.UtcNow.AddDays(31);
-                        //var messageBody = template.Description.Replace("{DATA_VENCIMENTO}", dataVencimento.ToString("dd/MM/yyyy"));
-                        //messageBody = messageBody.Replace("{ID}", payment.Id.ToString());
-                        //messageBody = messageBody.Replace("{VALOR}", EnumExtensions.FormataMoeda(professionalPayment.Value));
+                        PagamentoId = request.IdPagamento,
+                        Status = request.Status,
+                        Detalhes = request.Notificacao,
+                        ProfessionalId = professional.Id,
+                        Created = DateTime.Now,
+                        Update = DateTime.Now
+                    };
 
-                        //await _mediator.Send(new QueuePublishEmailCommand { Email = new EmailDto { To = new List<string> { professional.Client.Email }, Subject = TypeSubject.PagamentoConfirmado.GetDescription(), MessageBody = messageBody }, TypeTemplate = TypeTemplate.ConfirmaPagamento });
-
-                    }
-                    else
-                        professional.SetEstorno();
-
-                    await _professionalProfileRepository.Update(professional);
+                    await _professionalPaymentRepository.Add(novoPagamento);
                 }
 
-                await _professionalPaymentRepository.Update(professionalPayment);
+                if (request.Status == StatusPayment.APRO.GetDescription())
+                {
+                    professional.SetPremium();
+                    await _professionalProfileRepository.Update(professional);
+                }else
+                    if (request.Status == StatusPayment.ESTORNO.GetDescription())
+                    {
+                        professional.SetEstorno();
+                        await _professionalProfileRepository.Update(professional);
+                    }
+
                 return Unit.Value;
 
-            }catch(Exception e)
+            }
+            catch(Exception e)
             {
                 Log.Error($"UpdatePaymentCommand Error: {e.Message}"); 
                 return Unit.Value;

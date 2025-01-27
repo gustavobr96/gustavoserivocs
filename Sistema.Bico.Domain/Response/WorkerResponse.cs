@@ -12,6 +12,7 @@ namespace Sistema.Bico.Domain.Response
         public string? Titulo { get; set; }
         public string? Phone { get; set; }
         public int Area { get; set; }
+        public bool? Remote { get; set; } = false;
         public string? Sobre { get; set; }
         public string? Profession { get; set; }
         public string? CEP { get; set; }

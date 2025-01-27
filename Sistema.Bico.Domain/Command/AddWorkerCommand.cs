@@ -18,6 +18,7 @@ namespace Sistema.Bico.Domain.Command
         public Guid AddressId { get; set; }
         public Guid ProfessionalAreaId { get; set; }
         public bool IsConcluded { get; set; } = false;
+        public bool Remote { get; set; }
         public virtual Client Client { get; set; }
         public virtual Address Address { get; set; }
         public virtual ProfessionalArea ProfessionalArea { get; set; }

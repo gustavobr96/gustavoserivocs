@@ -2,6 +2,7 @@
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Enums;
+using Sistema.Bico.Domain.Generics.Extensions;
 using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Infra.Context;
 using System;
@@ -96,7 +97,7 @@ namespace Sistema.Bico.Infra.Repository
                                                                 three.Communication) / (three.NumberAvaliation*3), 2);
                     }
 
-                    var verifyPlan = await _context.ProfessionalPayment.Where(w => w.ProfessionalId == professional.Id && w.Created.AddDays(31) >= DateTime.Now && w.StatusPayment == StatusPayment.APRO).FirstOrDefaultAsync();
+                    var verifyPlan = await _context.ProfessionalPayment.Where(w => w.ProfessionalId == professional.Id && w.Created.AddDays(31) >= DateTime.Now && w.Status == StatusPayment.APRO.GetDescription()).FirstOrDefaultAsync();
                     if(verifyPlan == null) // Verifica plano e desativa profissional.
                        professional.Ativo = false;
                     

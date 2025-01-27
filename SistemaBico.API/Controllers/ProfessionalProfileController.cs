@@ -50,6 +50,8 @@ namespace SistemaBico.API.Controllers
             return Ok(response);
         }
 
+
+
         [HttpGet("GetVerifyProfissional/{id}")]
         [SwaggerOperation(Tags = new[] { "Professional" })]
         public async Task<IActionResult> GetVerifyProfissional(Guid id)
@@ -58,7 +60,7 @@ namespace SistemaBico.API.Controllers
             var entity = await _professionalProfileRepository.GetVerifyProfissional(id);
 
             if(entity != null)
-                return Ok(true);
+                return Ok(new { Profissional = true, Ativo =  entity.Ativo, Premium = entity.Premium, VigenciaPremium = entity.VigenciaPremium?.ToString("dd/MM/yyyy") ?? null });
 
 
             return Ok(false);

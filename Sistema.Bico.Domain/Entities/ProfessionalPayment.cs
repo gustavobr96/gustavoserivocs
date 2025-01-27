@@ -5,11 +5,10 @@ namespace Sistema.Bico.Domain.Entities
 {
     public class ProfessionalPayment : Base
     {
-        public decimal Value { get; set; }
-        public long? PagamentoId { get; set; }
+        public string? PagamentoId { get; set; }
         public Guid ProfessionalId { get; set; }
+        public string Status { get; set; }
+        public string Detalhes { get; set; } // JSON ou informações adicionais
         public virtual ProfessionalProfile Professional { get; set; }
-        public bool Enable { get; set; }
-        public StatusPayment StatusPayment { get; set;}
     }
 }

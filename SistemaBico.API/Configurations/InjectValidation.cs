@@ -53,7 +53,7 @@ namespace SistemaBico.API.Configurations
             services.AddScoped<IRequestHandler<CancelApplyProfessionalCommand, Unit>, CancelApplyProfessionalCommandHandler>();
             services.AddScoped<IRequestHandler<DoneWorkerCommand, Unit>, DoneWorkerCommandHandler>();
             services.AddScoped<IRequestHandler<UpdateProfessionalClientCommand, Result>, UpdateProfessionalClientCommandHandler>();
-            services.AddScoped<IRequestHandler<AddPaymentProfessionalCommand, long>, RealizarPagamentoCommandHandler>();
+            services.AddScoped<IRequestHandler<AddPaymentProfessionalCommand, string>, RealizarPagamentoCommandHandler>();
             services.AddScoped<IRequestHandler<QueueAddPaymentCommand, Result>, QueuePublishPaymentCommandHandler>();
             services.AddScoped<IRequestHandler<QueuePublishEmailCommand, Result>, QueuePublishEmailCommandHandler>();
             services.AddScoped<IRequestHandler<UpdatePaymentCommand, Unit>, AtualizaStatusPagamentoCommandHandler>();

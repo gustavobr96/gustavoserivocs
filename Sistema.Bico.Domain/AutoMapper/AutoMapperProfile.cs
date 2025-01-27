@@ -88,6 +88,7 @@ namespace Sistema.Bico.Domain.AutoMapper
                 .ForMember(dst => dst.State, map => map.MapFrom(src => src.Address.State))
                 .ForMember(dst => dst.CEP, map => map.MapFrom(src => src.Address.ZipCode))
                 .ForMember(dst => dst.City, map => map.MapFrom(src => src.Address.City))
+                .ForMember(dst => dst.Remote, map => map.MapFrom(src => src.Remote))
                 .ForMember(dst => dst.Interessados, map => map.MapFrom(src => src.WorkerProfessional == null ? 0 : src.WorkerProfessional.Count));
 
             _ = CreateMap<ApplicationUser, ClientResponse>()

@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ using Sistema.Bico.Domain.AutoMapper;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Generics.Entities;
 using Sistema.Bico.Domain.Generics.Result;
+using Sistema.Bico.Domain.Hubs;
 using Sistema.Bico.Domain.Integration;
 using Sistema.Bico.Domain.Integration.Interfaces;
 using Sistema.Bico.Domain.UseCases.Cliente;
@@ -28,6 +30,7 @@ using Sistema.Bico.Infra.Context;
 using SistemaBico.API.Configurations;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -67,6 +70,7 @@ namespace Sistema.Bico.API
             //services.AddHostedService<QueueConsumerSendEmail>();
             //services.AddHostedService<QueueConsumerForgotClient>();
 
+          
             services.AddDefaultIdentity<ApplicationUser>(options => 
             { 
               options.SignIn.RequireConfirmedAccount = false;
@@ -154,7 +158,16 @@ namespace Sistema.Bico.API
                     new List<string>()
                   }
                 });
+
             });
+
+
+            services.AddSignalR();
+
+
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("pt-BR");
+
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                      .AddJwtBearer(option =>
@@ -186,6 +199,16 @@ namespace Sistema.Bico.API
                          };
                      });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder => builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
+
             services.AddSwaggerGenNewtonsoftSupport();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
         }
@@ -204,6 +227,9 @@ namespace Sistema.Bico.API
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseCors("AllowAll");
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -217,7 +243,7 @@ namespace Sistema.Bico.API
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
+                endpoints.MapHub<PaymentHub>("/signalr-hub");
             });
 
             app.UseSwaggerESwaggerUI();

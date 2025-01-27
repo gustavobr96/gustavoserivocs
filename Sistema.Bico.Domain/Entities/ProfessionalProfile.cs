@@ -25,6 +25,7 @@ namespace Sistema.Bico.Domain.Entities
         public decimal? Avaliation { get; set; }
         public bool Ativo { get; set; } = true;
         public bool Premium { get; set; } = false;
+        public DateTime? VigenciaPremium { get; set; }
         public virtual Client Client { get; set; }
         public  Address Address { get; set; }
         public  ProfessionalArea ProfessionalArea { get; set; }
@@ -49,11 +50,13 @@ namespace Sistema.Bico.Domain.Entities
         {
             Ativo = true;
             Premium = true;
+            VigenciaPremium = DateTime.Now.AddMonths(1);
         }
         public void SetEstorno()
         {
             Ativo = false;
             Premium = false;
+            VigenciaPremium = null;
         }
         public void UpdateAddress(Address address)
         {

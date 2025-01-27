@@ -5,10 +5,8 @@ using System;
 
 namespace Sistema.Bico.Domain.Command
 {
-    public class AddPaymentProfessionalCommand : IRequest<long>
+    public class AddPaymentProfessionalCommand : IRequest<string>
     {
         public Guid ClientId { get; set; }
-        public TypePayment TypePayment { get; set; }
-        public PaymentResponse Payment { get; set; }
     }
 }

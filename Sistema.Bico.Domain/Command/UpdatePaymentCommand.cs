@@ -5,7 +5,9 @@ namespace Sistema.Bico.Domain.Command
 {
     public class UpdatePaymentCommand : IRequest<Unit>
     {
-        public long Id { get; set; }
-        public ActionPaymentWebHook Action { get; set; }
+        public string IdPagamento { get; set; }
+        public string Status { get; set; }
+        public string Notificacao { get; set; }
+        public string ClientId { get; set; }
     }
 }

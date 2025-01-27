@@ -14,6 +14,7 @@ namespace Sistema.Bico.Domain.Entities
         public string Profession { get; set; }
         public string About { get; set; }
         public string? Price { get; set; }
+        public bool Remote { get; set; }
         public Guid ClientId { get; set; }
         public Guid? AddressId { get; set; }
         public Guid? ProfessionalAreaId { get; set; }
