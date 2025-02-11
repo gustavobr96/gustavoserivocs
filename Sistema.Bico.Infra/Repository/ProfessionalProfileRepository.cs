@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCoreSecondLevelCacheInterceptor;
+using Microsoft.EntityFrameworkCore;
 using Sistema.Bico.Domain.Command.Filters;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Enums;
@@ -75,6 +76,16 @@ namespace Sistema.Bico.Infra.Repository
                   .ToListAsync();
         }
 
+        public async Task<List<ProfessionalProfile>> GetProfessionalByAreaAndCity(string? city, int area)
+        {
+            return await _context.ProfessionalProfile
+                  .Include(end => end.Client)
+                  .Where((w => string.IsNullOrEmpty(city) || w.Address.City.Contains(city) && w.ProfessionalArea.Codigo == area && w.Client.TokenPhone != null))
+                  .Cacheable()
+                  .ToListAsync();
+        }
+
+
 
         public async Task<ProfessionalProfile> GetProfessionalProfileIdBasic(Guid id)
         {
@@ -85,28 +96,39 @@ namespace Sistema.Bico.Infra.Repository
 
         public async Task<(int, List<ProfessionalProfile>)> GetProfessionalPagination(FilterProfessionalCommand filter)
         {
-            var count = await _context.ProfessionalProfile
-                 .Where(w => (string.IsNullOrEmpty(filter.City) || w.Address.City.Trim().ToLower().Contains(filter.City.Trim().ToLower())) &&
-                        ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
-                        ((filter.Especiality == null || filter.Especiality.Count == 0) || w.Especiality.Any(l => filter.Especiality.Contains(l.Description))) && w.ClientId != filter.ClientId && w.Ativo &&
-                        (string.IsNullOrEmpty(filter.Profession) || w.Profession.ToLower().Contains(filter.Profession.ToLower())))
-                .CountAsync();
-           
-            var listProfessional = await _context.ProfessionalProfile
-                 .Include(es => es.Especiality)
-                 .Include(es => es.Client)
-                 .Include(area => area.ProfessionalArea)
-                 .Include(end => end.Address)
-                  .Where(w => (string.IsNullOrEmpty(filter.City) || w.Address.City.Trim().ToLower().Contains(filter.City.Trim().ToLower())) &&
-                        ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
-                        ((filter.Especiality == null || filter.Especiality.Count == 0) || w.Especiality.Any(l => filter.Especiality.Contains(l.Description))) && w.ClientId != filter.ClientId && w.Ativo &&
-                        (string.IsNullOrEmpty(filter.Profession) || w.Profession.ToLower().Contains(filter.Profession.ToLower())))
-                 .Skip(filter.Take * (filter.Page - 1))
-                 .Take(filter.Take)
-                 .ToListAsync();
+            // Definindo uma chave exclusiva para o cache, considerando os filtros e a paginação
+            var cacheKey = $"ProfessionalProfiles_Page_{filter.Page}_Take_{filter.Take}_ClientId_{filter.ClientId}_City_{filter.City}_Area_{filter.Area}_Profession_{filter.Profession}_Especiality_{string.Join(",", filter.Especiality ?? new List<string>())}";
 
-            return (count, listProfessional );
+            // Consulta para contar os registros (não cacheada, já que não envolve dados paginados)
+            var count = await _context.ProfessionalProfile
+                .Where(w =>
+                    (string.IsNullOrEmpty(filter.City) || w.Address.City.Trim().ToLower().Contains(filter.City.Trim().ToLower())) &&
+                    ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
+                    ((filter.Especiality == null || filter.Especiality.Count == 0) || w.Especiality.Any(l => filter.Especiality.Contains(l.Description))) &&
+                    w.ClientId != filter.ClientId && w.Ativo &&
+                    (string.IsNullOrEmpty(filter.Profession) || w.Profession.ToLower().Contains(filter.Profession.ToLower())))
+                .CountAsync();
+
+            // Consulta para obter os registros paginados, com cache de segundo nível
+            var listProfessional = await _context.ProfessionalProfile
+                .Include(es => es.Especiality)
+                .Include(es => es.Client)
+                .Include(area => area.ProfessionalArea)
+                .Include(end => end.Address)
+                .Where(w =>
+                    (string.IsNullOrEmpty(filter.City) || w.Address.City.Trim().ToLower().Contains(filter.City.Trim().ToLower())) &&
+                    ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
+                    ((filter.Especiality == null || filter.Especiality.Count == 0) || w.Especiality.Any(l => filter.Especiality.Contains(l.Description))) &&
+                    w.ClientId != filter.ClientId && w.Ativo &&
+                    (string.IsNullOrEmpty(filter.Profession) || w.Profession.ToLower().Contains(filter.Profession.ToLower())))
+                .Skip(filter.Take * (filter.Page - 1))
+                .Take(filter.Take)
+                .Cacheable() // 🔥 Ativando o cache para a consulta paginada
+                .ToListAsync();
+
+            return (count, listProfessional);
         }
+
 
         public async Task<List<ProfessionalProfile>> GetProfessionalInterested(Guid workerId)
         {
@@ -124,6 +146,13 @@ namespace Sistema.Bico.Infra.Repository
         {
             return await _context.ProfessionalProfile
                  .FirstOrDefaultAsync(f => f.Perfil == id);
+        }
+
+        public async Task<ProfessionalProfile> GetProfessionalPerfilClient(string perfil)
+        {
+            return await _context.ProfessionalProfile
+                  .Include(x => x.Client)
+                 .FirstOrDefaultAsync(f => f.Perfil == perfil);
         }
     }
 }

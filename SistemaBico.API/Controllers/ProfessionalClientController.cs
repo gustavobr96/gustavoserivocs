@@ -68,7 +68,7 @@ namespace SistemaBico.API.Controllers
 
         [HttpPost("CancelApplyProfessional")]
         [SwaggerOperation(Tags = new[] { "ProfessionalClient" })]
-        public async Task<IActionResult> CancelApplyProfessional(QueueCancelApplyProfessionalCommand queueCancelApplyProfessionalCommand)
+        public async Task<IActionResult> CancelApplyProfessional(CancelApplyProfessionalCommand queueCancelApplyProfessionalCommand)
         {
             try
             {

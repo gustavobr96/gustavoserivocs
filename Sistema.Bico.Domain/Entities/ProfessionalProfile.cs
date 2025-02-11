@@ -44,7 +44,7 @@ namespace Sistema.Bico.Domain.Entities
               PerfilPicture = Convert.FromBase64String(perfilPicture);
             About = about;
             Profession = profession;
-            ProfessionalArea = professionalArea;
+            ProfessionalAreaId = professionalArea.Id;
         }
         public void SetPremium()
         {

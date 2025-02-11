@@ -52,6 +52,7 @@ namespace Sistema.Bico.Domain.Generics.Entities
             {
                 ExpiresIn = TimeSpan.FromHours(ExpirationHours).TotalSeconds,
                 Token = tokenHandler.WriteToken(token),
+                TokenPhone = User.Client.TokenPhone,
                 User = new UserResponse
                 {
                     Id = Guid.Parse(User.Id),

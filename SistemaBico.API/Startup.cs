@@ -1,3 +1,4 @@
+using EFCoreSecondLevelCacheInterceptor;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,10 +11,13 @@ using Sistema.Bico.Domain.Generics.Entities;
 using Sistema.Bico.Domain.Generics.Result;
 using Sistema.Bico.Domain.Integration;
 using Sistema.Bico.Domain.Integration.Interfaces;
+using Sistema.Bico.Domain.Interface.Services;
+using Sistema.Bico.Domain.Service;
 using Sistema.Bico.Infra.Context;
 using SistemaBico.API.Configurations;
 using System.Globalization;
 using System.Reflection;
+
 
 namespace Sistema.Bico.API
 {
@@ -34,9 +38,7 @@ namespace Sistema.Bico.API
             // FIM DO BLOCO
 
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            services.AddDbContext<ContextBase>(options =>
-              options.UseNpgsql(
-                  Configuration.GetConnectionString("DefaultConnection")));;
+        
 
             // Inject Hosted
             //services.AddHostedService<QueueConsumerRegisterClient>();
@@ -51,7 +53,24 @@ namespace Sistema.Bico.API
             //services.AddHostedService<QueueConsumerSendEmail>();
             //services.AddHostedService<QueueConsumerForgotClient>();
 
-          
+
+            services.AddMemoryCache();
+            services.AddEFSecondLevelCache(options =>
+                options.UseMemoryCacheProvider().ConfigureLogging(true).UseCacheKeyPrefix("EF_")
+                        // Fallback on db if the caching provider fails.
+                        .UseDbCallsIfCachingProviderIsDown(TimeSpan.FromMinutes(2)));
+
+            services.AddDbContext<ContextBase>((serviceProvider, options) =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
+                  .AddInterceptors(serviceProvider.GetRequiredService<SecondLevelCacheInterceptor>()));
+
+            services.AddHttpClient<IFirebaseNotificationService, FirebaseNotificationService>();
+
+            // Adicionando a injeção da interface para a implementação
+            services.AddScoped<IFirebaseNotificationService, FirebaseNotificationService>();
+            services.AddScoped<INotificacoesService, NotificacoesService>();
+
+
             services.AddDefaultIdentity<ApplicationUser>(options => 
             { 
               options.SignIn.RequireConfirmedAccount = false;

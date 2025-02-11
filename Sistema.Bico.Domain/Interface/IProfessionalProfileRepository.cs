@@ -20,5 +20,7 @@ namespace Sistema.Bico.Domain.Interface
         Task<List<ProfessionalProfile>> GetTopProfessional(string? city = null);
         Task<ProfessionalProfile> GetProfessionalProfileBasic(string perfil);
         Task<ProfessionalProfile> GetVerifyProfissional(Guid id);
+        Task<List<ProfessionalProfile>> GetProfessionalByAreaAndCity(string? city, int area);
+        Task<ProfessionalProfile> GetProfessionalPerfilClient(string perfil);
     }
 }

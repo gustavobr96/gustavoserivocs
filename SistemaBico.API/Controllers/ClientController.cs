@@ -101,6 +101,22 @@ namespace SistemaBico.API.Controllers
             }
         }
 
+        [HttpPost("UpdateToken")]
+        [SwaggerOperation(Tags = new[] { "Client" })]
+        public async Task<IActionResult> UpdateToken(UpdateClientTokenCommand updateClientTokenCommand) // Migrar para fila
+        {
+            try
+            {
+                var model = await _mediator.Send(updateClientTokenCommand);
+                return Ok(200);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(null);
+            }
+        }
+
+
         [HttpGet("GetClientProfileId/{id}")]
         [SwaggerOperation(Tags = new[] { "Client" })]
         public async Task<IActionResult> GetClientProfileId(Guid id)

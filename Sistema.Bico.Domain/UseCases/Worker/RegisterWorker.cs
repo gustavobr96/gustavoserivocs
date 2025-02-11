@@ -2,6 +2,7 @@
 using MediatR;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Interface;
+using Sistema.Bico.Domain.Interface.Services;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,14 +15,17 @@ namespace Sistema.Bico.Domain.UseCases.Worker
         private readonly IWorkerRepository _workerRepository;
         private readonly IMapper _mapper;
         private readonly IProfessionalAreaRepository _professionalAreaRepository;
+        private readonly INotificacoesService _notificacoesServicosNovos;
 
         public RegisterWorkertCommandHandler(IWorkerRepository workerRepository,
             IMapper mapper,
-            IProfessionalAreaRepository professionalAreaRepository)
+            IProfessionalAreaRepository professionalAreaRepository,
+            INotificacoesService notificacoesServicosNovos)
         {
             _workerRepository = workerRepository;
             _mapper = mapper;
             _professionalAreaRepository = professionalAreaRepository;
+            _notificacoesServicosNovos = notificacoesServicosNovos;
         }
 
         public async Task<Unit> Handle(AddWorkerCommand request, CancellationToken cancellationToken)
@@ -35,6 +39,9 @@ namespace Sistema.Bico.Domain.UseCases.Worker
                     worker.InserirWorker(area.Id);
 
                     await _workerRepository.Add(worker);
+
+                    string? cidade = request.Remote ? null : request.Address?.City;
+                    await _notificacoesServicosNovos.DispararNotificacaoNovoServico(cidade, area.Codigo, request.Title);
                 }
 
                 return Unit.Value;

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCoreSecondLevelCacheInterceptor;
+using Microsoft.EntityFrameworkCore;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Infra.Context;
@@ -18,13 +19,13 @@ namespace Sistema.Bico.Infra.Repository
 
         public async Task<ProfessionalArea> GetProfessionalAreaId(int id)
         {
-            return await _context.ProfessionalArea
+            return await _context.ProfessionalArea.Cacheable()
                  .FirstOrDefaultAsync(f => f.Codigo == id);
         }
 
         public async Task<List<ProfessionalArea>> GetAllProfessionalArea()
         {
-            return await _context.ProfessionalArea.ToListAsync();
+            return await _context.ProfessionalArea.Cacheable().ToListAsync();
         }
     }
 }

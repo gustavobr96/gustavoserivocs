@@ -60,6 +60,7 @@ namespace SistemaBico.API.Configurations
             services.AddScoped<IRequestHandler<ApprovalOrRecusedCommand, Unit>, ApproveOrRecuseCommandHandler>();
             services.AddScoped<IRequestHandler<WorkerCancellPlansCommand, Unit>, WorkerCancelPlanCommandHandler>();
             services.AddScoped<IRequestHandler<SendEmailCommand, Unit>, SendEmailCommandHandler>();
+            services.AddScoped<IRequestHandler<UpdateClientTokenCommand, Unit>, UpdateClientTokenCommandHandler>();
 
          
         }
@@ -87,6 +88,7 @@ namespace SistemaBico.API.Configurations
             services.AddScoped<IProfessionalPaymentRepository, ProfessionalPaymentRepository>();
             services.AddScoped<ITemplateRepository, TemplateRepository>();
             services.AddScoped<IPlanDapperRepository, PlanDapperRepository>();
+            services.AddScoped<IUserDapperRepository, UserDapperRepository>();
         }
     }
 }

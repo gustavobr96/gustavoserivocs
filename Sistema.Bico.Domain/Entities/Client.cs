@@ -20,6 +20,7 @@ namespace Sistema.Bico.Domain.Entities
         public bool IsServiceProvider { get;  set; }
         public DateTime? Cancellation { get;  set; }
         public bool Enable { get;  set; }
+        public string TokenPhone { get;  set; }
 
         public virtual ICollection<ApplicationUser> ApplicationUser { get; set; }
         public virtual ICollection<ProfessionalClient>? ProfessionalClient { get; set; }

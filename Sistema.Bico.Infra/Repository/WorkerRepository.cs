@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCoreSecondLevelCacheInterceptor;
+using Microsoft.EntityFrameworkCore;
 using Sistema.Bico.Domain.Command.Filters;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Interface;
@@ -41,11 +42,14 @@ namespace Sistema.Bico.Infra.Repository
         {
             var listWorkersApply = await _workerProfessionalRepository.GetWorkerProfessionalByClientId(filter.ClientId);
 
-            // Consulta para contar os registros
+            // Definindo uma chave exclusiva para o cache considerando os filtros e a paginação
+            var cacheKey = $"Workers_Page_{filter.Page}_Take_{filter.Take}_ClientId_{filter.ClientId}_Remote_{filter.Remote}_City_{filter.City}_Area_{filter.Area}_Profession_{filter.Profession}";
+
+            // Consulta para contar os registros (não deve ser cacheada, já que não envolve dados paginados)
             var countQuery = _context.Worker
                 .Where(w =>
-                    (!filter.Remote || w.Remote) && // Se remote for false, não filtra; se true, traz apenas remote
-                    (filter.Remote || string.IsNullOrEmpty(filter.City) || w.Address.City.Contains(filter.City)) && // Ignora cidade se remote for true
+                    (!filter.Remote || w.Remote) &&
+                    (filter.Remote || string.IsNullOrEmpty(filter.City) || w.Address.City.Contains(filter.City)) &&
                     ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
                     (string.IsNullOrEmpty(filter.Profession) || w.Profession.Contains(filter.Profession)) &&
                     (listWorkersApply.Count == 0 || !listWorkersApply.Select(s => s.WorkerId).Contains(w.Id)) &&
@@ -53,20 +57,21 @@ namespace Sistema.Bico.Infra.Repository
 
             var count = await countQuery.CountAsync();
 
-            // Consulta para obter os registros paginados
+            // Consulta para obter os registros paginados com cache de segundo nível
             var listProfessional = await _context.Worker
                 .Include(es => es.Client)
                 .Include(area => area.ProfessionalArea)
                 .Include(end => end.Address)
                 .Where(w =>
-                    (!filter.Remote || w.Remote) && // Se remote for false, não filtra; se true, traz apenas remote
-                    (filter.Remote || string.IsNullOrEmpty(filter.City) || w.Address.City.Contains(filter.City)) && // Ignora cidade se remote for true
+                    (!filter.Remote || w.Remote) &&
+                    (filter.Remote || string.IsNullOrEmpty(filter.City) || w.Address.City.Contains(filter.City)) &&
                     ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
                     (string.IsNullOrEmpty(filter.Profession) || w.Profession.Contains(filter.Profession)) &&
                     (listWorkersApply.Count == 0 || !listWorkersApply.Select(s => s.WorkerId).Contains(w.Id)) &&
                     w.ClientId != filter.ClientId)
                 .Skip(filter.Take * (filter.Page - 1))
                 .Take(filter.Take)
+                .Cacheable() // 🔥 Ativando cache para a consulta paginada
                 .ToListAsync();
 
             return (count, listProfessional);

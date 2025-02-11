@@ -10,5 +10,6 @@ namespace Sistema.Bico.Domain.Command
         public TypePeople TypePeople { get;  set; }
         public string CpfCnpj { get;  set; }
         public string FotoBase64 { get;  set; }
+        public string TokenPhone { get;  set; }
     }
 }

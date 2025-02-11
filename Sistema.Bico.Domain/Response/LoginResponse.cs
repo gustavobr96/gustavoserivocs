@@ -16,6 +16,7 @@ namespace Sistema.Bico.Domain.Response
     public class LoginResponse
     {
         public string Token { get; set; }
+        public string TokenPhone { get; set; }
         public double ExpiresIn { get; set; }
         public UserResponse User { get; set; }
     }
