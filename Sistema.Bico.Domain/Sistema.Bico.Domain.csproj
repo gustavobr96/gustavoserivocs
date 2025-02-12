@@ -26,13 +26,4 @@
     <Folder Include="Generics\TemplateEmail\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="firebase.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="google-services.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

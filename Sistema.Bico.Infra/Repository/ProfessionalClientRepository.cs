@@ -54,19 +54,19 @@ namespace Sistema.Bico.Infra.Repository
                     .FirstOrDefaultAsync(f => f.ClientId == clientId && f.ProfessionalProfile.Perfil == profile);
         }
 
-
-
         public async Task<List<ProfessionalClient>> GetMyProfessionalClient(Guid clientId)
         {
             return await _context.ProfessionalClient
-                 .Include(s => s.ProfessionalProfile)
-                 .Include(s => s.ProfessionalProfile.Address)
-                 .Include(s => s.ProfessionalProfile.Especiality)
-                 .Include(s => s.Client)
-                 .Where(f => f.ClientId == clientId)
-                 .OrderByDescending(x => x.Created)
-                 .ToListAsync();
-    
+                           .Include(s => s.ProfessionalProfile)
+                           .Include(s => s.ProfessionalProfile.Address)
+                           .Include(s => s.ProfessionalProfile.Especiality)
+                           .Include(s => s.Client)
+                           .Where(f => f.ClientId == clientId)
+                           .AsNoTracking()
+                           .OrderByDescending(x => x.Created)
+                           .Take(10)
+                           .ToListAsync();
+
         }
 
         public async Task<List<ProfessionalClient>> GetClientApproval(Guid clientId)

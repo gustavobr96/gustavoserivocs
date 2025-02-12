@@ -27,10 +27,16 @@ namespace Sistema.Bico.Domain.Service
         }
         private async Task<string> GetAccessTokenAsync()
         {
-            GoogleCredential credential = GoogleCredential.FromFile(_firebaseCredentialsPath)
-                .CreateScoped("https://www.googleapis.com/auth/firebase.messaging");
-            var token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
-            return token;
+            try {
+                GoogleCredential credential = GoogleCredential.FromFile(_firebaseCredentialsPath)
+                   .CreateScoped("https://www.googleapis.com/auth/firebase.messaging");
+                var token = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
+                return token;
+            }
+            catch (Exception e) {
+                return "";
+            }
+           
         }
         public async Task EnviarNotificacaoParaProfissionais(List<string> tokens, string titulo, string mensagem)
         {
