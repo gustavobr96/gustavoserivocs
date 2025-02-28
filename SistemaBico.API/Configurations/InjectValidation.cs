@@ -89,6 +89,7 @@ namespace SistemaBico.API.Configurations
             services.AddScoped<ITemplateRepository, TemplateRepository>();
             services.AddScoped<IPlanDapperRepository, PlanDapperRepository>();
             services.AddScoped<IUserDapperRepository, UserDapperRepository>();
+            services.AddScoped<IDapperProfessionalClientRepository, DapperProfessionalClientRepository>();
         }
     }
 }

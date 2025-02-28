@@ -9,5 +9,6 @@ namespace Sistema.Bico.Domain.Response
         public ProfessionalProfileResponse ProfessionalProfile { get; set; }
         public ClientResponse Client { get; set; }
         public StatusWorker StatusWorker { get; set; }
+        public DateTime Created { get; set; }
     }
 }

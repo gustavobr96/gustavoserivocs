@@ -3,6 +3,7 @@ using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Enums;
 using Sistema.Bico.Domain.Generics.Extensions;
 using Sistema.Bico.Domain.Interface;
+using Sistema.Bico.Domain.Response;
 using Sistema.Bico.Infra.Context;
 using Sistema.Bico.Infra.Generics.Repository;
 using System;
@@ -43,8 +44,8 @@ namespace Sistema.Bico.Infra.Repository
         public async Task<ProfessionalClient> GetProfessionalClientByProfile(Guid clientId, string profile)
         {
             //var professional = await _context.ProfessionalProfile.FirstOrDefaultAsync(f => f.Perfil == profile);
-            return  await _context.ProfessionalClient
-                    .FirstOrDefaultAsync(f => f.ClientId == clientId  && f.ProfessionalProfile.Perfil == profile);
+            return await _context.ProfessionalClient
+                    .FirstOrDefaultAsync(f => f.ClientId == clientId && f.ProfessionalProfile.Perfil == profile);
         }
         public async Task<ProfessionalClient> GetProfessionalClientByProfileIntencao(Guid clientId, string profile)
         {
@@ -54,19 +55,34 @@ namespace Sistema.Bico.Infra.Repository
                     .FirstOrDefaultAsync(f => f.ClientId == clientId && f.ProfessionalProfile.Perfil == profile);
         }
 
-        public async Task<List<ProfessionalClient>> GetMyProfessionalClient(Guid clientId)
+        public async Task<List<ProfessionalClientResponse>> GetMyProfessionalClient(Guid clientId)
         {
             return await _context.ProfessionalClient
-                           .Include(s => s.ProfessionalProfile)
-                           .Include(s => s.ProfessionalProfile.Address)
-                           .Include(s => s.ProfessionalProfile.Especiality)
-                           .Include(s => s.Client)
                            .Where(f => f.ClientId == clientId)
+                           .Select(s => new ProfessionalClientResponse
+                           {
+                               Id = s.Id,
+                               ProfessionalProfile = new ProfessionalProfileResponse
+                               {
+                                   Name = s.ProfessionalProfile.Name,
+                                   Profession = s.ProfessionalProfile.Profession,
+                                   City = s.ProfessionalProfile.Address.City,
+                                   CEP = s.ProfessionalProfile.Address.ZipCode,
+                                   Phone = s.ProfessionalProfile.Phone,
+                                   LastName = s.ProfessionalProfile.LastName,
+                                   Especiality = s.ProfessionalProfile.Especiality.Select(s => s.Description).ToList(),
+                                   Sobre = s.ProfessionalProfile.About,
+                                   PerfilPicture = s.ProfessionalProfile.PerfilPicture != null ? Convert.ToBase64String(s.ProfessionalProfile.PerfilPicture) : "",
+                                   Perfil = s.ProfessionalProfile.Perfil,
+                                   Avaliation = s.ProfessionalProfile.Avaliation != null ? s.ProfessionalProfile.Avaliation.ToString() : "0,0",
+                               },
+                               StatusWorker = s.StatusWorker,
+                               Created = s.Created
+                           })
                            .AsNoTracking()
                            .OrderByDescending(x => x.Created)
                            .Take(10)
                            .ToListAsync();
-
         }
 
         public async Task<List<ProfessionalClient>> GetClientApproval(Guid clientId)

@@ -16,18 +16,21 @@ namespace SistemaBico.API.Controllers
     {
         private readonly IProfessionalProfileRepository _professionalProfileRepository;
         private readonly IProfessionalClientRepository _professionalClientRepository;
+        private readonly IDapperProfessionalClientRepository _dapperProfessionalClientRepository;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
         public ProfessionalClientController(IProfessionalClientRepository professionalClientRepository,
             IMediator mediator,
             IMapper mapper,
-            IProfessionalProfileRepository professionalProfileRepository)
+            IProfessionalProfileRepository professionalProfileRepository,
+            IDapperProfessionalClientRepository dapperProfessionalClientRepository)
         {
             _professionalClientRepository = professionalClientRepository;
             _mediator = mediator;
             _mapper = mapper;
             _professionalProfileRepository = professionalProfileRepository;
+            _dapperProfessionalClientRepository = dapperProfessionalClientRepository;
         }
 
 
@@ -37,10 +40,8 @@ namespace SistemaBico.API.Controllers
         {
             try
             {
-                var list = await _professionalClientRepository.GetMyProfessionalClient(guid.Guid);
-                var response = _mapper.Map<List<ProfessionalClientResponse>>(list);
-
-                return Ok(response);
+                var list = await _dapperProfessionalClientRepository.GetMyProfessionalClient(guid.Guid);
+                return Ok(list);
             }
             catch (Exception e)
             {
