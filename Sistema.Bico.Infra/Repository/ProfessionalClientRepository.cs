@@ -53,6 +53,7 @@ namespace Sistema.Bico.Infra.Repository
             return await _context.ProfessionalClient
                     .Where(w => w.StatusWorker == StatusWorker.IntencaoServico)
                     .FirstOrDefaultAsync(f => f.ClientId == clientId && f.ProfessionalProfile.Perfil == profile);
+                   
         }
 
         public async Task<List<ProfessionalClientResponse>> GetMyProfessionalClient(Guid clientId)

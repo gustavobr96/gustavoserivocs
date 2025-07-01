@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using Sistema.Bico.Domain.Entities;
+using Sistema.Bico.Domain.Enums;
 using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Domain.Response;
 using System;
@@ -95,6 +96,22 @@ namespace Sistema.Bico.Infra.Dapper.Repository
                 return null;
             }
 
+
+        }
+
+        public async Task AtualizarStatus(Guid id, StatusWorker status)
+        {
+            try
+            {
+                string commandText = @"UPDATE ""TB_ProfessionalClient"" SET ""StatusWorker"" = @StatusWorker WHERE ""Id"" = @Id";
+                await connection.ExecuteAsync(commandText, new { Id = id, StatusWorker = status });
+                connection.Close();
+
+            }
+            catch (Exception e)
+            {
+
+            }
 
         }
     }

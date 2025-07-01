@@ -2,16 +2,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Serilog;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Command.Filters;
 using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Domain.Response;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SistemaBico.API.Controllers
 {

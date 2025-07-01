@@ -43,6 +43,7 @@ namespace Sistema.Bico.Infra.Repository
                  .Include(area => area.ProfessionalArea)
                  .Include(end => end.Address)
                  .FirstOrDefaultAsync(f => f.ClientId == id);
+
         }
 
         public async Task<ProfessionalProfile> GetVerifyProfissional(Guid id)

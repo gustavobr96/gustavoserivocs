@@ -1,4 +1,4 @@
-using EFCoreSecondLevelCacheInterceptor;
+﻿using EFCoreSecondLevelCacheInterceptor;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,7 +18,6 @@ using SistemaBico.API.Configurations;
 using System.Globalization;
 using System.Reflection;
 
-
 namespace Sistema.Bico.API
 {
     public class Startup
@@ -26,78 +25,47 @@ namespace Sistema.Bico.API
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Console.WriteLine(" Iniciando Startup...");
         }
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // *** ESTE BLOCO PRECISA INSERIR
-            //services.AddLettuceEncrypt();
-            // FIM DO BLOCO
+            Console.WriteLine("🔧 Configurando Services...");
 
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-        
-
-            // Inject Hosted
-            //services.AddHostedService<QueueConsumerRegisterClient>();
-            //services.AddHostedService<QueueConsumerRegisterWorker>();
-            //services.AddHostedService<QueueConsumerApplyWorker>();
-            //services.AddHostedService<QueueConsumerApplyProfessional>();
-            //services.AddHostedService<QueueConsumerRegisterProfessional>();
-            //services.AddHostedService<QueueConsumerCancelApplyProfessional>();
-            //services.AddHostedService<QueueConsumerDoneWorker>();
-            //services.AddHostedService<QueueConsumerPayment>();
-            //services.AddHostedService<QueueConsumerWorkerCancelPlan>();
-            //services.AddHostedService<QueueConsumerSendEmail>();
-            //services.AddHostedService<QueueConsumerForgotClient>();
-
 
             services.AddMemoryCache();
             services.AddEFSecondLevelCache(options =>
-                options.UseMemoryCacheProvider().ConfigureLogging(true).UseCacheKeyPrefix("EF_")
-                        // Fallback on db if the caching provider fails.
-                        .UseDbCallsIfCachingProviderIsDown(TimeSpan.FromMinutes(2)));
+                options.UseMemoryCacheProvider()
+                       .ConfigureLogging(true)
+                       .UseCacheKeyPrefix("EF_")
+                       .UseDbCallsIfCachingProviderIsDown(TimeSpan.FromMinutes(2)));
 
             services.AddDbContext<ContextBase>((serviceProvider, options) =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
-                  .AddInterceptors(serviceProvider.GetRequiredService<SecondLevelCacheInterceptor>()));
+                       .AddInterceptors(serviceProvider.GetRequiredService<SecondLevelCacheInterceptor>()));
 
             services.AddHttpClient<IFirebaseNotificationService, FirebaseNotificationService>();
-
-            // Adicionando a inje��o da interface para a implementa��o
             services.AddScoped<IFirebaseNotificationService, FirebaseNotificationService>();
             services.AddScoped<INotificacoesService, NotificacoesService>();
 
-
-            services.AddDefaultIdentity<ApplicationUser>(options => 
-            { 
-              options.SignIn.RequireConfirmedAccount = false;
-              options.SignIn.RequireConfirmedPhoneNumber = false;
-
-              options.Password.RequireDigit = false;
-              options.Password.RequireLowercase = false;
-              options.Password.RequireNonAlphanumeric = false;
-              options.Password.RequireUppercase = false;
-              options.Password.RequiredLength = 6;
-              options.Password.RequiredUniqueChars = 0;
-
+            services.AddDefaultIdentity<ApplicationUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 0;
             }).AddEntityFrameworkStores<ContextBase>();
 
-            // Repositorys
             services.AddInjectRepositorys();
-
-            // Commands
             services.AddInjectHandlers();
 
-          //  services.AddTransient<IRequestHandler<QueuePublishWorkerCancelPlanCommand, Unit>, QueuePublishWorkerCancelPlanCommandHandler>();
-            services.AddHttpClient();
-            //services.AddHostedService<WorkerCancelPlansExpiration>();
-
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-
-            // Notification
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
             services.AddScoped<Domain.Generics.Interfaces.INotification, Domain.Generics.Notification.Notification>();
             services.AddScoped<IMercadoPagoIntegration, MercadoPagoIntegration>();
@@ -108,11 +76,11 @@ namespace Sistema.Bico.API
                 .AddNewtonsoftJson(s =>
                 {
                     s.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-                }).AddFluentValidation();
+                })
+                .AddFluentValidation();
 
             services.AddInjectValidation();
 
-            services.AddControllersWithViews();
             services.AddApiVersioning(options =>
             {
                 options.DefaultApiVersion = new ApiVersion(1, 0);
@@ -128,7 +96,7 @@ namespace Sistema.Bico.API
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Bico API", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
@@ -140,34 +108,29 @@ namespace Sistema.Bico.API
                     Scheme = "Bearer"
                 });
 
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-              {
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
-                  new OpenApiSecurityScheme
-                  {
-                    Reference = new OpenApiReference
-                      {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                      },
-                      Scheme = "oauth2",
-                      Name = "Bearer",
-                      In = ParameterLocation.Header,
-
-                    },
-                    new List<string>()
-                  }
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
+                        },
+                        new List<string>()
+                    }
                 });
-
             });
 
-
-           // services.AddSignalR();
-
+            services.AddSwaggerGenNewtonsoftSupport();
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("pt-BR");
-
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                      .AddJwtBearer(option =>
@@ -178,7 +141,6 @@ namespace Sistema.Bico.API
                              ValidateAudience = false,
                              ValidateLifetime = true,
                              ValidateIssuerSigningKey = true,
-
                              ValidIssuer = "Bico.Securiry.Bearer",
                              ValidAudience = "Bico.Securiry.Bearer",
                              IssuerSigningKey = JwtSecurityKey.Create("Secret_Key-AESKPERSK2816762")
@@ -188,65 +150,74 @@ namespace Sistema.Bico.API
                          {
                              OnAuthenticationFailed = context =>
                              {
-                                 Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
+                                 Console.WriteLine(" Auth Failed: " + context.Exception.Message);
                                  return Task.CompletedTask;
                              },
                              OnTokenValidated = context =>
                              {
-                                 Console.WriteLine("OnTokenValidated: " + context.SecurityToken);
+                                 Console.WriteLine("Token Validated: " + context.SecurityToken);
                                  return Task.CompletedTask;
                              }
                          };
                      });
-
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy("AllowAll",
-            //        builder => builder
-            //            .AllowAnyOrigin()
-            //            .AllowAnyMethod()
-            //            .AllowAnyHeader());
-            //});
-
-
-            services.AddSwaggerGenNewtonsoftSupport();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            Console.WriteLine("🚦 Executando Configure...");
+
+            try
             {
-                app.UseDeveloperExceptionPage();
-                app.UseMigrationsEndPoint();
+                if (env.IsDevelopment())
+                {
+                    app.UseDeveloperExceptionPage();
+                    app.UseMigrationsEndPoint();
+                }
+                else
+                {
+                    app.UseExceptionHandler("/Home/Error");
+                    app.UseHsts();
+                }
+
+                app.UseHttpsRedirection();
+                app.UseStaticFiles();
+                app.UseRouting();
+
+                app.UseAuthentication();
+                app.UseAuthorization();
+
+                // Swagger padrão
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bico API v1");
+                    c.RoutePrefix = "swagger";
+                });
+
+                // Endpoint padrão e health
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+
+                    // Endpoint básico de health check
+                    endpoints.MapGet("/", async context =>
+                    {
+                        await context.Response.WriteAsync("API rodando!");
+                    });
+
+                    endpoints.MapGet("/health", async context =>
+                    {
+                        await context.Response.WriteAsync("Healthy");
+                    });
+                });
+
+                Console.WriteLine(" Aplicação inicializada com sucesso.");
             }
-            else
+            catch (Exception ex)
             {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                Console.WriteLine($" Erro na configuração do pipeline: {ex.Message}");
+                throw;
             }
-
-           // app.UseCors("AllowAll");
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-               // endpoints.MapHub<PaymentHub>("/signalr-hub");
-            });
-
-            app.UseSwaggerESwaggerUI();
         }
     }
 }

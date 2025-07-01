@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Sistema.Bico.Domain.Command;
+using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Enums;
 using Sistema.Bico.Domain.Interface;
 using System;
@@ -11,10 +12,13 @@ namespace Sistema.Bico.Domain.UseCases.Worker
     public class ApproveOrRecuseCommandHandler : IRequestHandler<ApprovalOrRecusedCommand, Unit>
     {
         private readonly IProfessionalClientRepository _professionalClientRepository;
+        private readonly IDapperProfessionalClientRepository _professionalClientDapperRepository;
 
-        public ApproveOrRecuseCommandHandler(IProfessionalClientRepository professionalClientRepository)
+        public ApproveOrRecuseCommandHandler(IProfessionalClientRepository professionalClientRepository,
+            IDapperProfessionalClientRepository professionalClientDapperRepository)
         {
             _professionalClientRepository = professionalClientRepository;
+            _professionalClientDapperRepository = professionalClientDapperRepository;
         }
 
         public async Task<Unit> Handle(ApprovalOrRecusedCommand request, CancellationToken cancellationToken)
@@ -25,8 +29,8 @@ namespace Sistema.Bico.Domain.UseCases.Worker
                 if (professional != null)
                 {
                     var status = request.Aceitar ? StatusWorker.Contratado : StatusWorker.Reprovado;
-                    professional.StatusWorker = status;
-                    await _professionalClientRepository.Update(professional);
+
+                    await _professionalClientDapperRepository.AtualizarStatus(professional.Id, status);
                 }
 
                 return Unit.Value;

@@ -40,8 +40,10 @@ namespace SistemaBico.API.Controllers
         {
             try
             {
-                var list = await _dapperProfessionalClientRepository.GetMyProfessionalClient(guid.Guid);
-                return Ok(list);
+                var list = await _professionalClientRepository.GetMyProfessionalClient(guid.Guid);
+                var response = _mapper.Map<List<ProfessionalClientResponse>>(list);
+
+                return Ok(response);
             }
             catch (Exception e)
             {

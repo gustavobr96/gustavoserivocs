@@ -13,16 +13,19 @@ namespace Sistema.Bico.Domain.UseCases.Professional
     public class UpdateProfessionalClientCommandHandler : IRequestHandler<UpdateProfessionalClientCommand, Result>
     {
         private readonly IProfessionalClientRepository _professionalClientRepository;
+        private readonly IDapperProfessionalClientRepository _professionalClientDapperRepository;
         private readonly INotificacoesService _notificacoesService;
         private readonly Generics.Interfaces.INotification _Notification;
 
         public UpdateProfessionalClientCommandHandler(IProfessionalClientRepository professionalClientRepository, 
             Generics.Interfaces.INotification notification,
-            INotificacoesService notificacoesService)
+            INotificacoesService notificacoesService,
+            IDapperProfessionalClientRepository professionalClientDapperRepository)
         {
             _professionalClientRepository = professionalClientRepository;
             _Notification = notification;
             _notificacoesService = notificacoesService;
+            _professionalClientDapperRepository = professionalClientDapperRepository;
         }
 
         public async Task<Result> Handle(UpdateProfessionalClientCommand request, CancellationToken cancellationToken)
@@ -33,8 +36,7 @@ namespace Sistema.Bico.Domain.UseCases.Professional
 
                 if (professionalClient != null)
                 {
-                    professionalClient.StatusWorker = request.StatusWorker;
-                    await _professionalClientRepository.Update(professionalClient);
+                    await _professionalClientDapperRepository.AtualizarStatus(professionalClient.Id, request.StatusWorker);
 
                     if (professionalClient.StatusWorker == StatusWorker.AguardandoConfirmacao)
                         await _notificacoesService.DispararNotificacaoPendenteAprovacao(request.Perfil);
