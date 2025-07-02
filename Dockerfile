@@ -17,7 +17,7 @@ RUN dotnet restore "SistemaBicoCore.sln"
 RUN dotnet build "SistemaBicoCore.sln" -c Release -o /app/build
 
 # Publica a api
-RUN dotnet publish "SistemaBico.API/SistemaBico.API.csproj" -c Release -r linux-x64 --self-contained true -o /app/publish /p:PublishTrimmed=false /p:PublishSingleFile=false
+RUN dotnet publish "SistemaBico.API/SistemaBico.API.csproj" -c Release -o /app/publish
 
 # Imagem final
 FROM base AS final
@@ -36,6 +36,8 @@ VOLUME /app/data
 # Define variáveis de ambiente
 ENV ASPNETCORE_URLS=http://0.0.0.0:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
+ENV DOTNET_SYSTEM_NET_SOCKETS_INLINE_COMPLETIONS=1
 
 # EntryPoint da aplicação
+
 ENTRYPOINT ["dotnet", "SistemaBico.API.dll"]

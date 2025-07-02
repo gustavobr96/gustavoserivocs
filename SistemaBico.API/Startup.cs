@@ -13,6 +13,7 @@ using Sistema.Bico.Domain.Integration;
 using Sistema.Bico.Domain.Integration.Interfaces;
 using Sistema.Bico.Domain.Interface.Services;
 using Sistema.Bico.Domain.Service;
+using Sistema.Bico.Domain.UseCases;
 using Sistema.Bico.Infra.Context;
 using SistemaBico.API.Configurations;
 using System.Globalization;
@@ -168,6 +169,8 @@ namespace Sistema.Bico.API
 
             try
             {
+                app.UseMiddleware<ExceptionHandlingMiddleware>();
+
                 if (env.IsDevelopment())
                 {
                     app.UseDeveloperExceptionPage();
@@ -179,7 +182,6 @@ namespace Sistema.Bico.API
                     app.UseHsts();
                 }
 
-                app.UseHttpsRedirection();
                 app.UseStaticFiles();
                 app.UseRouting();
 

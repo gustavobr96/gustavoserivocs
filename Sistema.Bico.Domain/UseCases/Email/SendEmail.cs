@@ -20,7 +20,7 @@ namespace Sistema.Bico.Domain.UseCases.Email
             try
             {
                 await _smtpEmailComunication.SendEmail(request.Email, cancellationToken);
-                return await Task.FromResult(Unit.Value);
+                return Unit.Value;
             }
             catch (Exception e) { return Unit.Value; }
           

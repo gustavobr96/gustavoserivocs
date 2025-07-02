@@ -50,7 +50,7 @@ namespace Sistema.Bico.Domain.UseCases.Professional
             catch(Exception e) { return Unit.Value; }
 
 
-            return await Task.FromResult(Unit.Value);
+            return Unit.Value;
         }
     }
 }

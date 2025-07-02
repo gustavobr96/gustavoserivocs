@@ -67,13 +67,13 @@ namespace Sistema.Bico.Domain.Integration
 
                 Log.Information("message: {@message}", message);
                 await smtpClient.SendMailAsync(message, cancellationToken);
-                return await Task.FromResult(Unit.Value);
+                return Unit.Value;
             }
             catch(Exception e)
             {
                 Log.Error($"SendEmail Error: {e.Message}");
                 Log.Information($"SendEmail Error: {e.Message}");
-                return await Task.FromResult(Unit.Value);
+                return Unit.Value;
             }
            
         }

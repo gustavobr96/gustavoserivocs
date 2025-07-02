@@ -1,1 +1,0 @@
-2025-01-21 13:36:20.228 -03:00 [INF] One or more errors occurred. (The SSL connection could not be established, see inner exception.)

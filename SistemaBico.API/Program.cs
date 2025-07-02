@@ -1,58 +1,52 @@
-using Microsoft.AspNetCore.Server.Kestrel.Core;
+﻿using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
-using Sistema.Bico.API;
 
-static class Program
+namespace Sistema.Bico.API
 {
-    public static void Main(string[] args)
+    public static class Program
     {
-        Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
+        public static void Main(string[] args)
+        {
+            Log.Logger = new LoggerConfiguration()
+                 .MinimumLevel.Debug()
+                 .WriteTo.Console()
                 .WriteTo.File("logApi.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
-        try
-        {
-            var hostbuilder = CreateHostBuilder(args);
-            hostbuilder.Build().Run();
-        }
-        finally
-        {
-            Log.CloseAndFlush();
-        }
-    }
-
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
+            try
             {
-                webBuilder.UseStartup<Startup>();
-                webBuilder.ConfigureKestrel(options =>
+                Log.Information("Iniciando aplicação...");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Aplicação falhou ao iniciar.");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    options.ConfigureEndpointDefaults(endpointOptions =>
+                    webBuilder.ConfigureKestrel(serverOptions =>
                     {
-                        endpointOptions.Protocols = HttpProtocols.Http1;
+                        serverOptions.ConfigureEndpointDefaults(endpointOptions =>
+                        {
+                            endpointOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                        });
+
+                        //  Definindo limites para evitar erro de socket
+                        serverOptions.Limits.MaxConcurrentConnections = 100;
+                        serverOptions.Limits.MaxConcurrentUpgradedConnections = 100;
+                        serverOptions.Limits.KeepAliveTimeout = TimeSpan.FromSeconds(120);
+                        serverOptions.Limits.RequestHeadersTimeout = TimeSpan.FromSeconds(30);
                     });
-                });
-            })
-            .ConfigureServices((context, services) =>
-            {
-                // Configura��es do Host
-                services.Configure<HostOptions>(o =>
-                {
 
+                    webBuilder.UseStartup<Startup>();
                 });
-            });
-
-    public static void ConfigureWebHost(this IWebHostBuilder webHostBuilder)
-    {
-        webHostBuilder.UseStartup<Startup>();
-        webHostBuilder.ConfigureKestrel(c =>
-        {
-            c.ConfigureEndpointDefaults(x =>
-            {
-                x.Protocols = HttpProtocols.Http1;
-            });
-        });
     }
 }

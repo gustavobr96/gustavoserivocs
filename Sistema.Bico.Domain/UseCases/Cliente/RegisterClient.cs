@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Enums;
@@ -20,16 +21,20 @@ namespace Sistema.Bico.Domain.UseCases.Cliente
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
         private readonly ITemplateRepository _templateRepository;
+        private readonly ILogger<RegisterClientCommandHandler> _logger;
 
-        public RegisterClientCommandHandler(IIdentityRepository identityRepository,
+        public RegisterClientCommandHandler(
+            IIdentityRepository identityRepository,
             IMapper mapper,
             IMediator mediator,
-            ITemplateRepository templateRepository)
+            ITemplateRepository templateRepository,
+            ILogger<RegisterClientCommandHandler> logger)
         {
             _identityRepository = identityRepository;
             _mapper = mapper;
             _mediator = mediator;
             _templateRepository = templateRepository;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(AddClientCommand request, CancellationToken cancellationToken)
@@ -43,18 +48,24 @@ namespace Sistema.Bico.Domain.UseCases.Cliente
                 client.Email = identity.Email;
 
                 if (!string.IsNullOrEmpty(request.FotoBase64))
+                {
                     client.PerfilPicture = Convert.FromBase64String(request.FotoBase64);
-               
+                    _logger.LogInformation("Imagem de perfil convertida e adicionada.");
+                }
+
                 identity.Client = client;
 
-                var template = await _templateRepository.GetTemplate(TypeTemplate.Cadastro);
+               // var template = await _templateRepository.GetTemplate(TypeTemplate.Cadastro);
                 await _identityRepository.RegisterAsync(identity, request.Password);
 
-                await _mediator.Send(new QueuePublishEmailCommand { Email = new EmailDto { To = new List<string> { request.Email }, Subject = TypeSubject.Cadastro.GetDescription(), MessageBody = template.Description }, TypeTemplate = TypeTemplate.Cadastro });
+                //await _mediator.Send(new QueuePublishEmailCommand { Email = new EmailDto { To = new List<string> { request.Email }, Subject = TypeSubject.Cadastro.GetDescription(), MessageBody = template.Description }, TypeTemplate = TypeTemplate.Cadastro });
 
                 return Unit.Value;
             }
-            catch(Exception e) { return Unit.Value; }
+            catch(Exception e) {
+                _logger.LogError(e, "Erro ao registrar cliente com e-mail: {Email}", request.Email);
+                throw; // Deixe a exceção estourar para que o Cloud Run saiba que houve falha
+            }
             
         }
     }

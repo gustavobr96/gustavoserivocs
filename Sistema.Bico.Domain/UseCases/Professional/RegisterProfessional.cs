@@ -65,7 +65,7 @@ namespace Sistema.Bico.Domain.UseCases.Professional
             }
 
 
-            return await Task.FromResult(Unit.Value);
+            return Unit.Value;
         }
     }
 }

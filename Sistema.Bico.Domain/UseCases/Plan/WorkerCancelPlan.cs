@@ -34,10 +34,11 @@ namespace Sistema.Bico.Domain.UseCases.Plan
                     var professional = professionalsPlans.ConvertAll(c => c.Professional);
                     professional.ForEach(p => p.SetEstorno());
                     await _professionalProfileRepository.UpdateStatsProfessionalPlan(professional);
-                    return await Task.FromResult(Unit.Value);
+                    
+                    return Unit.Value;
                 }
 
-                return await Task.FromResult(Unit.Value);
+                return Unit.Value;
             }
             catch(Exception e) { return Unit.Value; }
            
