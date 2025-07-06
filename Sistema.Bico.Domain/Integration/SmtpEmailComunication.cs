@@ -1,6 +1,4 @@
 ﻿using MediatR;
-using Microsoft.Extensions.Configuration;
-using Serilog;
 using Sistema.Bico.Domain.Generics.Extensions;
 using Sistema.Bico.Domain.Integration.Interfaces;
 using Sistema.Bico.Domain.Response;
@@ -65,14 +63,11 @@ namespace Sistema.Bico.Domain.Integration
                     EnableSsl = SSLENABLE
                 };
 
-                Log.Information("message: {@message}", message);
                 await smtpClient.SendMailAsync(message, cancellationToken);
                 return Unit.Value;
             }
             catch(Exception e)
             {
-                Log.Error($"SendEmail Error: {e.Message}");
-                Log.Information($"SendEmail Error: {e.Message}");
                 return Unit.Value;
             }
            

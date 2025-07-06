@@ -46,6 +46,8 @@ namespace SistemaBico.API.Configurations
             services.AddScoped<IRequestHandler<SendEmailCommand, Unit>, SendEmailCommandHandler>();
             services.AddScoped<IRequestHandler<UpdateClientTokenCommand, Unit>, UpdateClientTokenCommandHandler>();
 
+
+
          
         }
 

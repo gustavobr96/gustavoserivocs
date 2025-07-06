@@ -38,7 +38,6 @@ namespace Sistema.Bico.API
                             endpointOptions.Protocols = HttpProtocols.Http1AndHttp2;
                         });
 
-                        //  Definindo limites para evitar erro de socket
                         serverOptions.Limits.MaxConcurrentConnections = 100;
                         serverOptions.Limits.MaxConcurrentUpgradedConnections = 100;
                         serverOptions.Limits.KeepAliveTimeout = TimeSpan.FromSeconds(120);

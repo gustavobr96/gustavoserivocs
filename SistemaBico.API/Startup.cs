@@ -1,9 +1,10 @@
-﻿using EFCoreSecondLevelCacheInterceptor;
+﻿using AutoMapper;
+using EFCoreSecondLevelCacheInterceptor;
 using FluentValidation.AspNetCore;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Sistema.Bico.Domain.AutoMapper;
@@ -17,7 +18,7 @@ using Sistema.Bico.Domain.UseCases;
 using Sistema.Bico.Infra.Context;
 using SistemaBico.API.Configurations;
 using System.Globalization;
-using System.Reflection;
+
 
 namespace Sistema.Bico.API
 {
@@ -33,6 +34,9 @@ namespace Sistema.Bico.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+
             Console.WriteLine("🔧 Configurando Services...");
 
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -66,8 +70,10 @@ namespace Sistema.Bico.API
             services.AddInjectRepositorys();
             services.AddInjectHandlers();
 
-            services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-            services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
+
+        
+            // Registrar MediatR
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).Assembly));
             services.AddScoped<Domain.Generics.Interfaces.INotification, Domain.Generics.Notification.Notification>();
             services.AddScoped<IMercadoPagoIntegration, MercadoPagoIntegration>();
             services.AddScoped<ISmtpEmailComunication, SmtpEmailComunication>();
@@ -84,9 +90,9 @@ namespace Sistema.Bico.API
 
             services.AddApiVersioning(options =>
             {
+                options.AssumeDefaultVersionWhenUnspecified = true;
                 options.DefaultApiVersion = new ApiVersion(1, 0);
                 options.ReportApiVersions = true;
-                options.AssumeDefaultVersionWhenUnspecified = true;
             });
 
             services.AddVersionedApiExplorer(options =>
@@ -144,7 +150,7 @@ namespace Sistema.Bico.API
                              ValidateIssuerSigningKey = true,
                              ValidIssuer = "Bico.Securiry.Bearer",
                              ValidAudience = "Bico.Securiry.Bearer",
-                             IssuerSigningKey = JwtSecurityKey.Create("Secret_Key-AESKPERSK2816762")
+                             IssuerSigningKey = JwtSecurityKey.Create("a1b2c3d4e5f6g7h8i9j0klmnopqrstuv")
                          };
 
                          option.Events = new JwtBearerEvents
