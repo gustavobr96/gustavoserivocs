@@ -6,7 +6,6 @@ using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Command.Filters;
 using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Domain.Response;
-using Sistema.Bico.Infra.Dapper.Repository;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SistemaBico.API.Controllers
@@ -195,9 +194,6 @@ namespace SistemaBico.API.Controllers
                 _logger.LogError(ex, "Erro em GetProfessionalPerfil");
                 return null;
             }
-
-
         }
-
     }
 }

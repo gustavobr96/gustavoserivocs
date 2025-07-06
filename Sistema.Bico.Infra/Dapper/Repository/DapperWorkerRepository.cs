@@ -22,8 +22,6 @@ namespace Sistema.Bico.Infra.Dapper.Repository
         {
             _configuration = configuration;
             _logger = logger;
-            connection = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-            connection.Open();
         }
 
         public async Task<WorkerPaginationResponse> GetMyPublishWorkerClient(FilterWorkerCommand filter)

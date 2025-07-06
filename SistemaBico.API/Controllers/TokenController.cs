@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Sistema.Bico.Domain.Generics.Entities;
 using Sistema.Bico.Domain.Generics.Interfaces;
-using SistemaBico.API.Configurations;
-using System.Threading.Tasks;
 
 namespace Sistema.Bico.API.Controllers
 {

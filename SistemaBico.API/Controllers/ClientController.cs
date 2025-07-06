@@ -8,8 +8,6 @@ using Sistema.Bico.Domain.Generics.Entities;
 using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Domain.Response;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Threading.Tasks;
 
 namespace SistemaBico.API.Controllers
 {

@@ -2,18 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Npgsql;
 using Sistema.Bico.Domain.Command.Filters;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Enums;
 using Sistema.Bico.Domain.Interface;
-using Sistema.Bico.Domain.Response;
-using Sistema.Bico.Domain.UseCases.Cliente;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Sistema.Bico.Infra.Dapper.Repository
@@ -30,16 +26,12 @@ namespace Sistema.Bico.Infra.Dapper.Repository
         {
             _configuration = configuration;
             _logger = logger;
-            connection = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-            connection.Open();
         }
 
         public async Task<(int Total, List<ProfessionalProfile> List)> GetProfessionalPaginationWithSlapper(FilterProfessionalCommand filter)
         {
             try
             {
-
-                // Slapper config
                 Slapper.AutoMapper.Cache.ClearInstanceCache();
 
 
@@ -136,13 +128,11 @@ namespace Sistema.Bico.Infra.Dapper.Repository
                     Take = filter.Take
                 };
 
-                await using var conn = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-                await conn.OpenAsync();
+                await using var connection = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+                await connection.OpenAsync();
 
-                var total = await conn.ExecuteScalarAsync<int>(countSql, parameters);
-                var rows = await conn.QueryAsync<dynamic>(sql, parameters);
-
-
+                var total = await connection.ExecuteScalarAsync<int>(countSql, parameters);
+                var rows = await connection.QueryAsync<dynamic>(sql, parameters);
 
                 var mapped = Slapper.AutoMapper.MapDynamic<ProfessionalProfile>(rows).ToList();
 
@@ -151,7 +141,7 @@ namespace Sistema.Bico.Infra.Dapper.Repository
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Erro em GetProfessionalPaginationWithSlapper");
-                throw; // relança para não esconder erro
+                throw;
             }
         }
 
@@ -160,16 +150,18 @@ namespace Sistema.Bico.Infra.Dapper.Repository
         {
             try
             {
-                string commandText = @"UPDATE ""TB_ProfessionalClient"" SET ""StatusWorker"" = @StatusWorker WHERE ""Id"" = @Id";
+                var commandText = @"UPDATE ""TB_ProfessionalClient"" SET ""StatusWorker"" = @StatusWorker WHERE ""Id"" = @Id";
+
+                await using var connection = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+                await connection.OpenAsync();
+
                 await connection.ExecuteAsync(commandText, new { Id = id, StatusWorker = status });
-                connection.Close();
-
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-
+                _logger.LogError(ex, "Erro em AtualizarStatus");
+                throw;
             }
-
         }
     }
 }
