@@ -22,10 +22,12 @@ namespace Sistema.Bico.Infra.Repository
         public async Task<(int, List<WorkerDone>)> GetWorkerDoneByProfilePagination(FilterProfileCommand filter)
         {
             var count = await _context.WorkerDone
+             .AsNoTracking()
              .Where(w => w.WorkerDoneProfessional.ProfessionalProfile.Perfil == filter.Profile)
              .CountAsync();
 
             var listWorkerDone = await _context.WorkerDone
+                .AsNoTracking()
                 .Where(f => f.WorkerDoneProfessional.ProfessionalProfile.Perfil == filter.Profile)
                 .Skip(filter.Take * (filter.Page - 1))
                 .Take(filter.Take)
@@ -36,6 +38,7 @@ namespace Sistema.Bico.Infra.Repository
         public async Task<List<WorkerDone>> GetListWorkerDoneProfile(string id)
         {
             var list = await _context.WorkerDone
+             .AsNoTracking()
              .Where(w => w.WorkerDoneProfessional.ProfessionalProfile.Perfil == id)
              .ToListAsync();
 

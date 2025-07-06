@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Generics.Entities;
 using Sistema.Bico.Domain.Interface;
@@ -12,11 +13,13 @@ namespace Sistema.Bico.Domain.UseCases.Cliente
     {
         private readonly IClientRepository _clientRepository;
         private readonly IIdentityRepository _identityRepository;
+        private readonly ILogger<UpdateClientCommandHandler> _logger;
 
-        public UpdateClientCommandHandler(IClientRepository clientRepository, IIdentityRepository identityRepository)
+        public UpdateClientCommandHandler(IClientRepository clientRepository, IIdentityRepository identityRepository, ILogger<UpdateClientCommandHandler> logger)
         {
             _clientRepository = clientRepository;
             _identityRepository = identityRepository;
+            _logger = logger;
         }
 
         public async Task<ApplicationUser> Handle(UpdateClientCommand request, CancellationToken cancellationToken)
@@ -33,6 +36,7 @@ namespace Sistema.Bico.Domain.UseCases.Cliente
             }
             catch(Exception e)
             {
+                _logger.LogError(e, " - Erro ao atualizar Cliente");
                 return null;
             }
         }

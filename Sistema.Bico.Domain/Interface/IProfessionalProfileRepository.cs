@@ -1,6 +1,7 @@
 ﻿using Sistema.Bico.Domain.Command.Filters;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Generics.Interfaces;
+using Sistema.Bico.Domain.Response;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,7 +11,6 @@ namespace Sistema.Bico.Domain.Interface
     public interface IProfessionalProfileRepository : IGeneric<ProfessionalProfile>
     {
         Task<ProfessionalProfile> GetProfessionalProfileId(Guid id);
-        Task<(int, List<ProfessionalProfile>)> GetProfessionalPagination(FilterProfessionalCommand filter);
         Task<ProfessionalProfile> GetProfessionalProfileIdBasic(Guid id);
         Task<List<ProfessionalProfile>> GetProfessionalInterested(Guid workerId);
         Task<ProfessionalProfile> GetProfessionalPerfilId(string id);
@@ -22,5 +22,6 @@ namespace Sistema.Bico.Domain.Interface
         Task<ProfessionalProfile> GetVerifyProfissional(Guid id);
         Task<List<ProfessionalProfile>> GetProfessionalByAreaAndCity(string? city, int area);
         Task<ProfessionalProfile> GetProfessionalPerfilClient(string perfil);
+        Task<ProfessionalProfileResponse> GetProfessionalProfileIdTracking(Guid id);
     }
 }

@@ -10,7 +10,6 @@ namespace Sistema.Bico.API
             Log.Logger = new LoggerConfiguration()
                  .MinimumLevel.Debug()
                  .WriteTo.Console()
-                .WriteTo.File("logApi.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
             try

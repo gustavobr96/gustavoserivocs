@@ -165,7 +165,7 @@ namespace Sistema.Bico.API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            Console.WriteLine("🚦 Executando Configure...");
+            Console.WriteLine("Executando Configure...");
 
             try
             {

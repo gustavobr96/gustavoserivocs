@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Interface;
@@ -12,12 +13,15 @@ namespace Sistema.Bico.Domain.UseCases.Worker
     {
         private readonly IWorkerProfessionalRepository _workerProfessionalRepository;
         private readonly IProfessionalProfileRepository _professionalProfileRepository;
+        private readonly ILogger<ApplyWorkerCommandHandler> _logger;
 
         public ApplyWorkerCommandHandler(IWorkerProfessionalRepository workerProfessionalRepository,
-            IProfessionalProfileRepository professionalProfileRepository)
+            IProfessionalProfileRepository professionalProfileRepository,
+            ILogger<ApplyWorkerCommandHandler> logger)
         {
             _workerProfessionalRepository = workerProfessionalRepository;
             _professionalProfileRepository = professionalProfileRepository;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(ApplyWorkerCommand request, CancellationToken cancellationToken)
@@ -35,7 +39,11 @@ namespace Sistema.Bico.Domain.UseCases.Worker
 
                 return Unit.Value;
             }
-            catch (Exception e) { return Unit.Value; }
+            catch (Exception e)
+            {
+                _logger.LogError(e, " - Erro ao Aplicar no serviço");
+                throw;
+            }
 
         }
     }

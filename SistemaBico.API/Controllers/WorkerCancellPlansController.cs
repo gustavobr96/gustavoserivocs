@@ -22,7 +22,7 @@ namespace SistemaBico.API.Controllers
         [SwaggerOperation(Tags = new[] { "WorkerCancellPlans" })]
         public async Task<IActionResult> WorkerCancellPlans()
         {
-            await _mediator.Send(new QueuePublishWorkerCancelPlanCommand());
+            await _mediator.Send(new WorkerCancellPlansCommand());
             return Ok();
         }
     }

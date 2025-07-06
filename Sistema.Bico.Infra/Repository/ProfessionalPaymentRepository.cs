@@ -39,6 +39,7 @@ namespace Sistema.Bico.Infra.Repository
         public async Task<ProfessionalPayment> GetPaymentProfessionalByClient(Guid id)
         {
             return await _context.ProfessionalPayment
+                 .AsNoTracking()
                  .Where(w => w.Professional.ClientId == id && w.Created.AddDays(31) >= DateTime.Now)
                  .OrderByDescending(o => o.Created)
                  .FirstOrDefaultAsync();

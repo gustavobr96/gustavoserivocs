@@ -12,6 +12,7 @@ namespace Sistema.Bico.Domain.Entities
             ProfessionalClient = new HashSet<ProfessionalClient>();
         }
 
+
         public string Name { get; set; }
         public string LastName { get; set; }
         public string Perfil { get; set; }

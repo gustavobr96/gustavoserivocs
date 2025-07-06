@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Sistema.Bico.Domain.Command.Filters;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Interface;
+using Sistema.Bico.Domain.Response;
 using Sistema.Bico.Infra.Context;
 using Sistema.Bico.Infra.Generics.Repository;
 using System;
@@ -38,72 +39,103 @@ namespace Sistema.Bico.Infra.Repository
             return true;
         }
 
-        public async Task<(int, List<Worker>)> GetProfessionalPagination(FilterWorkerCommand filter)
+        public async Task<(int, List<WorkerResponse>)> GetProfessionalPagination(FilterWorkerCommand filter)
         {
             var listWorkersApply = await _workerProfessionalRepository.GetWorkerProfessionalByClientId(filter.ClientId);
 
-            // Definindo uma chave exclusiva para o cache considerando os filtros e a paginação
-            var cacheKey = $"Workers_Page_{filter.Page}_Take_{filter.Take}_ClientId_{filter.ClientId}_Remote_{filter.Remote}_City_{filter.City}_Area_{filter.Area}_Profession_{filter.Profession}";
+            // IDs dos workers que o cliente já aplicou
+            var appliedIds = listWorkersApply.Select(s => s.WorkerId).ToList();
 
-            // Consulta para contar os registros (não deve ser cacheada, já que não envolve dados paginados)
-            var countQuery = _context.Worker
+            // Filtros comuns
+            var queryBase = _context.Worker
+                .AsNoTracking()
                 .Where(w =>
                     (!filter.Remote || w.Remote) &&
                     (filter.Remote || string.IsNullOrEmpty(filter.City) || w.Address.City.Contains(filter.City)) &&
                     ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
                     (string.IsNullOrEmpty(filter.Profession) || w.Profession.Contains(filter.Profession)) &&
-                    (listWorkersApply.Count == 0 || !listWorkersApply.Select(s => s.WorkerId).Contains(w.Id)) &&
+                    (!appliedIds.Any() || !appliedIds.Contains(w.Id)) &&
                     w.ClientId != filter.ClientId);
 
-            var count = await countQuery.CountAsync();
+            // Count com cache
+            var count = await queryBase
+                .Cacheable()
+                .CountAsync();
 
-            // Consulta para obter os registros paginados com cache de segundo nível
-            var listProfessional = await _context.Worker
-                .Include(es => es.Client)
-                .Include(area => area.ProfessionalArea)
-                .Include(end => end.Address)
-                .Where(w =>
-                    (!filter.Remote || w.Remote) &&
-                    (filter.Remote || string.IsNullOrEmpty(filter.City) || w.Address.City.Contains(filter.City)) &&
-                    ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
-                    (string.IsNullOrEmpty(filter.Profession) || w.Profession.Contains(filter.Profession)) &&
-                    (listWorkersApply.Count == 0 || !listWorkersApply.Select(s => s.WorkerId).Contains(w.Id)) &&
-                    w.ClientId != filter.ClientId)
+            // Dados paginados, apenas com os campos necessários
+            var list = await queryBase
+                .Select(w => new WorkerResponse
+                {
+                    Id = w.Id,
+                    Created = w.Created.ToString("yyyy-MM-dd"),
+                    Name = w.Client.Name,
+                    Price = w.Price,
+                    Titulo = w.Title,
+                    Phone = w.Phone,
+                    Area = w.ProfessionalArea.Codigo,
+                    AreaName = w.ProfessionalArea.Description,
+                    Remote = w.Remote,
+                    Sobre = w.About,
+                    Profession = w.Profession,
+                    CEP = w.Address.ZipCode,
+                    City = w.Address.City,
+                    State = w.Address.State,
+                    Interessados = _context.WorkerProfessional.Count(x => x.WorkerId == w.Id)
+                })
                 .Skip(filter.Take * (filter.Page - 1))
                 .Take(filter.Take)
-                .Cacheable() // 🔥 Ativando cache para a consulta paginada
+                .Cacheable()
                 .ToListAsync();
 
-            return (count, listProfessional);
+            return (count, list);
         }
 
-        public async Task<(int, List<Worker>)> GetMyWorkersPagination(FilterWorkerCommand filter)
+        public async Task<(int, List<WorkerResponse>)> GetMyWorkersPagination(FilterWorkerCommand filter)
         {
+            var listWorkersApply = await _workerProfessionalRepository
+                .GetWorkerProfessionalByClientId(filter.ClientId);
 
-            var listWorkersApply = await _workerProfessionalRepository.GetWorkerProfessionalByClientId(filter.ClientId);
+            var workerIds = listWorkersApply.Select(s => s.WorkerId).ToList();
 
-            var count = await _context.Worker
-              .Where(w => (string.IsNullOrEmpty(filter.City) || w.Address.City.Contains(filter.City)) &&
-                     ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
-                     (string.IsNullOrEmpty(filter.Profession) || w.Profession.Contains(filter.Profession)) &&
-                     (listWorkersApply.Select(s => s.WorkerId).Contains(w.Id)))
-              .CountAsync();
+            // Filtro base
+            var query = _context.Worker
+                .AsNoTracking()
+                .Where(w =>
+                    (string.IsNullOrEmpty(filter.City) || w.Address.City.Contains(filter.City)) &&
+                    ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
+                    (string.IsNullOrEmpty(filter.Profession) || w.Profession.Contains(filter.Profession)) &&
+                    workerIds.Contains(w.Id)
+                );
 
+            var count = await query.CountAsync();
 
-            var listProfessional = await _context.Worker
-                 .Include(es => es.Client)
-                 .Include(area => area.ProfessionalArea)
-                 .Include(end => end.Address)
-                 .Where(w => (string.IsNullOrEmpty(filter.City) || w.Address.City.Contains(filter.City)) &&
-                        ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
-                        (string.IsNullOrEmpty(filter.Profession) || w.Profession.Contains(filter.Profession)) &&
-                        (listWorkersApply.Select(s => s.WorkerId).Contains(w.Id)))
-                 .Skip(filter.Take * (filter.Page - 1))
-                 .Take(filter.Take)
-                 .ToListAsync();
+            var list = await query
+                .OrderByDescending(w => w.Created)
+                .Skip(filter.Take * (filter.Page - 1))
+                .Take(filter.Take)
+                .Select(w => new WorkerResponse
+                {
+                    Id = w.Id,
+                    Created = w.Created.ToString("yyyy-MM-dd"),
+                    Name = w.Client.Name,
+                    Price = w.Price,
+                    Titulo = w.Title,
+                    Phone = w.Phone,
+                    Area = w.ProfessionalArea.Codigo,
+                    AreaName = w.ProfessionalArea.Description,
+                    Remote = w.Remote,
+                    Sobre = w.About,
+                    Profession = w.Profession,
+                    CEP = w.Address.ZipCode,
+                    City = w.Address.City,
+                    State = w.Address.State,
+                    Interessados = w.WorkerProfessional.Count()
+                })
+                .ToListAsync();
 
-            return (count, listProfessional);
+            return (count, list);
         }
+
         public async Task<(int, List<Worker>)> GetMyPublishWorkerClient(FilterWorkerCommand filter)
         {
 

@@ -20,12 +20,13 @@ namespace Sistema.Bico.Infra.Repository
         public async Task<ProfessionalArea> GetProfessionalAreaId(int id)
         {
             return await _context.ProfessionalArea.Cacheable()
+                  .AsNoTracking()
                  .FirstOrDefaultAsync(f => f.Codigo == id);
         }
 
         public async Task<List<ProfessionalArea>> GetAllProfessionalArea()
         {
-            return await _context.ProfessionalArea.Cacheable().ToListAsync();
+            return await _context.ProfessionalArea.AsNoTracking().Cacheable().ToListAsync();
         }
     }
 }

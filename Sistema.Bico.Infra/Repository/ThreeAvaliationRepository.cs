@@ -17,7 +17,7 @@ namespace Sistema.Bico.Infra.Repository
         }
         public async Task<ThreeAvaliation> GetThreeAvaliationByProfessionalId(Guid professionalId)
         {
-            return await _context.ThreeAvaliation
+            return await _context.ThreeAvaliation.AsNoTracking()
                  .FirstOrDefaultAsync(f => f.ProfessionalProfileId == professionalId);
         }
     }

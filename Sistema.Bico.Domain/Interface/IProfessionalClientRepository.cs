@@ -11,9 +11,10 @@ namespace Sistema.Bico.Domain.Interface
     {
         Task<ProfessionalClient> GetProfessionalClient(Guid clientId, Guid professionalId);
         Task<List<ProfessionalClientResponse>> GetMyProfessionalClient(Guid clientId);
+        Task<ProfessionalClientResponse> GetMyProfessionalClientByPerfil(string Perfil);
         Task<ProfessionalClient> GetProfessionalClientByProfile(Guid clientId, string profile);
         Task<ProfessionalClient> GetProfessionalClientByProfileIntencao(Guid clientId, string profile);
-        Task<List<ProfessionalClient>> GetClientApproval(Guid clientId);
+        Task<List<ProfessionalClientResponse>> GetClientApproval(Guid clientId);
         Task<ProfessionalClient> GetById(Guid id);
         Task<ProfessionalClient> GetProfessionalClientEmAndamento(Guid clientId, Guid professionalId);
     }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Interface;
 using System;
@@ -10,10 +11,13 @@ namespace Sistema.Bico.Domain.UseCases.Cliente
     public class UpdateClientTokenCommandHandler : IRequestHandler<UpdateClientTokenCommand, Unit>
     {
         private readonly IUserDapperRepository _userDapperRepository;
+        private readonly ILogger<UpdateClientTokenCommandHandler> _logger;
 
-        public UpdateClientTokenCommandHandler(IUserDapperRepository userDapperRepository)
+        public UpdateClientTokenCommandHandler(IUserDapperRepository userDapperRepository,
+           ILogger<UpdateClientTokenCommandHandler> logger )
         {
             _userDapperRepository = userDapperRepository;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(UpdateClientTokenCommand request, CancellationToken cancellationToken)
@@ -25,6 +29,7 @@ namespace Sistema.Bico.Domain.UseCases.Cliente
             }
             catch (Exception e)
             {
+                _logger.LogError(e, " - Erro ao atualizar token do Cliente");
                 return Unit.Value;
             }
         }

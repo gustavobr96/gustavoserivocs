@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Domain.Interface.Services;
@@ -16,16 +17,19 @@ namespace Sistema.Bico.Domain.UseCases.Worker
         private readonly IMapper _mapper;
         private readonly IProfessionalAreaRepository _professionalAreaRepository;
         private readonly INotificacoesService _notificacoesServicosNovos;
+        private readonly ILogger<RegisterWorkertCommandHandler> _logger;
 
         public RegisterWorkertCommandHandler(IWorkerRepository workerRepository,
             IMapper mapper,
             IProfessionalAreaRepository professionalAreaRepository,
-            INotificacoesService notificacoesServicosNovos)
+            INotificacoesService notificacoesServicosNovos,
+            ILogger<RegisterWorkertCommandHandler> logger)
         {
             _workerRepository = workerRepository;
             _mapper = mapper;
             _professionalAreaRepository = professionalAreaRepository;
             _notificacoesServicosNovos = notificacoesServicosNovos;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(AddWorkerCommand request, CancellationToken cancellationToken)
@@ -46,8 +50,12 @@ namespace Sistema.Bico.Domain.UseCases.Worker
 
                 return Unit.Value;
             }
-            catch (Exception e) { return Unit.Value; }
-           
+            catch (Exception e)
+            {
+                _logger.LogError(e, " - Erro ao adicionar serviço");
+                throw;
+            }
+
         }
     }
 }

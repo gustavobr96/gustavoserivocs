@@ -19,18 +19,30 @@ namespace Sistema.Bico.Infra.Repository
 
         public async Task UpdateEspecialityProfile(Guid idProfile, List<ProfessionalEspeciality> especiality)
         {
-            using var transaction = _context.Database.BeginTransaction();
+            await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                _context.ProfessionalEspeciality.RemoveRange(_context.ProfessionalEspeciality.Where(x => x.IdProfessionalProfile == idProfile));
-                _context.ProfessionalEspeciality.AddRange(especiality.ConvertAll(s => new ProfessionalEspeciality { Description = s.Description, IdProfessionalProfile = idProfile }));
-                _context.SaveChanges();
-                transaction.Commit();
+                var existentes = _context.ProfessionalEspeciality.Where(x => x.IdProfessionalProfile == idProfile);
+                _context.ProfessionalEspeciality.RemoveRange(existentes);
+
+                var novasEspecialidades = especiality
+                    .ConvertAll(s => new ProfessionalEspeciality
+                    {
+                        Description = s.Description,
+                        IdProfessionalProfile = idProfile
+                    });
+
+                await _context.ProfessionalEspeciality.AddRangeAsync(novasEspecialidades);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                transaction.Rollback();
+                await transaction.RollbackAsync();
+                throw; 
             }
         }
+
     }
 }

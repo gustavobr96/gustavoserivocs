@@ -6,6 +6,7 @@ namespace Sistema.Bico.Domain.Response
 {
     public class ProfessionalProfileResponse
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string NameComplete { get; set; }
         public string LastName { get; set; }

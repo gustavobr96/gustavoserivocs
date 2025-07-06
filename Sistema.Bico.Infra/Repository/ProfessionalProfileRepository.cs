@@ -4,6 +4,7 @@ using Sistema.Bico.Domain.Command.Filters;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Enums;
 using Sistema.Bico.Domain.Interface;
+using Sistema.Bico.Domain.Response;
 using Sistema.Bico.Infra.Context;
 using Sistema.Bico.Infra.Generics.Repository;
 using System;
@@ -45,16 +46,54 @@ namespace Sistema.Bico.Infra.Repository
                  .FirstOrDefaultAsync(f => f.ClientId == id);
 
         }
+        public async Task<ProfessionalProfileResponse> GetProfessionalProfileIdTracking(Guid id)
+        {
+            var perfil = await _context.ProfessionalProfile
+                .AsNoTracking()
+                .Where(p => p.ClientId == id)
+                .Select(p => new ProfessionalProfileResponse
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    NameComplete = p.Name + " " + p.LastName,
+                    LastName = p.LastName,
+                    Phone = p.Phone,
+                    Perfil = p.Perfil,
+                    Avaliation = p.Avaliation == null ? "0,0" : p.Avaliation.ToString(),
+                    PerfilPicture = p.PerfilPicture.Length > 0 ? Convert.ToBase64String(p.PerfilPicture) : Base64Default._imageDefault,
+                    Especiality = p.Especiality.Select(e => e.Description).ToList(),
+                    Area = p.ProfessionalArea.Codigo,
+                    AreaName = p.ProfessionalArea.Description,
+                    Sobre = p.About,
+                    Profession = p.Profession,
+                    Logradouro = p.Address.Logradouro,
+                    Number = p.Address.Number,
+                    Bairro = p.Address.Bairro,
+                    State = p.Address.State,
+                    Complemento = p.Address.Complemento,
+                    CEP = p.Address.ZipCode,
+                    City = p.Address.City,
+                    Email = p.Client.Email,
+                    Ativo = p.Ativo,
+                    Premium = p.Premium,
+                })
+                .FirstOrDefaultAsync();
+
+            return perfil;
+        }
+
 
         public async Task<ProfessionalProfile> GetVerifyProfissional(Guid id)
         {
             return await _context.ProfessionalProfile
+                 .AsNoTracking()
                  .Include(es => es.Client)
                  .FirstOrDefaultAsync(f => f.ClientId == id);
         }
         public async Task<ProfessionalProfile> GetProfessionalPerfilId(string id)
         {
             return await _context.ProfessionalProfile
+                 .AsNoTracking()
                  .Include(es => es.Especiality)
                  .Include(es => es.Client)
                  .Include(area => area.ProfessionalArea)
@@ -71,6 +110,7 @@ namespace Sistema.Bico.Infra.Repository
         public async Task<List<ProfessionalProfile>> GetTopProfessional(string? city = null)
         {
             return await _context.ProfessionalProfile
+                  .AsNoTracking()
                   .Include(end => end.Address)
                   .Where(w => string.IsNullOrEmpty(city) || w.Address.City.Contains(city) && w.Ativo)
                   .Take(12)
@@ -95,41 +135,6 @@ namespace Sistema.Bico.Infra.Repository
                  .FirstOrDefaultAsync(f => f.ClientId == id);
         }
 
-        public async Task<(int, List<ProfessionalProfile>)> GetProfessionalPagination(FilterProfessionalCommand filter)
-        {
-            // Definindo uma chave exclusiva para o cache, considerando os filtros e a paginação
-            var cacheKey = $"ProfessionalProfiles_Page_{filter.Page}_Take_{filter.Take}_ClientId_{filter.ClientId}_City_{filter.City}_Area_{filter.Area}_Profession_{filter.Profession}_Especiality_{string.Join(",", filter.Especiality ?? new List<string>())}";
-
-            // Consulta para contar os registros (não cacheada, já que não envolve dados paginados)
-            var count = await _context.ProfessionalProfile
-                .Where(w =>
-                    (string.IsNullOrEmpty(filter.City) || w.Address.City.Trim().ToLower().Contains(filter.City.Trim().ToLower())) &&
-                    ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
-                    ((filter.Especiality == null || filter.Especiality.Count == 0) || w.Especiality.Any(l => filter.Especiality.Contains(l.Description))) &&
-                    w.ClientId != filter.ClientId && w.Ativo &&
-                    (string.IsNullOrEmpty(filter.Profession) || w.Profession.ToLower().Contains(filter.Profession.ToLower())))
-                .CountAsync();
-
-            // Consulta para obter os registros paginados, com cache de segundo nível
-            var listProfessional = await _context.ProfessionalProfile
-                .Include(es => es.Especiality)
-                .Include(es => es.Client)
-                .Include(area => area.ProfessionalArea)
-                .Include(end => end.Address)
-                .Where(w =>
-                    (string.IsNullOrEmpty(filter.City) || w.Address.City.Trim().ToLower().Contains(filter.City.Trim().ToLower())) &&
-                    ((filter.Area == null || filter.Area == 0) || w.ProfessionalArea.Codigo == filter.Area) &&
-                    ((filter.Especiality == null || filter.Especiality.Count == 0) || w.Especiality.Any(l => filter.Especiality.Contains(l.Description))) &&
-                    w.ClientId != filter.ClientId && w.Ativo &&
-                    (string.IsNullOrEmpty(filter.Profession) || w.Profession.ToLower().Contains(filter.Profession.ToLower())))
-                .Skip(filter.Take * (filter.Page - 1))
-                .Take(filter.Take)
-                .Cacheable() // 🔥 Ativando o cache para a consulta paginada
-                .ToListAsync();
-
-            return (count, listProfessional);
-        }
-
 
         public async Task<List<ProfessionalProfile>> GetProfessionalInterested(Guid workerId)
         {
@@ -146,14 +151,19 @@ namespace Sistema.Bico.Infra.Repository
         public async Task<ProfessionalProfile> GetProfessionalProfileBasic(string id)
         {
             return await _context.ProfessionalProfile
+                 .AsNoTracking()
                  .FirstOrDefaultAsync(f => f.Perfil == id);
         }
 
         public async Task<ProfessionalProfile> GetProfessionalPerfilClient(string perfil)
         {
             return await _context.ProfessionalProfile
-                  .Include(x => x.Client)
+                 .AsNoTracking()
+                 .Include(x => x.Client)
                  .FirstOrDefaultAsync(f => f.Perfil == perfil);
         }
+
+       
+
     }
 }

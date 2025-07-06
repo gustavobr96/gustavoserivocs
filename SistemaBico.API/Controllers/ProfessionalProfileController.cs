@@ -6,6 +6,7 @@ using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Command.Filters;
 using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Domain.Response;
+using Sistema.Bico.Infra.Dapper.Repository;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace SistemaBico.API.Controllers
@@ -18,57 +19,87 @@ namespace SistemaBico.API.Controllers
         private readonly IProfessionalProfileRepository _professionalProfileRepository;
         private readonly IWorkerDoneRepository _workerDoneRepository;
         private readonly IThreeAvaliationRepository _threeAvaliationRepository;
+        private readonly IDapperProfessionalClientRepository _dapperProfessionalClientRepository;
+        private readonly IProfessionalClientRepository _professionalClientRepository;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly ILogger<ProfessionalProfileController> _logger;
+
 
         public ProfessionalProfileController(IProfessionalProfileRepository professionalProfileRepository,
             IMediator mediator,
             IMapper mapper,
             IWorkerDoneRepository workerDoneRepository,
-            IThreeAvaliationRepository threeAvaliationRepository)
+            IThreeAvaliationRepository threeAvaliationRepository,
+            IDapperProfessionalClientRepository dapperProfessionalClientRepository,
+            ILogger<ProfessionalProfileController> logger,
+            IProfessionalClientRepository professionalClientRepository)
         {
             _professionalProfileRepository = professionalProfileRepository;
             _mediator = mediator;
             _mapper = mapper;
             _workerDoneRepository = workerDoneRepository;
             _threeAvaliationRepository = threeAvaliationRepository;
+            _dapperProfessionalClientRepository = dapperProfessionalClientRepository;
+            _logger = logger;
+            _professionalClientRepository = professionalClientRepository;
         }
 
         [HttpGet("GetProfessionalProfileId/{id}")]
         [SwaggerOperation(Tags = new[] { "Professional" })] 
         public async Task<IActionResult> GetProfessionalProfileId(Guid id)
         {
-
-            var entity = await _professionalProfileRepository.GetProfessionalProfileId(id);
-            var response = _mapper.Map<ProfessionalProfileResponse>(entity);
-
-            return Ok(response);
+            try
+            {
+                var response = await _professionalProfileRepository.GetProfessionalProfileIdTracking(id);
+                return Ok(response);
+            }
+            catch(Exception ex) {
+                _logger.LogError(ex, "Erro em GetProfessionalProfileId");
+                return StatusCode(500);
+            }
         }
-
-
 
         [HttpGet("GetVerifyProfissional/{id}")]
         [SwaggerOperation(Tags = new[] { "Professional" })]
         public async Task<IActionResult> GetVerifyProfissional(Guid id)
         {
+            try
+            {
+                var entity = await _professionalProfileRepository.GetVerifyProfissional(id);
 
-            var entity = await _professionalProfileRepository.GetVerifyProfissional(id);
-
-            if(entity != null)
-                return Ok(new { Profissional = true, Ativo =  entity.Ativo, Premium = entity.Premium, VigenciaPremium = entity.VigenciaPremium?.ToString("dd/MM/yyyy") ?? null });
+                if (entity != null)
+                    return Ok(new { Profissional = true, Ativo = entity.Ativo, Premium = entity.Premium, VigenciaPremium = entity.VigenciaPremium?.ToString("dd/MM/yyyy") ?? null });
 
 
-            return Ok(false);
+                return Ok(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro em GetVerifyProfissional");
+                return StatusCode(500);
+            }
+           
         }
 
         [HttpPost("GetProfessionalPaginated")]
         [SwaggerOperation(Tags = new[] { "Professional" })]
         public async Task<ProfessionalProfilePaginationResponse> GetProfessionalPaginated(FilterProfessionalCommand filter)
         {
-            var (count,list) =  await _professionalProfileRepository.GetProfessionalPagination(filter);
-            var response = _mapper.Map<List<ProfessionalProfileResponse>>(list);
+            try
+            {
+                var (count, list) = await _dapperProfessionalClientRepository.GetProfessionalPaginationWithSlapper(filter);
+                var response = _mapper.Map<List<ProfessionalProfileResponse>>(list);
 
-            return new ProfessionalProfilePaginationResponse { CountRegister = count, ProfessionalProfile = response };
+                return new ProfessionalProfilePaginationResponse { CountRegister = count, ProfessionalProfile = response };
+
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Erro em GetProfessionalPaginated");
+                return null;
+            }
+          
         }
 
         [HttpPost("Register")]
@@ -83,6 +114,7 @@ namespace SistemaBico.API.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e, "Erro em Register");
                 return StatusCode(403, e.Message);
             }
         }
@@ -99,6 +131,7 @@ namespace SistemaBico.API.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e, "Erro em Atualizar");
                 return BadRequest(null);
             }
         }
@@ -108,10 +141,19 @@ namespace SistemaBico.API.Controllers
         [SwaggerOperation(Tags = new[] { "Professional" })]
         public async Task<ProfessionalProfilePaginationResponse> GetInterested(GuidResponse request)
         {
-            var list = await _professionalProfileRepository.GetProfessionalInterested(request.Guid);
-            var response = _mapper.Map<List<ProfessionalProfileResponse>>(list);
+            try
+            {
+                var list = await _professionalProfileRepository.GetProfessionalInterested(request.Guid);
+                var response = _mapper.Map<List<ProfessionalProfileResponse>>(list);
 
-            return new ProfessionalProfilePaginationResponse { ProfessionalProfile = response };
+                return new ProfessionalProfilePaginationResponse { ProfessionalProfile = response };
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e, "Erro em GetInterested");
+                return null;
+            }
+           
         }
 
         [HttpPost("GetTopProfessionalAnonymos")]
@@ -125,35 +167,36 @@ namespace SistemaBico.API.Controllers
            return professionalResponse;
         }
 
-        [HttpPost("GetProfessionalPerfil")]
-        [SwaggerOperation(Tags = new[] { "Professional" })]
-        public async Task<ProfileWorkerProfessionalPaginationResponse> GetProfessionalPerfil(FilterProfileCommand filter)
-        {
-
-            var entity = await _professionalProfileRepository.GetProfessionalPerfilId(filter.Profile);
-            var (count, list) = await _workerDoneRepository.GetWorkerDoneByProfilePagination(filter);
-            var treeAvaliation = await _threeAvaliationRepository.GetThreeAvaliationByProfessionalId(entity.Id);
-
-            var professionalProfile = _mapper.Map<ProfessionalProfileResponse>(entity);
-            var workerDone = _mapper.Map<List<WorkerDoneResponse>>(list);
-            var treeAvaliationResponse = _mapper.Map<ThreeAvaliationResponse>(treeAvaliation);
-
-            return new ProfileWorkerProfessionalPaginationResponse { CountRegister = count, ProfessionalProfile = professionalProfile, WorkerDone = workerDone , ThreeAvaliation = treeAvaliationResponse };
-        }
-
         [HttpGet("GetProfessionalPerfil/{id}")]
         [SwaggerOperation(Tags = new[] { "Professional" })]
         public async Task<ProfileWorkerProfessionalPaginationResponse> GetProfessionalPerfil(string id)
         {
+            try
+            {
+                var profile = await _professionalClientRepository.GetMyProfessionalClientByPerfil(id);
+                if (profile == null) return null;
 
-            var entity = await _professionalProfileRepository.GetProfessionalProfileBasic(id);
-            var treeAvaliation = await _threeAvaliationRepository.GetThreeAvaliationByProfessionalId(entity.Id);
-            var list= await _workerDoneRepository.GetListWorkerDoneProfile(id);
+                var threeAvaliation = await _threeAvaliationRepository.GetThreeAvaliationByProfessionalId(profile.ProfessionalProfile.Id);
+                var workerDoneList = await _workerDoneRepository.GetListWorkerDoneProfile(id);
 
-            var workerDone = _mapper.Map<List<WorkerDoneResponse>>(list);
-            var treeAvaliationResponse = _mapper.Map<ThreeAvaliationResponse>(treeAvaliation);
+                var dto = new ProfileWorkerProfessionalPaginationResponse
+                {
+                    ProfessionalProfile = _mapper.Map<ProfessionalProfileResponse>(profile.ProfessionalProfile),
+                    ThreeAvaliation = _mapper.Map<ThreeAvaliationResponse>(threeAvaliation),
+                    WorkerDone = _mapper.Map<List<WorkerDoneResponse>>(workerDoneList)
+                };
 
-            return new ProfileWorkerProfessionalPaginationResponse { WorkerDone = workerDone, ThreeAvaliation = treeAvaliationResponse };
+                return dto;
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Erro em GetProfessionalPerfil");
+                return null;
+            }
+
+
         }
 
     }

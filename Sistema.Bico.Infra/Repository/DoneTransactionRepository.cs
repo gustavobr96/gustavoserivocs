@@ -23,25 +23,29 @@ namespace Sistema.Bico.Infra.Repository
 
         public async Task DoneWorkerTransaction(DoneWorkerCommand doneWorkerCommand)
         {
-            using var transaction = _context.Database.BeginTransaction();
+            await using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
-
                 var professional = await _context.ProfessionalProfile.FirstOrDefaultAsync(f => f.Perfil == doneWorkerCommand.PrestadorPerfil);
                 if (professional != null)
                 {
-                    var workerDoneProfessional = await _context.WorkerDoneProfessional.FirstOrDefaultAsync(f => f.ProfessionalProfile.Perfil == doneWorkerCommand.PrestadorPerfil);
+                    var workerDoneProfessional = await _context.WorkerDoneProfessional
+                        .FirstOrDefaultAsync(f => f.ProfessionalProfile.Perfil == doneWorkerCommand.PrestadorPerfil);
+
                     if (workerDoneProfessional == null)
                     {
-                        workerDoneProfessional = new WorkerDoneProfessional();
-                        workerDoneProfessional.Id = new Guid();
-                        workerDoneProfessional.ProfessionalProfileId = Guid.Empty;
+                        workerDoneProfessional = new WorkerDoneProfessional
+                        {
+                            Id = Guid.NewGuid(), // Use Guid.NewGuid(), não new Guid()
+                            ProfessionalProfileId = Guid.Empty
+                        };
                     }
 
-                    var workerDone = new WorkerDone();
-                    workerDone.WorkerDoneProfessionalId = workerDoneProfessional.Id;
-
+                    var workerDone = new WorkerDone
+                    {
+                        WorkerDoneProfessionalId = workerDoneProfessional.Id
+                    };
 
                     if (doneWorkerCommand.WorkerId != null)
                     {
@@ -49,39 +53,44 @@ namespace Sistema.Bico.Infra.Repository
 
                         _context.WorkerProfessional.RemoveRange(_context.WorkerProfessional.Where(w => w.WorkerId == workerId));
 
-                        var worker = await _context.Worker.Where(w => w.Id == workerId).FirstOrDefaultAsync();
+                        var worker = await _context.Worker.FirstOrDefaultAsync(w => w.Id == workerId);
 
-                        if (worker != null) // Remove worker publicado.
+                        if (worker != null)
                         {
                             workerDone.Description = worker.Title;
                             _context.Worker.Remove(worker);
                         }
                         else
                         {
-                            workerDone.Description = string.IsNullOrEmpty(doneWorkerCommand.Description) ? "Nenhuma descrição." : doneWorkerCommand.Description;
+                            workerDone.Description = string.IsNullOrEmpty(doneWorkerCommand.Description)
+                                ? "Nenhuma descrição."
+                                : doneWorkerCommand.Description;
                         }
-                    }//
+                    }
 
                     var client = await _context.Client.FirstOrDefaultAsync(f => f.Id == doneWorkerCommand.ClientId);
 
-                    workerDone.Avaliation = Math.Round( ((decimal)doneWorkerCommand.AvaliationQuality +
-                                                                 doneWorkerCommand.AvaliationCommunication +
-                                                                 doneWorkerCommand.AvaliationDeadline) / 3, 2);
+                    workerDone.Avaliation = Math.Round(((decimal)doneWorkerCommand.AvaliationQuality +
+                                                         doneWorkerCommand.AvaliationCommunication +
+                                                         doneWorkerCommand.AvaliationDeadline) / 3, 2);
 
-                    var three = _context.ThreeAvaliation.Where(w => w.ProfessionalProfileId == professional.Id).FirstOrDefault();
+                    var three = await _context.ThreeAvaliation
+                        .FirstOrDefaultAsync(w => w.ProfessionalProfileId == professional.Id);
+
                     decimal mediaAvaliationProfessional;
-                    if(three == null)
+
+                    if (three == null)
                     {
-                        three =  new ThreeAvaliation
+                        three = new ThreeAvaliation
                         {
                             Deadline = doneWorkerCommand.AvaliationDeadline,
                             Quality = doneWorkerCommand.AvaliationQuality,
                             Communication = doneWorkerCommand.AvaliationCommunication,
                             NumberAvaliation = 1,
-                            ProfessionalProfileId = professional.Id,
+                            ProfessionalProfileId = professional.Id
                         };
 
-                        _context.ThreeAvaliation.Add(three);
+                        await _context.ThreeAvaliation.AddAsync(three);
                         mediaAvaliationProfessional = workerDone.Avaliation;
                     }
                     else
@@ -90,52 +99,64 @@ namespace Sistema.Bico.Infra.Repository
                         three.Quality += doneWorkerCommand.AvaliationQuality;
                         three.Communication += doneWorkerCommand.AvaliationCommunication;
                         three.NumberAvaliation += 1;
-                        
+
                         _context.ThreeAvaliation.Update(three);
                         mediaAvaliationProfessional = Math.Round(((decimal)three.Deadline +
                                                                   three.Quality +
-                                                                three.Communication) / (three.NumberAvaliation*3), 2);
+                                                                  three.Communication) / (three.NumberAvaliation * 3), 2);
                     }
 
-                    var verifyPlan = await _context.ProfessionalPayment.Where(w => w.ProfessionalId == professional.Id && w.Created.AddDays(31) >= DateTime.Now && w.Status == StatusPayment.APRO.GetDescription()).FirstOrDefaultAsync();
-                    if(verifyPlan == null) // Verifica plano e desativa profissional.
-                       professional.Ativo = false;
-                    
+                    var verifyPlan = await _context.ProfessionalPayment
+                        .Where(w => w.ProfessionalId == professional.Id &&
+                                    w.Created.AddDays(31) >= DateTime.Now &&
+                                    w.Status == StatusPayment.APRO.GetDescription())
+                        .FirstOrDefaultAsync();
+
+                    if (verifyPlan == null)
+                        professional.Ativo = false;
+
                     professional.Avaliation = mediaAvaliationProfessional;
                     _context.ProfessionalProfile.Update(professional);
 
-                    // Finalizar serviço
-                    var professionalClient = await _context.ProfessionalClient.FirstOrDefaultAsync(w => w.ProfessionalProfileId == professional.Id && w.ClientId == doneWorkerCommand.ClientId && w.StatusWorker == StatusWorker.Contratado);
-                    professionalClient.StatusWorker = StatusWorker.Finalizado;
-                    _context.ProfessionalClient.Update(professionalClient);
+                    var professionalClient = await _context.ProfessionalClient
+                        .FirstOrDefaultAsync(w =>
+                            w.ProfessionalProfileId == professional.Id &&
+                            w.ClientId == doneWorkerCommand.ClientId &&
+                            w.StatusWorker == StatusWorker.Contratado);
 
-                    workerDone.Comment = string.IsNullOrEmpty(doneWorkerCommand.Comment) ? "Nenhum comentário." : doneWorkerCommand.Comment;
-                    workerDone.Name = $"{client.Name} {client.LastName}";
+                    if (professionalClient != null)
+                    {
+                        professionalClient.StatusWorker = StatusWorker.Finalizado;
+                        _context.ProfessionalClient.Update(professionalClient);
+                    }
 
-                    if(workerDoneProfessional.ProfessionalProfileId == Guid.Empty)
+                    workerDone.Comment = string.IsNullOrEmpty(doneWorkerCommand.Comment)
+                        ? "Nenhum comentário."
+                        : doneWorkerCommand.Comment;
+
+                    workerDone.Name = $"{client?.Name} {client?.LastName}";
+
+                    if (workerDoneProfessional.ProfessionalProfileId == Guid.Empty)
                     {
                         workerDoneProfessional.ProfessionalProfileId = professional.Id;
-                        var listaWorkerDone = new List<WorkerDone>();
-                        listaWorkerDone.Add(workerDone);
-
-                        workerDoneProfessional.WorkerDone = listaWorkerDone;
-                        _context.WorkerDoneProfessional.Add(workerDoneProfessional);
+                        workerDoneProfessional.WorkerDone = new List<WorkerDone> { workerDone };
+                        await _context.WorkerDoneProfessional.AddAsync(workerDoneProfessional);
                     }
                     else
                     {
-                        _context.WorkerDone.Add(workerDone);
+                        await _context.WorkerDone.AddAsync(workerDone);
                     }
 
-                   
-                    _context.SaveChanges();
-                    transaction.Commit();
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
                 }
-
             }
             catch (Exception e)
             {
-                transaction.Rollback();
+                await transaction.RollbackAsync();
+                throw; 
             }
         }
+
     }
 }

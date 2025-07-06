@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MercadoPago.Client.Preference;
 using MercadoPago.Config;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Enums;
 using Sistema.Bico.Domain.Generics.Extensions;
@@ -23,17 +23,19 @@ namespace Sistema.Bico.Domain.UseCases.PaymentProfessional
         private readonly IProfessionalProfileRepository _professionalProfileRepository;
         private readonly IMediator _mediator;
         private readonly ITemplateRepository _templateRepository;
+        private readonly ILogger<RealizarPagamentoCommandHandler> _logger;
 
         public RealizarPagamentoCommandHandler(IProfessionalPaymentRepository professionalPaymentRepository,
             IProfessionalProfileRepository professionalProfileRepository,
             IMediator mediator,
-            ITemplateRepository templateRepository)
+            ITemplateRepository templateRepository,
+            ILogger<RealizarPagamentoCommandHandler> logger)
         {
             _professionalPaymentRepository = professionalPaymentRepository;
             _professionalProfileRepository = professionalProfileRepository;
             _mediator = mediator;
             _templateRepository = templateRepository;
-    
+            _logger = logger;
         }
 
         public async Task<string> Handle(AddPaymentProfessionalCommand request, CancellationToken cancellationToken)
@@ -77,7 +79,6 @@ namespace Sistema.Bico.Domain.UseCases.PaymentProfessional
                     var preferenceClient = new PreferenceClient();
                     var response = await preferenceClient.CreateAsync(preferenceRequest);
 
-                    // Verificando se a resposta foi bem-sucedida
                     if (response != null && response.InitPoint != null)
                     {
                         return response.InitPoint;
@@ -91,8 +92,7 @@ namespace Sistema.Bico.Domain.UseCases.PaymentProfessional
             }
             catch (Exception e)
             {
-                Log.Error($"Exception Payment: {e.Message}");
-           
+                _logger.LogError(e, " - Erro ao realizar o pagamento");
             }
 
             return "";

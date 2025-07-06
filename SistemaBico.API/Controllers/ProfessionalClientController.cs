@@ -51,6 +51,23 @@ namespace SistemaBico.API.Controllers
             }
         }
 
+        [HttpPost("GetMyProfessionalClientByPerfil")]
+        [SwaggerOperation(Tags = new[] { "ProfessionalClient" })]
+        public async Task<IActionResult> GetMyProfessionalClientByPerfil(string email)
+        {
+            try
+            {
+                var professionalClient = await _professionalClientRepository.GetMyProfessionalClientByPerfil(email);
+                var response = _mapper.Map<ProfessionalClientResponse>(professionalClient);
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(403, e.Message);
+            }
+        }
+
         [HttpPost("GetClientApproval")]
         [SwaggerOperation(Tags = new[] { "ProfessionalClient" })]
         public async Task<IActionResult> GetClientApproval(GuidResponse guid)
@@ -58,9 +75,7 @@ namespace SistemaBico.API.Controllers
             try
             {
                 var list = await _professionalClientRepository.GetClientApproval(guid.Guid);
-                var response = _mapper.Map<List<ProfessionalClientResponse>>(list);
-
-                return Ok(response);
+                return Ok(list);
             }
             catch (Exception e)
             {

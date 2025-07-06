@@ -1,17 +1,12 @@
 ﻿using MediatR;
-using MercadoPago.Resource.Preference;
-using Microsoft.EntityFrameworkCore;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Enums;
-using Sistema.Bico.Domain.Generics.DePara;
 using Sistema.Bico.Domain.Generics.Extensions;
 using Sistema.Bico.Domain.Integration.Interfaces;
 using Sistema.Bico.Domain.Interface;
-using Sistema.Bico.Domain.Response;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,18 +19,22 @@ namespace Sistema.Bico.Domain.UseCases.PaymentProfessional
         private readonly IProfessionalProfileRepository _professionalProfileRepository;
         private readonly ITemplateRepository _templateRepository;
         private readonly IMediator _mediator;
+        private readonly ILogger<AtualizaStatusPagamentoCommandHandler> _logger;
 
         public AtualizaStatusPagamentoCommandHandler(IMercadoPagoIntegration mercadoPago,
             IProfessionalPaymentRepository professionalPaymentRepository,
             IProfessionalProfileRepository professionalProfileRepository,
             IMediator mediator,
-            ITemplateRepository templateRepository)
+            ITemplateRepository templateRepository,
+            ILogger<AtualizaStatusPagamentoCommandHandler> logger
+            )
         {
             _mercadoPago = mercadoPago;
             _professionalPaymentRepository = professionalPaymentRepository;
             _professionalProfileRepository = professionalProfileRepository;
             _mediator = mediator;
             _templateRepository = templateRepository;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(UpdatePaymentCommand request, CancellationToken cancellationToken)
@@ -85,11 +84,13 @@ namespace Sistema.Bico.Domain.UseCases.PaymentProfessional
             }
             catch(Exception e)
             {
-                Log.Error($"UpdatePaymentCommand Error: {e.Message}"); 
+                _logger.LogError(e, " - Erro ao atualizar status do pagamento");
                 return Unit.Value;
             }
            
         }
+
+
     }
 
 }

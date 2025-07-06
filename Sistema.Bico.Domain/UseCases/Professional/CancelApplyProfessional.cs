@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Interface;
 using System;
@@ -12,11 +13,15 @@ namespace Sistema.Bico.Domain.UseCases.Professional
     {
         private readonly IProfessionalProfileRepository _professionalProfileRepository;
         private readonly IProfessionalClientRepository _professionalClientRepository;
+        private readonly ILogger<CancelApplyProfessionalCommandHandler> _logger;
 
-        public CancelApplyProfessionalCommandHandler(IProfessionalProfileRepository professionalProfileRepository, IProfessionalClientRepository professionalClientRepository)
+        public CancelApplyProfessionalCommandHandler(IProfessionalProfileRepository professionalProfileRepository,
+            IProfessionalClientRepository professionalClientRepository,
+            ILogger<CancelApplyProfessionalCommandHandler> logger)
         {
             _professionalProfileRepository = professionalProfileRepository;
             _professionalClientRepository = professionalClientRepository;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(CancelApplyProfessionalCommand request, CancellationToken cancellationToken)
@@ -33,7 +38,11 @@ namespace Sistema.Bico.Domain.UseCases.Professional
                 }
 
             }
-            catch(Exception e){ return Unit.Value; }
+            catch(Exception e)
+            {
+                _logger.LogError(e, " - Erro recusar profissional");
+                throw;
+            }
           
             return Unit.Value;
         }

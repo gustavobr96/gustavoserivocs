@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Generics.Extensions;
@@ -16,22 +16,23 @@ namespace Sistema.Bico.Domain.UseCases.Professional
         private readonly IProfessionalProfileRepository _professionalProfileRepository;
         private readonly IProfessionalAreaRepository _professionalAreaRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<RegisterProfessionalCommandHandler> _logger;
 
         public RegisterProfessionalCommandHandler(IProfessionalProfileRepository professionalProfileRepository,
             IMapper mapper,
-            IProfessionalAreaRepository professionalAreaRepository)
+            IProfessionalAreaRepository professionalAreaRepository,
+            ILogger<RegisterProfessionalCommandHandler> logger)
         {
             _professionalProfileRepository = professionalProfileRepository;
             _mapper = mapper;
             _professionalAreaRepository = professionalAreaRepository;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(AddProfessionalCommand request, CancellationToken cancellationToken)
         {
             try
             {
- 
-
                 var professionalExist = await _professionalProfileRepository.GetProfessionalProfileIdBasic(request.ClientId);
                 if(professionalExist == null)
                 {
@@ -43,11 +44,8 @@ namespace Sistema.Bico.Domain.UseCases.Professional
 
                         if (!string.IsNullOrEmpty(request.PerfilPicture))
                             professional.PerfilPicture = Convert.FromBase64String(request.PerfilPicture);
-
-                   
+     
                         professional.Perfil = EnumExtensions.GenerateKey();
-
-
                         await _professionalProfileRepository.Add(professional);
                     }
 
@@ -56,14 +54,9 @@ namespace Sistema.Bico.Domain.UseCases.Professional
             }
             catch (Exception e) 
             {
-                Log.Information($"{e.Message}");
-                Log.Information($"Erro {e.InnerException}");
-                Log.Information($"Erro2 {e.ToString()}");
-
-                return Unit.Value;
-       
+                _logger.LogError(e, " - Erro ao Aplicar profissional");
+                throw;
             }
-
 
             return Unit.Value;
         }

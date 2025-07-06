@@ -1,8 +1,11 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Server.IIS.Core;
+using Microsoft.Extensions.Logging;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Enums;
 using Sistema.Bico.Domain.Interface;
+using Sistema.Bico.Domain.UseCases.Cliente;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,16 +18,19 @@ namespace Sistema.Bico.Domain.UseCases.Professional
         private readonly IProfessionalClientRepository _professionalClientRepository;
         private readonly IMediator _mediator;
         private readonly IWorkerRepository _workerRepository;
+        private readonly ILogger<ApplyProfessionalCommandHandler> _logger;
 
         public ApplyProfessionalCommandHandler(IProfessionalProfileRepository professionalProfileRepository,
             IProfessionalClientRepository professionalClientRepository,
             IMediator mediator,
-            IWorkerRepository workerRepository)
+            IWorkerRepository workerRepository,
+             ILogger<ApplyProfessionalCommandHandler> logger)
         {
             _professionalProfileRepository = professionalProfileRepository;
             _professionalClientRepository = professionalClientRepository;
             _mediator = mediator;
             _workerRepository = workerRepository;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(ApplyProfessionalCommand request, CancellationToken cancellationToken)
@@ -47,8 +53,11 @@ namespace Sistema.Bico.Domain.UseCases.Professional
                     await _workerRepository.DeleteWorkerId(request.WorkerId);
                 }
             }
-            catch(Exception e) { return Unit.Value; }
-
+            catch(Exception e) 
+            {
+                _logger.LogError(e, " - Erro ao Aplicar profissional");
+                throw;
+            }
 
             return Unit.Value;
         }

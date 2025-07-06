@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Interface;
@@ -14,15 +15,18 @@ namespace Sistema.Bico.Domain.UseCases.Professional
         private readonly IProfessionalAreaRepository _professionalAreaRepository;
         private readonly IProfessionalEspecialityRepository _professionalEspecialityRepository;
         private readonly IAddressRepository _addressRepository;
+        private readonly ILogger<UpdateProfessionalCommandHandler> _logger;
         public UpdateProfessionalCommandHandler(IProfessionalProfileRepository professionalProfileRepository,
             IProfessionalAreaRepository professionalAreaRepository,
             IProfessionalEspecialityRepository professionalEspecialityRepository,
-            IAddressRepository addressRepository)
+            IAddressRepository addressRepository,
+             ILogger<UpdateProfessionalCommandHandler> logger)
         {
             _professionalProfileRepository = professionalProfileRepository;
             _professionalAreaRepository = professionalAreaRepository;
             _professionalEspecialityRepository = professionalEspecialityRepository;
             _addressRepository = addressRepository;
+            _logger = logger;
         }
 
         public async Task<ProfessionalProfile> Handle(UpdateProfessionalCommand request, CancellationToken cancellationToken)
@@ -45,7 +49,8 @@ namespace Sistema.Bico.Domain.UseCases.Professional
             }
             catch (Exception e)
             {
-                return null;
+                _logger.LogError(e, " - Erro ao Atualizar profissional");
+                throw;
             }
         }
     }

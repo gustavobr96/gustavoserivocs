@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Enums;
 using Sistema.Bico.Domain.Generics.Result;
@@ -16,16 +17,19 @@ namespace Sistema.Bico.Domain.UseCases.Professional
         private readonly IDapperProfessionalClientRepository _professionalClientDapperRepository;
         private readonly INotificacoesService _notificacoesService;
         private readonly Generics.Interfaces.INotification _Notification;
+        private readonly ILogger<UpdateProfessionalClientCommandHandler> _logger;
 
         public UpdateProfessionalClientCommandHandler(IProfessionalClientRepository professionalClientRepository, 
             Generics.Interfaces.INotification notification,
             INotificacoesService notificacoesService,
-            IDapperProfessionalClientRepository professionalClientDapperRepository)
+            IDapperProfessionalClientRepository professionalClientDapperRepository,
+            ILogger<UpdateProfessionalClientCommandHandler> logger)
         {
             _professionalClientRepository = professionalClientRepository;
             _Notification = notification;
             _notificacoesService = notificacoesService;
             _professionalClientDapperRepository = professionalClientDapperRepository;
+            _logger = logger;
         }
 
         public async Task<Result> Handle(UpdateProfessionalClientCommand request, CancellationToken cancellationToken)
@@ -47,6 +51,7 @@ namespace Sistema.Bico.Domain.UseCases.Professional
 
             }catch(Exception e)
             {
+                _logger.LogError(e, " - Erro ao Atualizar profissional");
                 _Notification.Handle("Erro ao enfileirar o cancel apply professional!");
                 return _Notification.Return();
             }

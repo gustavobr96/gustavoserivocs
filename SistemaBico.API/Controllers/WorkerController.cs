@@ -6,11 +6,7 @@ using Sistema.Bico.Domain.Command;
 using Sistema.Bico.Domain.Command.Filters;
 using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Domain.Response;
-using Sistema.Bico.Infra.Repository;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SistemaBico.API.Controllers
 {
@@ -23,17 +19,23 @@ namespace SistemaBico.API.Controllers
         private readonly IMapper _mapper;
         private readonly IWorkerRepository _workerRepository;
         private readonly IClientRepository _clientRepository;
+        private readonly IDapperWorkerRepository _dapperWorkerRepository;
+        private readonly ILogger<WorkerController> _logger;
 
         public WorkerController(
-            IMediator mediator, 
-            IMapper mapper, 
+            IMediator mediator,
+            IMapper mapper,
             IWorkerRepository workerRepository,
-            IClientRepository clientRepository)
+            IClientRepository clientRepository,
+            IDapperWorkerRepository dapperWorkerRepository,
+             ILogger<WorkerController> logger)
         {
             _mediator = mediator;
             _mapper = mapper;
             _workerRepository = workerRepository;
             _clientRepository = clientRepository;
+            _dapperWorkerRepository = dapperWorkerRepository;
+            _logger = logger;
         }
 
         [HttpPost("Register")]
@@ -57,10 +59,10 @@ namespace SistemaBico.API.Controllers
         {
             try
             {
-               await _mediator.Send(queueApplyWorkerCommand);
+                await _mediator.Send(queueApplyWorkerCommand);
 
-               var worker = await _workerRepository.GetEntityById(queueApplyWorkerCommand.WorkerId);
-               var response = _mapper.Map<WorkerResponse>(worker);
+                var worker = await _workerRepository.GetEntityById(queueApplyWorkerCommand.WorkerId);
+                var response = _mapper.Map<WorkerResponse>(worker);
 
                 return Ok(response);
             }
@@ -70,15 +72,21 @@ namespace SistemaBico.API.Controllers
             }
         }
 
-
         [HttpPost("GetWorkerPaginated")]
         [SwaggerOperation(Tags = new[] { "Worker" })]
         public async Task<WorkerPaginationResponse> GetProfessionalPaginated(FilterWorkerCommand filter)
         {
-            var (count, list) = await _workerRepository.GetProfessionalPagination(filter);
-            var response = _mapper.Map<List<WorkerResponse>>(list);
-
-            return new WorkerPaginationResponse { CountRegister = count, Worker = response };
+            try
+            {
+                var (count, list) = await _workerRepository.GetProfessionalPagination(filter);
+                return new WorkerPaginationResponse { CountRegister = count, Worker = list };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Erro em GetMyPublishWorkerClient");
+                return null;
+            }
+        
         }
 
         [HttpPost("GetMyWorkers")]
@@ -86,9 +94,8 @@ namespace SistemaBico.API.Controllers
         public async Task<WorkerPaginationResponse> GetMyWorkers(FilterWorkerCommand filter)
         {
             var (count, list) = await _workerRepository.GetMyWorkersPagination(filter);
-            var response = _mapper.Map<List<WorkerResponse>>(list);
 
-            return new WorkerPaginationResponse { CountRegister = count, Worker = response };
+            return new WorkerPaginationResponse { CountRegister = count, Worker = list };
         }
 
 
@@ -96,23 +103,30 @@ namespace SistemaBico.API.Controllers
         [SwaggerOperation(Tags = new[] { "Worker" })]
         public async Task<WorkerPaginationResponse> GetMyPublishWorkerClient(FilterWorkerCommand filter)
         {
-            var (count, list) = await _workerRepository.GetMyPublishWorkerClient(filter);
-            var response = _mapper.Map<List<WorkerResponse>>(list);
 
-            return new WorkerPaginationResponse { CountRegister = count, Worker = response };
-        }     
-        
+            try
+            {
+                return await _dapperWorkerRepository.GetMyPublishWorkerClient(filter);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Erro em GetMyPublishWorkerClient");
+                return null;
+            }
+
+        }
+
         [HttpPost("GetMyWorkersClientIdBasic")]
         [SwaggerOperation(Tags = new[] { "Worker" })]
         public async Task<List<WorkerResponse>> GetMyWorkersClientIdBasic(GuidResponse guid)
         {
-            var entity =  await _workerRepository.GetMyWorkersClientIdBasic(guid.Guid);
+            var entity = await _workerRepository.GetMyWorkersClientIdBasic(guid.Guid);
             var response = _mapper.Map<List<WorkerResponse>>(entity);
 
             return response;
         }
 
-        // Done Worker
+
         [HttpPost("WorkerDone")]
         [SwaggerOperation(Tags = new[] { "Worker" })]
         public async Task<IActionResult> WorkerDone(DoneWorkerCommand queueDoneWorkerCommand)
@@ -127,6 +141,5 @@ namespace SistemaBico.API.Controllers
                 return StatusCode(403, e.Message);
             }
         }
-
     }
 }

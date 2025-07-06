@@ -1,8 +1,8 @@
-﻿using Sistema.Bico.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Interface;
 using Sistema.Bico.Infra.Context;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sistema.Bico.Infra.Repository
@@ -17,17 +17,23 @@ namespace Sistema.Bico.Infra.Repository
         }
         public async Task UpdateAddress(Guid id, Address address)
         {
-            using var transaction = _context.Database.BeginTransaction();
+            await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                _context.Address.Remove(_context.Address.Where(x => x.Id == id).FirstOrDefault());
-                _context.Address.AddRange(address);
-                _context.SaveChanges();
-                transaction.Commit();
+                var existing = await _context.Address.FirstOrDefaultAsync(x => x.Id == id);
+                if (existing != null)
+                {
+                    _context.Address.Remove(existing);
+                }
+
+                await _context.Address.AddAsync(address);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                transaction.Rollback();
+                await transaction.RollbackAsync();
+                throw; 
             }
         }
     }

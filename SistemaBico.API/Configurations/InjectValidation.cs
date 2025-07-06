@@ -1,10 +1,6 @@
-﻿using FluentValidation;
-using MediatR;
-using Sistema.Bico.API;
+﻿using MediatR;
 using Sistema.Bico.Domain.Command;
-using Sistema.Bico.Domain.Command.Validations;
 using Sistema.Bico.Domain.Entities;
-using Sistema.Bico.Domain.Generics.ConnectFactory;
 using Sistema.Bico.Domain.Generics.Entities;
 using Sistema.Bico.Domain.Generics.Interfaces;
 using Sistema.Bico.Domain.Generics.Result;
@@ -15,7 +11,6 @@ using Sistema.Bico.Domain.UseCases.PaymentProfessional;
 using Sistema.Bico.Domain.UseCases.Plan;
 using Sistema.Bico.Domain.UseCases.Professional;
 using Sistema.Bico.Domain.UseCases.Worker;
-using Sistema.Bico.Domain.Workers;
 using Sistema.Bico.Infra.Dapper.Repository;
 using Sistema.Bico.Infra.Generics.Repository;
 using Sistema.Bico.Infra.Repository;
@@ -26,20 +21,11 @@ namespace SistemaBico.API.Configurations
     {
         public static void AddInjectValidation(this IServiceCollection services)
         {
-            services.AddTransient<IValidator<QueueAddClientCommand>, QueueAddClientCommandValidation>();
-            services.AddTransient<IValidator<QueueAddWorkerCommand>, QueueAddWorkerCommandValidation>();
         }
 
         public static void AddInjectHandlers(this IServiceCollection services)
         {
-            services.AddScoped<IRequestHandler<QueuePublishForgotCommand, Result>, QueuePublishForgotClientCommandHandler>();
-            services.AddScoped<IRequestHandler<QueueAddClientCommand, Result>, QueuePublishRegisterClientCommandHandler>();
-            services.AddScoped<IRequestHandler<QueueAddWorkerCommand, Result>, QueuePublishRegisterWorkerCommandHandler>();
-            services.AddScoped<IRequestHandler<QueueApplyWorkerCommand, Result>, QueuePublishApplyWorkerCommandHandler>();
-            services.AddScoped<IRequestHandler<QueueApplyProfessionalCommand, Result>, QueuePublishApplyProfessionalCommandHandler>();
-            services.AddScoped<IRequestHandler<QueueCancelApplyProfessionalCommand, Result>, QueuePublishCancelProfessionalCommandHandler>();
-            services.AddScoped<IRequestHandler<QueuePublishRegisterProfessionalCommand, Result>, QueuePublishRegisterProfessionalCommandHandler>();
-            services.AddScoped<IRequestHandler<QueueDoneWorkerCommand, Result>, QueuePublishDoneWorkerCommandHandler>();
+
           
             services.AddScoped<IRequestHandler<AddClientCommand, Unit>, RegisterClientCommandHandler>();
             services.AddScoped<IRequestHandler<ForgotCommand, Unit>, ForgotClientCommandHandler>();
@@ -54,8 +40,6 @@ namespace SistemaBico.API.Configurations
             services.AddScoped<IRequestHandler<DoneWorkerCommand, Unit>, DoneWorkerCommandHandler>();
             services.AddScoped<IRequestHandler<UpdateProfessionalClientCommand, Result>, UpdateProfessionalClientCommandHandler>();
             services.AddScoped<IRequestHandler<AddPaymentProfessionalCommand, string>, RealizarPagamentoCommandHandler>();
-            services.AddScoped<IRequestHandler<QueueAddPaymentCommand, Result>, QueuePublishPaymentCommandHandler>();
-            services.AddScoped<IRequestHandler<QueuePublishEmailCommand, Result>, QueuePublishEmailCommandHandler>();
             services.AddScoped<IRequestHandler<UpdatePaymentCommand, Unit>, AtualizaStatusPagamentoCommandHandler>();
             services.AddScoped<IRequestHandler<ApprovalOrRecusedCommand, Unit>, ApproveOrRecuseCommandHandler>();
             services.AddScoped<IRequestHandler<WorkerCancellPlansCommand, Unit>, WorkerCancelPlanCommandHandler>();
@@ -69,7 +53,7 @@ namespace SistemaBico.API.Configurations
         {
      
             services.AddSingleton(typeof(IGeneric<>), typeof(RepositoryGenerics<>));
-            services.AddSingleton(typeof(IConnectFactory), typeof(ConnectFactoryCreator));
+            //services.AddSingleton(typeof(IConnectFactory), typeof(ConnectFactoryCreator));
             services.AddScoped<IToken, Token>();
             services.AddScoped<IClientRepository, ClientRepository>();
             services.AddScoped<IIdentityRepository, IdentityRepository>();
@@ -90,6 +74,7 @@ namespace SistemaBico.API.Configurations
             services.AddScoped<IPlanDapperRepository, PlanDapperRepository>();
             services.AddScoped<IUserDapperRepository, UserDapperRepository>();
             services.AddScoped<IDapperProfessionalClientRepository, DapperProfessionalClientRepository>();
+            services.AddScoped<IDapperWorkerRepository, DapperWorkerRepository>();
         }
     }
 }

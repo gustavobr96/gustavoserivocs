@@ -22,16 +22,19 @@ namespace SistemaBico.API.Controllers
         private readonly IMediator _mediator;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly ILogger<ProfessionalProfileController> _logger;
 
         public ClientController(IClientRepository clientRepository,
             IMediator mediator,
             UserManager<ApplicationUser> userManager,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<ProfessionalProfileController> logger)
         {
             _clientRepository = clientRepository;
             _mediator = mediator;
             _userManager = userManager;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [AllowAnonymous]
@@ -54,18 +57,11 @@ namespace SistemaBico.API.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e, "Erro em Register Cliente");
                 return StatusCode(403, e.Message);
             }
         }
 
-        [AllowAnonymous]
-        [HttpPost("Forgot")]
-        [SwaggerOperation(Tags = new[] { "Client" })]
-        public async Task<IActionResult> Forgot(QueuePublishForgotCommand queueAddClientCommand)
-        {
-            _ = await _mediator.Send(queueAddClientCommand);
-            return Ok();
-        }
 
         [HttpPost("Update")]
         [SwaggerOperation(Tags = new[] { "Client" })]
@@ -79,6 +75,7 @@ namespace SistemaBico.API.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e, "Erro em Atualizar Cliente");
                 return BadRequest(null);
             }
         }
@@ -97,6 +94,7 @@ namespace SistemaBico.API.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e, "Erro em Atualizar Senha");
                 return BadRequest(null);
             }
         }
@@ -112,6 +110,7 @@ namespace SistemaBico.API.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e, "Erro em Atualizar Token");
                 return BadRequest(null);
             }
         }
@@ -121,10 +120,18 @@ namespace SistemaBico.API.Controllers
         [SwaggerOperation(Tags = new[] { "Client" })]
         public async Task<IActionResult> GetClientProfileId(Guid id)
         {
-            var entity = await _clientRepository.GetUserByClientId(id);
-            var response = _mapper.Map<ClientResponse>(entity);
+            try
+            {
+                var entity = await _clientRepository.GetUserByClientId(id);
+                var response = _mapper.Map<ClientResponse>(entity);
 
-            return Ok(response);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Erro ao obter cliente");
+                return BadRequest(null);
+            }
         }
     }
 }

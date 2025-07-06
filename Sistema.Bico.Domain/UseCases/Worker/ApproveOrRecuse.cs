@@ -1,6 +1,6 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using Sistema.Bico.Domain.Command;
-using Sistema.Bico.Domain.Entities;
 using Sistema.Bico.Domain.Enums;
 using Sistema.Bico.Domain.Interface;
 using System;
@@ -13,12 +13,15 @@ namespace Sistema.Bico.Domain.UseCases.Worker
     {
         private readonly IProfessionalClientRepository _professionalClientRepository;
         private readonly IDapperProfessionalClientRepository _professionalClientDapperRepository;
+        private readonly ILogger<ApproveOrRecuseCommandHandler> _logger;
 
         public ApproveOrRecuseCommandHandler(IProfessionalClientRepository professionalClientRepository,
-            IDapperProfessionalClientRepository professionalClientDapperRepository)
+            IDapperProfessionalClientRepository professionalClientDapperRepository,
+            ILogger<ApproveOrRecuseCommandHandler> logger)
         {
             _professionalClientRepository = professionalClientRepository;
             _professionalClientDapperRepository = professionalClientDapperRepository;
+            _logger = logger;
         }
 
         public async Task<Unit> Handle(ApprovalOrRecusedCommand request, CancellationToken cancellationToken)
@@ -35,7 +38,11 @@ namespace Sistema.Bico.Domain.UseCases.Worker
 
                 return Unit.Value;
             }
-            catch(Exception e) { return Unit.Value; }
+            catch (Exception e)
+            {
+                _logger.LogError(e, " - Erro ao Aprovar ou Recusar serviço");
+                throw;
+            }
           
         }
     }

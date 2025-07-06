@@ -46,7 +46,7 @@ namespace Sistema.Bico.Domain.UseCases.Cliente
                     var template = await _templateRepository.GetTemplate(TypeTemplate.RecuperacaoSenha);
                     var messageBody = template.Description.Replace("{PASSWORD}", senha);
 
-                    await _mediator.Send(new QueuePublishEmailCommand { Email = new EmailDto { To = new List<string> { request.Email }, Subject = TypeSubject.RecuperacaoSenha.GetDescription(), MessageBody = messageBody }, TypeTemplate = TypeTemplate.RecuperacaoSenha });
+                    //await _mediator.Send(new QueuePublishEmailCommand { Email = new EmailDto { To = new List<string> { request.Email }, Subject = TypeSubject.RecuperacaoSenha.GetDescription(), MessageBody = messageBody }, TypeTemplate = TypeTemplate.RecuperacaoSenha });
 
 
                 }
